@@ -1,0 +1,32 @@
+spring:
+  security:
+    user:
+      name: admin
+      password: admin
+      
+  application:
+    name: Daki-plast
+
+  profiles: default
+  datasource:
+    url: jdbc:mysql://localhost:3306/dakiplast
+    username: root
+    password: root
+    initialization-mode: always
+
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+      show-sql: false
+      generate-ddl: true
+
+  queries:
+    users-query: "select email, password, active from users where email=?"
+    roles-query: "select email, role from users where email=?"
+      
+  devtools:
+    add-properties: false
+  
+  thymeleaf:
+    cache: false

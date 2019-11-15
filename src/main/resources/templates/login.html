@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+	<link rel="stylesheet"  type="text/css" th:href="@{css/style.css}">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<title>Daki plast</title>
+</head>
+<body class="h-75">
+	<div class="container modal-header">
+			<h1 class="col-5 m-auto text-center text-muted">
+				Daki plast
+			</h1>	
+	</div>
+
+	<div class="col-3 m-auto h-75 pt-5">
+		<div class="container">
+			<form th:action="@{/login}" method="POST" class="form-signin">
+				<br/>
+				
+				<input type="text" id="username" name="username"  placeholder="username" class="form-control" /> 
+				<br/> 
+				<input type="password" placeholder="Password" id="password" name="password" class="form-control"/> <br /> 
+					
+				<div align="center" th:if="${param.error}">
+					<p style="font-size: 20; color: #FF1C19;">Email or Password invalid, please verify</p>
+				</div>
+				<button class="btn btn-lg btn-secondary btn-block" type="Submit">Login</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

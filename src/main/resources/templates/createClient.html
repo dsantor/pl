@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+<title>Unos klijenta</title>
+</head>
+<body>
+	<form action="#" th:action="@{/save}" th:object="${client}" method="POST">
+		<div class="">
+			<table class="">
+				<tr>
+					<td>Ime:</td>
+					<td><input type="text" th:field="*{firstName}"/></td>
+				</tr>
+				<tr >
+					<td>Prezime:</td>
+					<td></td>
+				</tr>
+				<tr >
+					<td>Mesto:</td>
+					<td></td>
+				</tr>
+				<tr >
+					<td>Ulica:</td>
+					<td></td>
+				</tr>
+				<tr >
+					<td>Broj:</td>
+					<td></td>
+				</tr>
+				<tr >
+					<td>Telefon:</td>
+					<td></td>
+				</tr>
+				<tr >
+					<td>Email:</td>
+					<td></td>
+				</tr>
+				<tr >
+					<td><input type="submit" value="Kreiraj"/></td>
+					<td></td>
+				</tr>
+			</table>
+		</div>
+	</form>
+</body>
+</html>

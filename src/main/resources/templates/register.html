@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head :: head">
+
+<title>Register</title>
+</head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<body>
+	<div class="col-7 m-auto h-75 pt-5 flex">
+		<div class="container w-50">
+		
+				<div class="form-group">
+					<label>Username</label>
+					<input type="text" class="form-control" placeholder="username"/>
+				</div>
+				 
+				<div class="form-group">
+					<label>Ime</label>
+					<input type="text" class="form-control" placeholder="ime"/>
+					</div>
+				<div class="form-group">
+					<label>Prezime</label>
+					<input type="text" class="form-control" placeholder="prezime"/>
+				</div>
+			
+				<div class="form-group">
+					<label>Ulica</label>
+					<input type="text" class="form-control" placeholder="ulica"/>
+				</div>
+			</div>
+			<div class="container w-50">
+				<div class="form-group">
+					<label>Broj stana</label>
+					<input type="text" class="form-control" placeholder="broj kuce/stana"/>
+				</div>
+				<div class="form-group">
+					<label>Grad</label>
+					<input type="text" class="form-control" placeholder="grad"/>
+				</div>
+				
+				<div class="form-group">
+					<label>Telefon</label>
+					<input type="tel" class="form-control" placeholder="telefon"/>
+				</div>
+				
+				<div class="form-group">
+					<label>Email</label>
+					<input type="email" class="form-control" placeholder="email"/>
+				</div>
+				
+				<div class="form-group">
+					<button onclick="createUser()"
+					class="btn btn-lg btn-primary btn-block" value="Register">Register</button>
+				</div>
+			
+		</div>
+	</div>
+</body>
+
+<script>
+	function createUser() {
+		data = {
+			firstName: "name",
+			lastName:	"surname",
+			street:	"street",
+			city: "city",
+			buildNumber:"bnum",
+			email: "em@em",
+			phoneNumber:	"043",
+			username: "username",
+			password: "password"
+		};
+		$.ajax({
+			url: "/secure/register",
+			method: "POST",
+		 	contentType: "application/json; charset=utf-8",
+			data: JSON.stringify(data),
+			success: function(data) {console.log(data)},
+			error: function() {console.log("error")}
+		});
+	}
+</script>
+</html>

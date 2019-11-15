@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+	<link rel="stylesheet" type="text/css" th:href="@{css/style.css}">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<script>
+		window.isAdmin = [[${isAdmin}]]
+		window.loggedUserId = [[${id}]]
+	</script>
+	<title class="js--page--title">Homepage</title>
+</head>
+<body>
+	<nav class="navbar navbar-expand-md navbar-dark bg-dark js--nav--bar">
+			<div class="collapse navbar-collapse" id="navbarCollapse">
+				<div class="navbar-nav">
+					<a href="#profile" class="nav-item nav-link js--nav--item active" data-tab="profile">Profil</a>
+					<a href="#users" class="nav-item nav-link js--nav--item" data-tab="users">Korisnici</a>
+					<a href="#clients" class="nav-item nav-link js--nav--item" data-tab="clients">Klijenti</a>
+					<a href="#Bids" class="nav-item nav-link js--nav--item">Porudzbina</a>
+				</div>
+				<div class="navbar-nav ml-auto">
+					<a href="/logout" class="nav-item nav-link">Login</a>
+				</div>
+			</div>
+		</nav>
+<div class="container js--page--container">
+
+</div>
+<div class="side-dialog js--side--dialog--container" visibility=false></div>
+
+<div class="floating-message js--floating--message" visibility=false></div>
+
+<script type="text/javascript" th:src="@{js/mainNavigation.js}"></script>
+<script type="text/javascript" th:src="@{js/utils/ajaxRequest.js}"></script>
+<script type="text/javascript" th:src="@{js/utils/componentsUtils.js}"></script>
+<script type="text/javascript" th:src="@{js/abstractSinglePage.js}"></script>
+<script type="text/javascript" th:src="@{js/components/floatingMessage.js}"></script>
+
+<script type="text/javascript" th:src="@{js/utils/validation.js}"></script>
+
+<!-- USER -->
+<script type="text/javascript" th:src="@{js/editProfileDialog.js}"></script>
+<script type="text/javascript" th:src="@{js/user/userService.js}"></script>
+<script type="text/javascript" th:src="@{js/user/userProfile.js}"></script>
+<script type="text/javascript" th:src="@{js/user/usersPage.js}"></script>
+<script type="text/javascript" th:src="@{js/user/createUserPage.js}"></script>
+<script type="text/javascript" th:src="@{js/user/userDetailsDialog.js}"></script>
+
+
+<!-- CLIENTS -->
+<script type="text/javascript" th:src="@{js/clients/clientsPage.js}"></script>
+<script type="text/javascript" th:src="@{js/clients/createClientPage.js}"></script>
+
+</body> 
+</html> 
