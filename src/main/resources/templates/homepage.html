@@ -12,13 +12,22 @@
 	<title class="js--page--title">Homepage</title>
 </head>
 <body>
+		<!-- <div class="form-group form-inline header">
+				<div>
+					<img src="https://www.dakiplast.rs/wp-content/uploads/2017/05/logo-small-01-300x75.png" style="max-width: 50%;">
+				</div>
+				<div>
+					<button class="cbtn btn-light #{NEGATIVE_BUTTON}" value="Izmeni">Otkazi</button>
+					<button class="cbtn  btn-primary #{POSITIVE_BUTTON}" value="Izmeni">Sacuvaj</button>
+				</div>
+			</div> -->
 	<nav class="navbar navbar-expand-md navbar-dark bg-dark js--nav--bar">
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<div class="navbar-nav">
 					<a href="#profile" class="nav-item nav-link js--nav--item active" data-tab="profile">Profil</a>
 					<a href="#users" class="nav-item nav-link js--nav--item" data-tab="users">Korisnici</a>
 					<a href="#clients" class="nav-item nav-link js--nav--item" data-tab="clients">Klijenti</a>
-					<a href="#Bids" class="nav-item nav-link js--nav--item">Porudzbina</a>
+					<a href="#bids" class="nav-item nav-link js--nav--item">Porudzbina</a>
 				</div>
 				<div class="navbar-nav ml-auto">
 					<a href="/logout" class="nav-item nav-link">Login</a>
@@ -53,5 +62,7 @@
 <script type="text/javascript" th:src="@{js/clients/clientsPage.js}"></script>
 <script type="text/javascript" th:src="@{js/clients/createClientPage.js}"></script>
 
+<!-- BIDS -->
+<script type="text/javascript" th:src="@{js/bids\bidsPage.js}"></script>
 </body> 
 </html> 

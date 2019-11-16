@@ -42,7 +42,7 @@ class @MainNavigation
                 @currentPage = new ClientsPage(@container)
                 return
             when '#bids'
-                @currentPage = new BidsPage()
+                @currentPage = new BidsPage(@container)
                 return
             else
                 @_redirectToErrorPage()

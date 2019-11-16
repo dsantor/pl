@@ -40,7 +40,7 @@
           this.currentPage = new ClientsPage(this.container);
           break;
         case '#bids':
-          this.currentPage = new BidsPage();
+          this.currentPage = new BidsPage(this.container);
           break;
         default:
           this._redirectToErrorPage();
