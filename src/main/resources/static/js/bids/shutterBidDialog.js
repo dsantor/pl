@@ -41,6 +41,6 @@
 
     return ShutterBidDialog;
 
-  })(this.AbstractBidDialog);
+  })(this.AbstractDialog);
 
 }).call(this);

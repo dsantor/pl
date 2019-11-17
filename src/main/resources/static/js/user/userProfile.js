@@ -6,7 +6,7 @@
       this.loggedUser = null;
       this.editProfilePage = new EditProfileDialog();
       this.clickEvent = this._clickEventHandler.bind(this);
-      $(window).on('click', this.clickEvent);
+      this.container.on('click', this.clickEvent);
       UserService.loadProfileTemplate(null, this, this._loadProfileTemplateSucess, null);
     }
 
@@ -15,8 +15,12 @@
     };
 
     UserProfile.prototype.destroy = function() {
-      this.container.html('');
-      return this.container = null;
+      this.container.off('click', this.clickEvent);
+      this.clickEvent = null;
+      this.loggedUser = null;
+      this.editProfilePage.destroy();
+      this.editProfilePage = null;
+      return this.container.html('');
     };
 
     UserProfile.prototype._clickEventHandler = function(event) {
@@ -24,7 +28,7 @@
       target = $(event.target);
       element = target.closest('.js--edit--profile');
       if (element.length !== 0) {
-        this.editProfilePage.show(this.loggedUser);
+        this.editProfilePage.show(this, this.loggedUser);
       }
     };
 
@@ -50,6 +54,11 @@
       this.street.text(user.street);
       this.city.text(user.city);
       return this.buildNumber.text(user.buildNumber);
+    };
+
+    UserProfile.prototype.editProfileDialogSuccess = function(user) {
+      this.loggedUser = user;
+      return this._getUserSuccess(this.loggedUser);
     };
 
     return UserProfile;

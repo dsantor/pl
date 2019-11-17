@@ -1,4 +1,4 @@
-class @ShutterBidDialog extends @AbstractBidDialog
+class @ShutterBidDialog extends @AbstractDialog
 
     constructor: () ->
         super()

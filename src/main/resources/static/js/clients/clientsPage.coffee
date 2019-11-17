@@ -1,11 +1,11 @@
-class @ClientsPage
+class @ClientsPage #extends @AbstractPage
 
-    @CC = []
-    constructor: (@container) ->
+    constructor: () ->
+        @container = $('.js--page--container')
 
-        ClientService.getAll(null, this, @_renderClients, @_renderClientsError)
         @clickEvent = @_clickEventHandler.bind(this)
         @container.on 'click', @clickEvent
+        ClientService.getAll(null, this, @_renderClients, @_renderClientsError)
 
         @createdNewClient = @_createdNewClient.bind(this)
         EventUtils.bindCreatedNewClient(@createdNewClient)
@@ -16,8 +16,19 @@ class @ClientsPage
         @clients = []
     
     destroy: () ->
+        @container.off 'click', @clickEvent
+        @clickEvent = null
+
         EventUtils.unbindCreatedNewClient(@createdNewClient)
         @createdNewClient = null
+
+        @createClientDialog.destroy()
+        @createClientDialog = null
+
+        @showClientDialog.destroy()
+        @showClientDialog = null
+
+        @clients = null
         @container.html('')
         
 

@@ -8,6 +8,8 @@
 
     function ShowClientDialog() {
       ShowClientDialog.__super__.constructor.call(this);
+      this.negativeButtonVisibility(false);
+      this.positiveButtonText("Zatvori");
     }
 
     ShowClientDialog.prototype.show = function(clientId) {
@@ -23,6 +25,14 @@
       return ShowClientDialog.__super__.destroy.call(this);
     };
 
+    ShowClientDialog.prototype.positiveAction = function() {
+      return this.hide();
+    };
+
+    ShowClientDialog.prototype.negativeAction = function() {
+      return this.hide();
+    };
+
     ShowClientDialog.prototype.save = function() {
       this._collectDataFromForm();
       return ShowClientDialog.__super__.save.call(this);
@@ -36,7 +46,7 @@
       var profileHTML;
       this.client = response.data;
       profileHTML = this._generateClientProfileHTML(this.client);
-      return this.container.html(profileHTML);
+      return this.container.append(profileHTML);
     };
 
     ShowClientDialog.prototype._loadedClientError = function(error) {
@@ -44,7 +54,7 @@
     };
 
     ShowClientDialog.prototype._generateClientProfileHTML = function(client) {
-      return "<div class='col-7 h-75 pt-5 flex'> <div class='container w-50'> <div class='profile-image h-336'> </div> </div> <div class='container w-50'> <table class='table table-borderless'> <tr> <td>Ime</td> <td>" + (client.firstName || '/') + "</td> </tr> <tr> <td>Prezime</td> <td>" + (client.lastName || '/') + "</td> </tr> <tr> <td>Ulica</td> <td>" + (client.street || '/') + "</td> </tr> <tr> <td>Broj stana</td> <td>" + (client.buildNumber || '/') + "</td> </tr> <tr> <td>Grad</td> <td>" + (client.city || '/') + "</td> </tr> <tr> <td>Telefon</td> <td>" + (client.phoneNumber || '/') + "</td> </tr> <tr> <td>Email</td> <td>" + (client.email || '/') + "</td> </tr> <!-- <tr> <td colspan='2'><input type='button' value='Izmeni' class='btn btn-lg btn-primary btn-block js--edit--profile'/></td> </tr> --> </table> </div> </div>";
+      return "<div class='container '> <nav class='nav header justify-content-end pt-3'> <span class='nav-link span-a js--create--client'>Promeni oznaku</span> <span class='nav-link span-a js--create--client'>Kreiraj porudzbinu</span> </nav> <div class='col-7 h-75 pt-5 flex'> <div class='container w-50'> <div class='profile-image h-336'> </div> </div> <div class='container w-50'> <table class='table table-borderless'> <tr> <td>Ime</td> <td>" + (client.firstName || '/') + "</td> </tr> <tr> <td>Prezime</td> <td>" + (client.lastName || '/') + "</td> </tr> <tr> <td>Ulica</td> <td>" + (client.street || '/') + "</td> </tr> <tr> <td>Broj stana</td> <td>" + (client.buildNumber || '/') + "</td> </tr> <tr> <td>Grad</td> <td>" + (client.city || '/') + "</td> </tr> <tr> <td>Telefon</td> <td>" + (client.phoneNumber || '/') + "</td> </tr> <tr> <td>Email</td> <td>" + (client.email || '/') + "</td> </tr> <!-- <tr> <td colspan='2'><input type='button' value='Izmeni' class='btn btn-lg btn-primary btn-block js--edit--profile'/></td> </tr> --> </table> </div> </div> </div>";
     };
 
     return ShowClientDialog;

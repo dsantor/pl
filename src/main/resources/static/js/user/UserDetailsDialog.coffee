@@ -1,38 +1,50 @@
-class @UserDetailsDialog
+class @UserDetailsDialog extends @AbstractDialog
 
     constructor: () ->
-        @container = $('.js--side--dialog--container')
-        UserService.loadProfileTemplate(null, this, @_loadProfileTemplateSucess, null)
-
+        super()
+        @negativeButtonVisibility(false)
+        @positiveButtonText("Zatvori")
         @userId = null
         @user   = null
 
     show: (@userId) ->
-        @container.attr('visibility', true)
+        super()
         UserService.getUser(@userId, null, this, @_getUserSuccess, null)
+        @container.append(ComponentsUtils.userDetailsHTML())
+        # Inputs
+        @firstName   = @container.find('.js--first--name')
+        @lastName    = @container.find('.js--last--name')
+        @street      = @container.find('.js--street')
+        @buildNumber = @container.find('.js--build--number')
+        @city        = @container.find('.js--city')
+        @phoneNumber = @container.find('.js--phone--number')
+        @email       = @container.find('.js--email')
 
     destroy: () ->
+        super()
+        @firstName      = null
+        @lastName       = null
+        @street         = null
+        @buildNumber    = null
+        @city           = null
+        @phoneNumber    = null
+        @email          = null
         @container.html('')
-        @container = null
         @userId = null
         @user = null
 
-    _loadProfileTemplateSucess:(template) ->
-        @container.html(template)
-        @firstname   = @container.find(".js--firstname")
-        @lastname    = @container.find(".js--lastname")
-        @phone       = @container.find(".js--phone")
-        @email       = @container.find(".js--email")
-        @street      = @container.find(".js--street")
-        @city        = @container.find(".js--city")
-        @buildNumber = @container.find(".js--buildNumber")
-
-
     _getUserSuccess: (user) ->
-        @firstname.text(user.firstName)
-        @lastname.text(user.lastName)
-        @phone.text(user.phoneNumber)
+        @firstName.text(user.firstName)
+        @lastName.text(user.lastName)
+        @phoneNumber.text(user.phoneNumber)
         @email.text(user.email)
         @street.text(user.street)
         @city.text(user.city)
         @buildNumber.text(user.buildNumber)
+
+
+    _templateHTML: () ->
+        super()
+    
+    positiveAction: () ->
+        @hide()

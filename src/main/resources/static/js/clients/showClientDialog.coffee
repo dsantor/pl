@@ -2,6 +2,8 @@ class @ShowClientDialog extends @AbstractDialog
 
     constructor: () ->
         super()
+        @negativeButtonVisibility(false)
+        @positiveButtonText("Zatvori")
 
     show: (clientId) ->
         ClientService.getClient(clientId, null, this, @_loadedClient, @_loadedClientError)
@@ -13,6 +15,12 @@ class @ShowClientDialog extends @AbstractDialog
     destroy: () ->
         super()
 
+    positiveAction: () ->
+        @hide()
+    
+    negativeAction: () ->
+        @hide()
+
     save: () ->
         @_collectDataFromForm()
         super()
@@ -23,7 +31,7 @@ class @ShowClientDialog extends @AbstractDialog
     _loadedClient: (response) ->
         @client = response.data
         profileHTML = @_generateClientProfileHTML(@client)
-        @container.html(profileHTML)
+        @container.append(profileHTML)
         
 
     _loadedClientError: (error) ->
@@ -31,8 +39,12 @@ class @ShowClientDialog extends @AbstractDialog
 
 
     _generateClientProfileHTML: (client) ->
-    
-        return "<div class='col-7 h-75 pt-5 flex'>
+        return "<div class='container '>
+                <nav class='nav header justify-content-end pt-3'>
+                    <span class='nav-link span-a js--create--client'>Promeni oznaku</span>
+                    <span class='nav-link span-a js--create--client'>Kreiraj porudzbinu</span>
+                </nav>
+                <div class='col-7 h-75 pt-5 flex'>
                     <div class='container w-50'>
                         <div class='profile-image h-336'>
                         </div>
@@ -78,4 +90,5 @@ class @ShowClientDialog extends @AbstractDialog
                                 
                         </table>
                     </div>
-                </div>"
+                </div>
+            </div>"

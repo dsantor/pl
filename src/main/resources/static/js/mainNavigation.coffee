@@ -38,14 +38,11 @@ class @MainNavigation
             when '#users'
                 @currentPage = new UserPage()
                 return
-            when '#create-user'
-                @currentPage = new CreateUserPage(@container)
-                return
             when '#clients'
-                @currentPage = new ClientsPage(@container)
+                @currentPage = new ClientsPage()
                 return
             when '#bids'
-                @currentPage = new BidsPage(@container)
+                @currentPage = new BidsPage()
                 return
             else
                 @_redirectToErrorPage()

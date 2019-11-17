@@ -1,4 +1,4 @@
-class @DoorBidDialog extends @AbstractBidDialog
+class @DoorBidDialog extends @AbstractDialog
 
     constructor: () ->
         super()

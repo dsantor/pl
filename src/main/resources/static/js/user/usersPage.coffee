@@ -1,21 +1,26 @@
-class @UserPage
+class @UserPage #extends @AbstractPage
+
     constructor: () ->
         @container = $('.js--page--container')
-        UserService.loadUsersTemplate(null, this, @_loadUsersTemplateSucess, null)
 
         @clickEvent = @_clickEventHandler.bind(this)
         @container.on 'click', @clickEvent
 
+
+        UserService.getUsers(null, this, @_getUsersSuccess, @_getUsersError)
+
+       
+
+        @createdNewUser = @_createdNewUser.bind(this)
+        EventUtils.bindCreatedNewUser(@createdNewUser)
+
         @users = []
 
-        @userDetailsDialog = new UserDetailsDialog();
+        @userDetailsDialog = new UserDetailsDialog()
+        @crateUserDialog = new CreateUserDialog()
 
     getPageTitle: () ->
         return 'Users'
-
-    _loadUsersTemplateSucess: (template) ->
-        #@container.append (template)
-        UserService.getUsers(null, this, @_getUsersSuccess, @_getUsersError)
 
     _getUsersSuccess: (data) ->
         if data is null or data.length is 0
@@ -32,8 +37,8 @@ class @UserPage
         if window.isAdmin
             #@_renderSubmenuActions()
             
-            adminOptionsHtml = "<nav class='nav justify-content-end pt-5 pb-3'>
-                                    <a href='#create-user' class='nav-item nav-link active'>Dodaj korisnika</a>
+            adminOptionsHtml = "<nav class='nav justify-content-end pt-3'>
+                                    <span class='nav-link span-a js--create--user'>Dodaj korisnika</span>
                                 </nav>
                     <th class='table-text w-10'>Profil</th>"
  
@@ -80,10 +85,19 @@ class @UserPage
     show: () ->	
 
     destroy: () ->
-        @container.off 'click', @_clickEventHandler
+        @container.off 'click', @clickEvent
         @clickEvent = null
-        @container.html('')
 
+        @userDetailsDialog.destroy()
+        @userDetailsDialog = null
+        
+        @crateUserDialog.destroy()
+        @crateUserDialog  = null
+        
+        EventUtils.unbindCreatedNewUser(@createdNewUser)
+        @createdNewUser = null
+
+        @container.html('')
         @users = null
 
 
@@ -100,7 +114,7 @@ class @UserPage
 
         element = targetElement.closest('.js--create--user')
         if element.length > 0
-            window.location.hash = 'create-user'
+            @crateUserDialog.show()
             return
         
         
@@ -136,3 +150,7 @@ class @UserPage
 
     _removeUserError: (response) ->
         console.error response
+
+    _createdNewUser: (event, user) ->
+        @users.push(user)
+        @_renderUsers(@users)

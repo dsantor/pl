@@ -1,6 +1,7 @@
 class @BidsPage
 
-    constructor: (@container) ->
+    constructor: () ->
+        @container = $('.js--page--container')
         @container.html(@_html())
 
         @clickEvent = @_clickEventHandler.bind(this)
@@ -9,7 +10,30 @@ class @BidsPage
         @doorBidDialog = new DoorBidDialog()
         @windowBidDialog = new WindowBidDialog()
         @shutterBidDialog = new ShutterBidDialog()
+        @thresholdBidDialog = new ThresholdBidDialog()
+        @mosquitoRepellerBidDialog = new MosquitoRepellerBidDialog()
+    
     destroy: () ->
+        
+        @doorBidDialog.destroy()
+        @doorBidDialog = null
+        
+        @windowBidDialog.destroy()
+        @windowBidDialog = null
+
+        @shutterBidDialog.destroy()
+        @shutterBidDialog = null
+        
+        @thresholdBidDialog.destroy()
+        @thresholdBidDialog = null
+
+        @mosquitoRepellerBidDialog.destroy()
+        @mosquitoRepellerBidDialog = null
+
+        @container.off 'click', @clickEvent
+        @clickEvent= null
+
+        @container.html('')
 
 
     show: () ->
@@ -55,27 +79,29 @@ class @BidsPage
         </div>"
 
 
+    _closest: (target, closestTo) ->
+        return target.closest(closestTo).length > 0
 
     _clickEventHandler: (event) ->
         target = $(event.target)
-
-        element = target.closest(".js--create--door")
-        if element.length > 0
+        
+        if @_closest(target, ".js--create--door")
             @doorBidDialog.show()
             return
-        element = target.closest(".js--create--threshold")
-        if element.length > 0
-            alert("th")
+
+        if @_closest(target, ".js--create--threshold")
+            @thresholdBidDialog.show()
             return
-        element = target.closest(".js--create--window")
-        if element.length > 0
+        
+        if @_closest(target, ".js--create--mosquito--repeller")
+            @mosquitoRepellerBidDialog.show()
+            return
+
+        if @_closest(target, ".js--create--window")
             @windowBidDialog.show()
             return
-        element = target.closest(".js--create--shutter")
-        if element.length > 0
+
+        if @_closest(target, ".js--create--shutter")
             @shutterBidDialog.show()
             return
-        element = target.closest(".js--create--mosquito--repeller")
-        if element.length > 0
-            @shutterBidDialog.show()
-            return
+

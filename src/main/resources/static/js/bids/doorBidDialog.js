@@ -41,6 +41,6 @@
 
     return DoorBidDialog;
 
-  })(this.AbstractBidDialog);
+  })(this.AbstractDialog);
 
 }).call(this);

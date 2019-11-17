@@ -1,11 +1,10 @@
-class @CreateClientDialog
+class @CreateClientDialog extends @AbstractDialog
 
     constructor: () ->
-        @container = $('.js--side--dialog--container')
-       
-        
-        @clickEvent = @_clickEventHandler.bind(this)
-        @container.on 'click', @clickEvent
+        super()
+
+        # @clickEvent = @_clickEventHandler.bind(this)
+        # @container.on 'click', @clickEvent
         
 
     getPageTitle: () ->
@@ -13,12 +12,9 @@ class @CreateClientDialog
 
 
     show: () ->
-        @container.attr('visibility', true)
-
-        @container.html(@_html())
-        # Buttons
-        @negativeButton = @container.find(".#{ComponentsUtils.NEGATIVE_BUTTON}")
-        @positiveButton = @container.find(".#{ComponentsUtils.POSITIVE_BUTTON}")
+        # @container.attr('visibility', true)
+        super()
+        @container.append(@_html())
 
         # Inputs
         @firstName    = @container.find('.js--firstName')
@@ -32,14 +28,9 @@ class @CreateClientDialog
         # @mobileNumber = @container.find('.js--mobileNumber')
 
     hide: () ->
-        @container.attr('visibility', false)
+        super()
 
     destroy: () ->
-        @container.off 'click', @clickEvent
-        @clickEvent = null
-        @negativeButton = null
-        @positiveButton = null
-        @container.html('')
 
         @firstName    = null
         @lastName     = null
@@ -54,46 +45,39 @@ class @CreateClientDialog
     _html: () ->
         "<div class='col-7 m-auto h-75 pt-5 flex'>
             <div class='container w-50'>
-
-                    <div class='form-group'>
-                        <label>Email*</label>
-                        <input type='email' class='form-control js--email' placeholder='email'/>
-                    </div>
-
-                    <div class='form-group'>
-                        <label>Ime</label>
-                        <input type='text' class='form-control js--firstName' placeholder='ime'/>
-                        </div>
-                    <div class='form-group'>
-                        <label>Prezime</label>
-                        <input type='text' class='form-control js--lastName' placeholder='prezime'/>
-                    </div>
-                
-                    <div class='form-group'>
-                        <label>Ulica</label>
-                        <input type='text' class='form-control js--street' placeholder='ulica'/>
-                    </div>
+                <div class='form-group'>
+                    <label>Email*</label>
+                    <input type='email' class='form-control js--email' placeholder='email'/>
                 </div>
-                <div class='container w-50'>
-                    <div class='form-group'>
-                        <label>Broj stana</label>
-                        <input type='text' class='form-control js--buildNumber' placeholder='broj kuce/stana'/>
-                    </div>
-                    <div class='form-group'>
-                        <label>Grad</label>
-                        <input type='text' class='form-control js--city' placeholder='grad'/>
-                    </div>
-                    
-                    <div class='form-group'>
-                        <label>Telefon</label>
-                        <input type='tel' class='form-control js--phoneNumber' placeholder='telefon'/>
-                    </div>
 
-                    <div class='form-group form-inline form-inline-btns-mt'>
-                        <button class='btn btn-lg btn-light btn-block w-50 #{ComponentsUtils.NEGATIVE_BUTTON}' value='Izmeni'>Otkazi</button>
-                        <button class='btn btn-lg btn-primary btn-block w-50 #{ComponentsUtils.POSITIVE_BUTTON}' value='Izmeni'>Kreiraj</button>
+                <div class='form-group'>
+                    <label>Ime</label>
+                    <input type='text' class='form-control js--firstName' placeholder='ime'/>
                     </div>
+                <div class='form-group'>
+                    <label>Prezime</label>
+                    <input type='text' class='form-control js--lastName' placeholder='prezime'/>
+                </div>
+            
+                <div class='form-group'>
+                    <label>Ulica</label>
+                    <input type='text' class='form-control js--street' placeholder='ulica'/>
+                </div>
+            </div>
+            <div class='container w-50'>
+                <div class='form-group'>
+                    <label>Broj stana</label>
+                    <input type='text' class='form-control js--buildNumber' placeholder='broj kuce/stana'/>
+                </div>
+                <div class='form-group'>
+                    <label>Grad</label>
+                    <input type='text' class='form-control js--city' placeholder='grad'/>
+                </div>
                 
+                <div class='form-group'>
+                    <label>Telefon</label>
+                    <input type='tel' class='form-control js--phoneNumber' placeholder='telefon'/>
+                </div>               
             </div>
     	</div>"
 
@@ -102,22 +86,24 @@ class @CreateClientDialog
 #                         <input type='tel' class='form-control js--mobileNumber' placeholder='mobilni'/>
 #                     </div>
     
-    _clickEventHandler: (event) ->
-        target = $(event.target)
+    # _clickEventHandler: (event) ->
+    #     target = $(event.target)
 
-        element = target.closest(@negativeButton)
-        if element.length != 0
-            @hide()
-            return
+    #     element = target.closest(@negativeButton)
+    #     if element.length != 0
+    #         @hide()
+    #         return
 
-        element = target.closest(@positiveButton)
-        if element.length != 0
-            @_saveClient()
-            return
+    #     element = target.closest(@positiveButton)
+    #     if element.length != 0
+    #         @_saveClient()
+    #         return
 
 
-    
-    _saveClient: () ->
+    negativeAction: () ->
+        @hide()
+
+    positiveAction: () ->
         valid       = true
         phoneValid  = true
         mobileValid = true
@@ -180,4 +166,4 @@ class @CreateClientDialog
         EventUtils.triggerCreatedNewClient(response.data)
 
     _saveClientError: (response) ->
-        FloatingMessage.error(response.message)
+        FloatingMessage.error("Korisnik nije uspesno kreiran, pokusajte ponovo.")

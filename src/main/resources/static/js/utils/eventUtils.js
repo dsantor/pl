@@ -5,6 +5,8 @@
 
     EventUtils.NEW_CLIENT_IS_CREATED = 'NEW_CLIENT_IS_CREATED';
 
+    EventUtils.NEW_USER_IS_CREATED = 'NEW_USER_IS_CREATED';
+
     EventUtils.triggerEvent = function(eventName, data) {
       return $(document).trigger(eventName, data);
     };
@@ -17,6 +19,9 @@
       return $(document).off(eventName, handler);
     };
 
+
+    /* Client */
+
     EventUtils.triggerCreatedNewClient = function(client) {
       return this.triggerEvent(EventUtils.NEW_CLIENT_IS_CREATED, client);
     };
@@ -26,7 +31,22 @@
     };
 
     EventUtils.unbindCreatedNewClient = function(handler) {
-      return this.bindEventHandler(EventUtils.NEW_CLIENT_IS_CREATED, handler);
+      return this.unbindEventHandler(EventUtils.NEW_CLIENT_IS_CREATED, handler);
+    };
+
+
+    /* User */
+
+    EventUtils.triggerCreatedNewUser = function(client) {
+      return this.triggerEvent(EventUtils.NEW_USER_IS_CREATED, client);
+    };
+
+    EventUtils.bindCreatedNewUser = function(handler) {
+      return this.bindEventHandler(EventUtils.NEW_USER_IS_CREATED, handler);
+    };
+
+    EventUtils.unbindCreatedNewUser = function(handler) {
+      return this.unbindEventHandler(EventUtils.NEW_USER_IS_CREATED, handler);
     };
 
     return EventUtils;

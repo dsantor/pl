@@ -35,14 +35,11 @@
         case '#users':
           this.currentPage = new UserPage();
           break;
-        case '#create-user':
-          this.currentPage = new CreateUserPage(this.container);
-          break;
         case '#clients':
-          this.currentPage = new ClientsPage(this.container);
+          this.currentPage = new ClientsPage();
           break;
         case '#bids':
-          this.currentPage = new BidsPage(this.container);
+          this.currentPage = new BidsPage();
           break;
         default:
           this._redirectToErrorPage();

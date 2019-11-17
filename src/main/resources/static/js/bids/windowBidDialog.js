@@ -41,6 +41,6 @@
 
     return WindowBidDialog;
 
-  })(this.AbstractBidDialog);
+  })(this.AbstractDialog);
 
 }).call(this);

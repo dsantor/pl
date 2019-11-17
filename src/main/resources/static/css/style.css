@@ -10106,10 +10106,11 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 .side-dialog[visibility=true] {
-  position: absolute;
+  position: fixed;
   display: block;
   width: 100%;
   transition: all 0.5s cubic-bezier(0.26, 0.49, 0.96, 0.72);
+  overflow: auto;
 }
 
 .side-dialog[visibility=false] {
@@ -10143,7 +10144,8 @@ body {
   top: 13%;
   transform: translateX(-50%);
   word-break: break-word;
-  width: 237px;
+  min-width: 30%;
+  max-width: 50%;
   z-index: 100;
 }
 
@@ -10450,3 +10452,56 @@ span.span-a:hover {
   height: 336px;
 }
 
+.blue-color {
+  color: #fff;
+  background-color: #4199e3;
+  border-color: #4199e3;
+}
+
+/* .blue-color .nav-link {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.blue-color .nav-link.active {
+  color: rgba(255, 255, 255, 1) !important;
+} */
+
+/* .blue-color.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.5);
+} */
+
+
+.blue-color.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.blue-color.navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.blue-color.navbar-dark .navbar-nav .show > .nav-link,
+.blue-color.navbar-dark .navbar-nav .active > .nav-link,
+.blue-color.navbar-dark .navbar-nav .nav-link.show,
+.blue-color.navbar-dark .navbar-nav .nav-link.active {
+  color: #fff;
+  font-weight: 600;
+}
+.blue-color.navbar-dark .navbar-nav .nav-link.disabled {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+
+html {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  position: fixed;
+}
+
+.scroll-body {
+  overflow: auto;
+  height: 100%;
+  width: 100%;
+  display: block;
+  position: fixed;
+}

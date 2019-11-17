@@ -32,6 +32,10 @@
       return this.hide();
     };
 
+    AbstractBidDialog.prototype._templateWrapperHTML = function() {
+      return "<div class=''></div>";
+    };
+
     AbstractBidDialog.prototype._templateHTML = function() {};
 
     AbstractBidDialog.prototype._clickEventHandler = function(event) {

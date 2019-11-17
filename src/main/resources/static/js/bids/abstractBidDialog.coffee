@@ -27,6 +27,8 @@ class @AbstractBidDialog
     cancel: () ->
         @hide()
 
+    _templateWrapperHTML: () ->
+        return "<div class=''></div>"
     _templateHTML: () ->
 
     _clickEventHandler: (event) ->

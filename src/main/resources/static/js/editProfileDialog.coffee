@@ -8,7 +8,7 @@ class @EditProfileDialog
         @container.on 'click', @clickEvent
 
     
-    show: (user) ->
+    show: (@parentController, user) ->
         
         # @container.addClass('show')
         @container.attr('visibility', true)
@@ -100,14 +100,18 @@ class @EditProfileDialog
             phoneNumber : phoneNumber
             password    : password
         }
-        UserService.changeUserInfo(data, null, this, @_saveSuccess, @_saveError);
+
+        if @parentController and @parentController.editProfileDialogSuccess
+            @parentController.editProfileDialogSuccess(data)
+        UserService.changeUserInfo(data, null, this, @_saveSuccess, @_saveError)
+        @hide()
 
 
     destroy: () ->
         @container.off('click', @clickEvent)
         @clickEvent = null
-        @container = null
         @template = null
+        @parentController = null
 
     _html: () ->
         "<div class='col-7 m-auto h-75 pt-5 flex'>
@@ -180,8 +184,6 @@ class @EditProfileDialog
 
     _saveSuccess: (data) ->
         FloatingMessage.success(data.message)
-        @hide()
 
     _saveError: (data) ->
         FloatingMessage.error(data.message)
-        @hide()

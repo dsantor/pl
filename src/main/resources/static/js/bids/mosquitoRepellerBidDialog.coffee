@@ -1,4 +1,4 @@
-class @MosquitoRepellentBidDialog extends @AbstractBidDialog
+class @MosquitoRepellerBidDialog extends @AbstractDialog
 
     constructor: () ->
         super()

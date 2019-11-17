@@ -1,4 +1,4 @@
-class @WindowBidDialog extends @AbstractBidDialog
+class @WindowBidDialog extends @AbstractDialog
 
     constructor: () ->
         super()

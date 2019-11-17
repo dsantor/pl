@@ -3,44 +3,44 @@
   var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
-  this.MosquitoRepellentBidDialog = (function(superClass) {
-    extend(MosquitoRepellentBidDialog, superClass);
+  this.MosquitoRepellerBidDialog = (function(superClass) {
+    extend(MosquitoRepellerBidDialog, superClass);
 
-    function MosquitoRepellentBidDialog() {
-      MosquitoRepellentBidDialog.__super__.constructor.call(this);
+    function MosquitoRepellerBidDialog() {
+      MosquitoRepellerBidDialog.__super__.constructor.call(this);
     }
 
-    MosquitoRepellentBidDialog.prototype.show = function() {
-      return MosquitoRepellentBidDialog.__super__.show.call(this);
+    MosquitoRepellerBidDialog.prototype.show = function() {
+      return MosquitoRepellerBidDialog.__super__.show.call(this);
     };
 
-    MosquitoRepellentBidDialog.prototype.hide = function() {
-      return MosquitoRepellentBidDialog.__super__.hide.call(this);
+    MosquitoRepellerBidDialog.prototype.hide = function() {
+      return MosquitoRepellerBidDialog.__super__.hide.call(this);
     };
 
-    MosquitoRepellentBidDialog.prototype.destroy = function() {
-      return MosquitoRepellentBidDialog.__super__.destroy.call(this);
+    MosquitoRepellerBidDialog.prototype.destroy = function() {
+      return MosquitoRepellerBidDialog.__super__.destroy.call(this);
     };
 
-    MosquitoRepellentBidDialog.prototype.save = function() {
+    MosquitoRepellerBidDialog.prototype.save = function() {
       this._collectDataFromForm();
-      return MosquitoRepellentBidDialog.__super__.save.call(this);
+      return MosquitoRepellerBidDialog.__super__.save.call(this);
     };
 
-    MosquitoRepellentBidDialog.prototype.cancel = function() {
-      return MosquitoRepellentBidDialog.__super__.cancel.call(this);
+    MosquitoRepellerBidDialog.prototype.cancel = function() {
+      return MosquitoRepellerBidDialog.__super__.cancel.call(this);
     };
 
-    MosquitoRepellentBidDialog.prototype._collectDataFromForm = function() {
+    MosquitoRepellerBidDialog.prototype._collectDataFromForm = function() {
       return this.doorType = $('.js--door--type');
     };
 
-    MosquitoRepellentBidDialog.prototype._templateHTML = function() {
+    MosquitoRepellerBidDialog.prototype._templateHTML = function() {
       return "<div class='form-group form-inline header'> <div> <img src='https://www.dakiplast.rs/wp-content/uploads/2017/05/logo-small-01-300x75.png' style='max-width: 50%;'> </div> <div > <button class='cbtn btn-light " + ComponentsUtils.NEGATIVE_BUTTON + "' value='Izmeni'>Otkazi</button> <button class='cbtn  btn-primary " + ComponentsUtils.POSITIVE_BUTTON + "' value='Izmeni'>Sacuvaj</button> </div> </div> <div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta komarnika</label> <select> <option selected>---</option> <option>Fiksni</option> <option>Rolo</option> </select> </div> <div class='form-group'> <label>Tip komarnika</label> <select> <option selected>---</option> <option>Vrata</option> <option>Rolo</option> </select> </div> <div class='form-group'> <label>Strana otvora</label> <select> <option selected>---</option> <option>Levi otvor</option> <option>Desni otvor</option> </select> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Sirina</label> <input type='number' class='form-control' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Visina</label> <input type='number' class='form-control' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Unutrasnja sirina</label> <input type='number' class='form-control' placeholder='cm'> </div> </div> </div> </div>";
     };
 
-    return MosquitoRepellentBidDialog;
+    return MosquitoRepellerBidDialog;
 
-  })(this.AbstractBidDialog);
+  })(this.AbstractDialog);
 
 }).call(this);

@@ -3,19 +3,18 @@
   this.UserPage = (function() {
     function UserPage() {
       this.container = $('.js--page--container');
-      UserService.loadUsersTemplate(null, this, this._loadUsersTemplateSucess, null);
       this.clickEvent = this._clickEventHandler.bind(this);
       this.container.on('click', this.clickEvent);
+      UserService.getUsers(null, this, this._getUsersSuccess, this._getUsersError);
+      this.createdNewUser = this._createdNewUser.bind(this);
+      EventUtils.bindCreatedNewUser(this.createdNewUser);
       this.users = [];
       this.userDetailsDialog = new UserDetailsDialog();
+      this.crateUserDialog = new CreateUserDialog();
     }
 
     UserPage.prototype.getPageTitle = function() {
       return 'Users';
-    };
-
-    UserPage.prototype._loadUsersTemplateSucess = function(template) {
-      return UserService.getUsers(null, this, this._getUsersSuccess, this._getUsersError);
     };
 
     UserPage.prototype._getUsersSuccess = function(data) {
@@ -35,7 +34,7 @@
       var adminOptionsHtml, firstName, i, lastName, len, phoneNumber, rowHtml, tableHtml, u;
       adminOptionsHtml = "";
       if (window.isAdmin) {
-        adminOptionsHtml = "<nav class='nav justify-content-end pt-5 pb-3'> <a href='#create-user' class='nav-item nav-link active'>Dodaj korisnika</a> </nav> <th class='table-text w-10'>Profil</th>";
+        adminOptionsHtml = "<nav class='nav justify-content-end pt-3'> <span class='nav-link span-a js--create--user'>Dodaj korisnika</span> </nav> <th class='table-text w-10'>Profil</th>";
       }
       tableHtml = "<div> <table class='table mb-0'> <tr> " + adminOptionsHtml + " <th class='table-text w-20'>Ime</th> <th class='table-text w-20'>Prezime</th> <th class='table-text w-20'>Telefon</th> <th class='table-text w-30'>Email</th> </tr> </table> <table class='table table-striped'>";
       rowHtml = "";
@@ -63,8 +62,14 @@
     UserPage.prototype.show = function() {};
 
     UserPage.prototype.destroy = function() {
-      this.container.off('click', this._clickEventHandler);
+      this.container.off('click', this.clickEvent);
       this.clickEvent = null;
+      this.userDetailsDialog.destroy();
+      this.userDetailsDialog = null;
+      this.crateUserDialog.destroy();
+      this.crateUserDialog = null;
+      EventUtils.unbindCreatedNewUser(this.createdNewUser);
+      this.createdNewUser = null;
       this.container.html('');
       return this.users = null;
     };
@@ -82,7 +87,7 @@
       targetElement = $(e.target);
       element = targetElement.closest('.js--create--user');
       if (element.length > 0) {
-        window.location.hash = 'create-user';
+        this.crateUserDialog.show();
         return;
       }
       element = targetElement.closest('.js--show--user');
@@ -122,6 +127,11 @@
 
     UserPage.prototype._removeUserError = function(response) {
       return console.error(response);
+    };
+
+    UserPage.prototype._createdNewUser = function(event, user) {
+      this.users.push(user);
+      return this._renderUsers(this.users);
     };
 
     return UserPage;

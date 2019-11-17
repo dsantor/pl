@@ -70,7 +70,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		 .defaultSuccessUrl("/homepage")
 		 .usernameParameter("username")
 		 .passwordParameter("password")
-		 .and().logout()
+		 .and().logout().invalidateHttpSession(true)
 		 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 		 .logoutSuccessUrl("/login?logout").permitAll().and().exceptionHandling()
 		 .accessDeniedPage("/error-404");

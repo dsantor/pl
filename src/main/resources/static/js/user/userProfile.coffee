@@ -7,7 +7,7 @@ class @UserProfile
         @editProfilePage = new EditProfileDialog()
 
         @clickEvent = @_clickEventHandler.bind(this)
-        $(window).on 'click', @clickEvent
+        @container.on 'click', @clickEvent
 
         UserService.loadProfileTemplate(null, this, @_loadProfileTemplateSucess, null)
 
@@ -16,16 +16,20 @@ class @UserProfile
 
     
     destroy: () ->
+        @container.off 'click', @clickEvent
+        @clickEvent = null
+
+        @loggedUser = null
+        @editProfilePage.destroy()
+        @editProfilePage = null
         @container.html('')
-        @container = null
-        
 
     _clickEventHandler: (event) ->
         target = $(event.target)
 
         element = target.closest('.js--edit--profile')
         if element.length != 0
-            @editProfilePage.show(@loggedUser)
+            @editProfilePage.show(this, @loggedUser)
             return
 
     _loadProfileTemplateSucess: (template) ->
@@ -51,3 +55,8 @@ class @UserProfile
         @street.text(user.street)
         @city.text(user.city)
         @buildNumber.text(user.buildNumber)
+
+    
+    editProfileDialogSuccess: (user) ->
+        @loggedUser = user
+        @_getUserSuccess(@loggedUser)

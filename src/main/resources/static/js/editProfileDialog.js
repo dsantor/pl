@@ -8,7 +8,8 @@
       this.container.on('click', this.clickEvent);
     }
 
-    EditProfileDialog.prototype.show = function(user) {
+    EditProfileDialog.prototype.show = function(parentController, user) {
+      this.parentController = parentController;
       this.container.attr('visibility', true);
       this.container.html(this.template);
       this.negativeButton = this.container.find("." + ComponentsUtils.NEGATIVE_BUTTON);
@@ -91,14 +92,18 @@
         phoneNumber: phoneNumber,
         password: password
       };
-      return UserService.changeUserInfo(data, null, this, this._saveSuccess, this._saveError);
+      if (this.parentController && this.parentController.editProfileDialogSuccess) {
+        this.parentController.editProfileDialogSuccess(data);
+      }
+      UserService.changeUserInfo(data, null, this, this._saveSuccess, this._saveError);
+      return this.hide();
     };
 
     EditProfileDialog.prototype.destroy = function() {
       this.container.off('click', this.clickEvent);
       this.clickEvent = null;
-      this.container = null;
-      return this.template = null;
+      this.template = null;
+      return this.parentController = null;
     };
 
     EditProfileDialog.prototype._html = function() {
@@ -120,13 +125,11 @@
     };
 
     EditProfileDialog.prototype._saveSuccess = function(data) {
-      FloatingMessage.success(data.message);
-      return this.hide();
+      return FloatingMessage.success(data.message);
     };
 
     EditProfileDialog.prototype._saveError = function(data) {
-      FloatingMessage.error(data.message);
-      return this.hide();
+      return FloatingMessage.error(data.message);
     };
 
     return EditProfileDialog;
