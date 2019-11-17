@@ -8,7 +8,7 @@
  https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-tabs.php
  
  */
-:root {
+ :root {
   --blue: #007bff;
   --indigo: #6610f2;
   --purple: #6f42c1;
@@ -2001,6 +2001,7 @@ textarea.form-control {
 
 .form-group {
   margin-bottom: 1rem;
+  background-color: white;
 }
 
 .form-text {
@@ -2380,6 +2381,7 @@ textarea.form-control {
   }
 }
 
+select,
 .btn {
   display: inline-block;
   font-weight: 400;
@@ -2424,7 +2426,7 @@ fieldset:disabled a.btn {
   pointer-events: none;
 }
 
-.btn-primary {
+/* .btn-primary {
   color: #fff;
   background-color: #007bff;
   border-color: #007bff;
@@ -2434,7 +2436,7 @@ fieldset:disabled a.btn {
   color: #fff;
   background-color: #0069d9;
   border-color: #0062cc;
-}
+} */
 
 .btn-primary:focus, .btn-primary.focus {
   box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
@@ -10093,15 +10095,192 @@ a.text-dark:hover, a.text-dark:focus {
 	background-size: 24px;
 }
 
+.side-dialog {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 0px;
+  height: 100vh;
+  background-color: white;
+  z-index: 100;
+}
+
+.side-dialog[visibility=true] {
+  position: absolute;
+  display: block;
+  width: 100%;
+  transition: all 0.5s cubic-bezier(0.26, 0.49, 0.96, 0.72);
+}
+
+.side-dialog[visibility=false] {
+  display: block;
+  width: 0%;
+  transition: all 0.5s cubic-bezier(0.26, 0.49, 0.96, 0.72);
+}
+
+body {
+  position: relative;
+  height: 100vh;
+}
+
+.flex {
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.hide {
+	display: none;
+}
+
+
+.floating-message {
+  border-radius: 7px;
+  color: white;
+  left: 50%;
+  padding: 1rem 30px;
+  position: absolute;
+  text-align: center;
+  top: 13%;
+  transform: translateX(-50%);
+  word-break: break-word;
+  width: 237px;
+  z-index: 100;
+}
+
+.floating-message[visibility=true] {
+  display: block;
+}
+
+.floating-message[visibility=false] {
+  display: none;
+}
+
+select {
+    color: #495057;
+    width: 100%;
+    border: 1px solid #ced4da;
+}
+
+
+.cbtn {
+    text-align: center;
+    padding: .3rem 2rem;
+    font-size: 1rem;
+    margin: .1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    border-width: 0px;
+
+}
+
+.header {
+    border-bottom: 1px solid #ced4da;
+    padding: 0.3rem;
+    position: relative;
+    right: 0;
+    justify-content: space-between;
+    /* border-bottom: 1px solid #ced4da;
+    padding: 0.3rem;
+    position: fixed;
+    right: 0;
+    justify-content: space-between;
+    width: 100%;
+    background-color: white;
+    z-index: 100; */
+}
+
+.wh-10 {
+    width: 10ch;
+}
+
+
+label.left-label {
+  display: block;
+  align-items: left;
+  margin-bottom: 0;
+}
+
+.container-padding {
+  padding: 0px 0px 10% 0px;
+}
+
+.dialog-title {
+  font-variant: all-small-caps;
+  padding-left: 1rem;
+}
+
+
+.btn-primary {
+  color: #fff;
+  background-color: #4199e1;
+  border-color: #4199e1;
+}
+
+.btn-primary:hover {
+  color: #fff;
+  background-color: #2d79db;
+  border-color: #2d79db;
+}
+
+
+/* CUSTOM */
+.w-5 {
+  width: 5% !important;
+}
+
+.w-10 {
+  width: 10% !important;
+}
+
+.w-15 {
+  width: 15% !important;
+}
+
+.w-20 {
+  width: 20% !important;
+}
+
+
+.table-text {
+	overflow: hidden;
+	text-overflow: ellipsis;
+ 	white-space: nowrap;
+ 	width: 20%;
+ 	max-width: 20%;
+}
+
+
+.block-icon {
+    position: relative;
+    display: block;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+	background: url(../images/block.svg);
+	background-repeat: no-repeat;
+	background-size: 24px;
+}
+
+.remove-icon {
+    position: relative;
+    display: block;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+	background: url(../images/remove.svg);
+	background-repeat: no-repeat;
+	background-size: 24px;
+}
+
 .profile-icon {
   position: relative;
   display: block;
   width: 24px;
   height: 24px;
   cursor: pointer;
-background: url(../images/profile.svg);
-background-repeat: no-repeat;
-background-size: 24px;
+  background: url(../images/profile.svg);
+  background-repeat: no-repeat;
+  background-size: 24px;
 }
 
 .profile-image {
@@ -10117,12 +10296,28 @@ background-size: 24px;
 .profile-edit {
 	position: absolute;
 	width: 25px;
-    height: 25px;
-    right: 0;
-    cursor: pointer;
+  height: 25px;
+  right: 0;
+  cursor: pointer;
 	background: url(../images/edit.png);
 	background-repeat: no-repeat;
-  	background-size: 25px;
+  background-size: 25px;
+}
+.search-icon {
+  background-image: url(../images/search.svg);
+  background-repeat: no-repeat;
+	background-size: 24px;
+}
+
+.client-details-icon {
+  position: relative;
+  display: block;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  background: url(../images/clientDetails.png);
+  background-repeat: no-repeat;
+  background-size: 30px;
 }
 
 .side-dialog {
@@ -10138,6 +10333,7 @@ background-size: 24px;
 .side-dialog[visibility=true] {
   display: block;
   width: 100%;
+  height: 100vh;
   left:0px;
   /* transition: all 0.5s cubic-bezier(0.26, 0.49, 0.96, 0.72); */
   transition: all 0.5s ease-in-out;
@@ -10217,11 +10413,6 @@ body {
 }
 
 
-.search-icon {
-  background-image: url(../images/search.svg);
-  background-repeat: no-repeat;
-	background-size: 24px;;
-}
 
 
 .d-block {
@@ -10242,7 +10433,20 @@ body {
 	cursor: pointer;
 }
 
-.justify-content {
-  justify-content: center;
+
+span.span-a {
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+}
+  
+span.span-a:hover {
+    color: #0056b3;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.h-336 {
+  height: 336px;
 }
 

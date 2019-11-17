@@ -1,15 +1,57 @@
 package com.dakiplast.entities;
 
-public class Client {
-	
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
+import com.dakiplast.entities.interfaces.IClient;
+
+@Entity
+@Table(name = "clients")
+@NamedQueries({
+	@NamedQuery( name = "Client.findAll", query = "Select c from Client c"),
+	@NamedQuery( name = "Client.findById", query = "Select c from Client c where client_id =: client_id"),
+	@NamedQuery( name = "Client.findByEmail", query = "Select c from Client c where email =: email")
+})
+public class Client implements IClient, Serializable {
+		
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "user_id")
 	private Long id;
+	
+	@Column(name = "first_name")
 	private String firstName;
+	
+	@Column(name = "last_name")
 	private String lastName;
+	
+	@Column(name = "street")
 	private String street;
+	
+	@Column(name = "city")
 	private String city;
+	
+	@Column(name = "build_number")
 	private String buildNumber;
+	
+	@Column(name = "email")
 	private String email;
+	
+	@Column(name = "phone_number")
 	private String phoneNumber;
+	
+//	@Column(name = "mobile_number")
+//	private String mobileNumber;
 	
 	public Long getId() {
 		return id;
@@ -59,4 +101,10 @@ public class Client {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+//	public String getMobileNumber() {
+//		return mobileNumber;
+//	}
+//	public void setMobileNumber(String mobileNumber) {
+//		this.mobileNumber = mobileNumber;
+//	}
 }

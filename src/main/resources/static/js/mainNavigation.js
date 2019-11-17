@@ -6,6 +6,8 @@
       this.pageTitle = $('.js--page--title');
       this.navigationBar = $('.js--nav--bar');
       this.container = $('.js--page--container');
+      this.mainNavigation = $('.js--main--navigation');
+      this.mainNavigation.on('click', this._mainNavigationHandler.bind(this));
       this._restrictPage();
       $(window).on('hashchange', this._hashChangedHandler.bind(this));
       if (window.location.hash === '') {
@@ -70,6 +72,10 @@
     MainNavigation.prototype._redirectToErrorPage = function() {
       window.location.hash = '';
       return window.location.pathname = "/error-404";
+    };
+
+    MainNavigation.prototype._mainNavigationHandler = function(event) {
+      return this.mainNavigation.toggleClass('open');
     };
 
     return MainNavigation;

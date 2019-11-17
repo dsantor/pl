@@ -5,6 +5,9 @@ class @MainNavigation
         @pageTitle = $('.js--page--title')
         @navigationBar = $('.js--nav--bar')
         @container = $('.js--page--container')
+
+        @mainNavigation = $('.js--main--navigation')
+        @mainNavigation.on 'click', @_mainNavigationHandler.bind(this)
 		
         @_restrictPage()
 
@@ -67,6 +70,9 @@ class @MainNavigation
     _redirectToErrorPage: () ->
         window.location.hash     = '';
         window.location.pathname = "/error-404";
-		
+	
+    _mainNavigationHandler: (event) ->
+        @mainNavigation.toggleClass('open')
+
 $(document).ready ->
     new MainNavigation()

@@ -22,4 +22,11 @@ public class Validation {
 		Matcher matcher = pattern.matcher(phone);
 		return matcher.find();
 	}
+	
+	public static boolean isEmptyString(String value) {
+		if (value == null || value.isEmpty()) {
+			return true;
+		}
+		return false;
+	}
 }

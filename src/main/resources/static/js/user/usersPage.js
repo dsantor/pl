@@ -35,8 +35,7 @@
       var adminOptionsHtml, firstName, i, lastName, len, phoneNumber, rowHtml, tableHtml, u;
       adminOptionsHtml = "";
       if (window.isAdmin) {
-        this._renderSubmenuActions();
-        adminOptionsHtml = "<th class='table-text w-10'>Profil</th>";
+        adminOptionsHtml = "<nav class='nav justify-content-end pt-5 pb-3'> <a href='#create-user' class='nav-item nav-link active'>Dodaj korisnika</a> </nav> <th class='table-text w-10'>Profil</th>";
       }
       tableHtml = "<div> <table class='table mb-0'> <tr> " + adminOptionsHtml + " <th class='table-text w-20'>Ime</th> <th class='table-text w-20'>Prezime</th> <th class='table-text w-20'>Telefon</th> <th class='table-text w-30'>Email</th> </tr> </table> <table class='table table-striped'>";
       rowHtml = "";
@@ -46,13 +45,13 @@
         lastName = u.lastName || '/';
         phoneNumber = u.phoneNumber || '/';
         if (window.isAdmin) {
-          adminOptionsHtml = "<td class='table-text w-10'><span class='profile-icon ml-3 js--show--user' data-user-id=" + u.id + "></span></td>";
+          adminOptionsHtml = "<td class='table-text w-10'><span class='profile-icon js--show--user' data-user-id=" + u.id + "></span></td>";
         }
         rowHtml = "<tr class='js--user--row' data-user-id=" + u.id + "> " + adminOptionsHtml + " <td class='table-text w-20'>" + firstName + "</td> <td class='table-text w-20'>" + lastName + "</td> <td class='table-text w-20'>" + phoneNumber + "</td> <td class='table-text w-30'>" + u.email + "</td> </tr>";
         tableHtml += rowHtml;
       }
       tableHtml += "</table></div>";
-      return this.container.append(tableHtml);
+      return this.container.html(tableHtml);
     };
 
     UserPage.prototype._renderEmptyState = function() {

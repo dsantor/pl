@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -70,11 +71,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		 .usernameParameter("username")
 		 .passwordParameter("password")
 		 .and().logout()
-		 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-		 .logoutSuccessUrl("/login").permitAll().and().exceptionHandling()
-		 .accessDeniedPage("/error-404");
+		 .logoutUrl("/j_spring_boot_logout")
+//		 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+		 .logoutSuccessUrl("/login?logout").permitAll()
+//		 .deleteCookies(Authcoo)//.invalidateHttpSession(true).and().exceptionHandling()
+//		 .accessDeniedPage("/error-404")
+		 .and().exceptionHandling().accessDeniedPage("/error-404")
+		 .and()
+		 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		 .maximumSessions(1).maxSessionsPreventsLogin(false)
+		 .expiredUrl("/login?logout"); 
 
-//		http
+//		http  
 //			.authorizeRequests()
 //			.antMatchers(publicRoutes).permitAll()
 //			.antMatchers(adminRoutes).hasAnyRole("USER").anyRequest().authenticated()
@@ -92,7 +100,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //        .logout().permitAll();
 
 	}
-
+ 
 	@Override
 	public void configure(WebSecurity web) {
 		web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
