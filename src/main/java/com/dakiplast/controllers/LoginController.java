@@ -52,10 +52,10 @@ public class LoginController {
 				model.addAttribute("isAdmin", user.getRole().equals(RolesEnum.ROLE_ADMIN));
 				model.addAttribute("id", user.getId());
 			}
-			return "homepage.html";
+		
 		}
 		
-		return "redirect:/j_spring_boot_logout"; 
+		return "homepage.html";
 		
 	}
 

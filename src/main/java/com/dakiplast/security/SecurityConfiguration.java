@@ -71,16 +71,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		 .usernameParameter("username")
 		 .passwordParameter("password")
 		 .and().logout()
-		 .logoutUrl("/j_spring_boot_logout")
-//		 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-		 .logoutSuccessUrl("/login?logout").permitAll()
-//		 .deleteCookies(Authcoo)//.invalidateHttpSession(true).and().exceptionHandling()
-//		 .accessDeniedPage("/error-404")
-		 .and().exceptionHandling().accessDeniedPage("/error-404")
-		 .and()
-		 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		 .maximumSessions(1).maxSessionsPreventsLogin(false)
-		 .expiredUrl("/login?logout"); 
+		 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+		 .logoutSuccessUrl("/login?logout").permitAll().and().exceptionHandling()
+		 .accessDeniedPage("/error-404");
 
 //		http  
 //			.authorizeRequests()
