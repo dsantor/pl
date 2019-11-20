@@ -16,7 +16,11 @@
             return callBackFunction.call(callbackContext, data);
           }
         },
-        error: function(data) {
+        error: function(jqXHR, textStatus, errorThrown) {
+          if (jqXHR.status === 401 || jqXHR.status === 400) {
+            location.reload();
+            return;
+          }
           if (callbackError) {
             return callbackError.call(callbackContext, data);
           }

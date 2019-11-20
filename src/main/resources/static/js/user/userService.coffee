@@ -1,35 +1,35 @@
 class @UserService
 
     @loadProfileTemplate: (onTheFlyData, callbackContext, callBackFunction, callbackError) ->
-        url = '/templates/userProfile'
+        url = '../templates/userProfile'
         AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)
 
     @loadCreateUserTemplate: (onTheFlyData, callbackContext, callBackFunction, callbackError) ->
-        url = '/templates/createUser'
+        url = '../templates/createUser'
         AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)
 
     @loadEditProfileTemplate: (onTheFlyData, callbackContext, callBackFunction, callbackError) ->
-        url = '/templates/editProfile'
+        url = '../templates/editProfile'
         AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)
 
     @getUser: (userId, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
-        url = '/user/' + userId
+        url = '../api/user/' + userId
         AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)
 
     @getUsers: (onTheFlyData, callbackContext, callBackFunction, callbackError) ->
-        url = '/user/all'
+        url = '../api/user/all'
         AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)
 
     @changeUserInfo: (data, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
-        url = '/user/update'
+        url = '../api/user/update'
         AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError)
     
     @save: (data, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
-        url = '/user/save'
+        url = '../api/user/save'
         AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError)
     
 
     @remove: (userId, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
-        url = '/user/remove/' + userId
+        url = '../api/user/remove/' + userId
         AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)
 

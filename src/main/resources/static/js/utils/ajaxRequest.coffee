@@ -10,7 +10,10 @@ class @AjaxRequest
                     callbackError.call(callbackContext, data)
                 if callBackFunction
             	    callBackFunction.call(callbackContext, data)
-            error: (data) -> 
+            error: (jqXHR, textStatus, errorThrown) -> 
+                if jqXHR.status == 401 || jqXHR.status == 400
+                    location.reload()
+                    return
                 if callbackError
                     callbackError.call(callbackContext, data)
         });
@@ -28,6 +31,9 @@ class @AjaxRequest
                 if callBackFunction
             	    callBackFunction.call(callbackContext, data)
             error: () -> 
+                if jqXHR.status == 401 || jqXHR.status == 400
+                    location.reload()
+                    return
                 if callbackError
                     callbackError.call(callbackContext, data)
         });

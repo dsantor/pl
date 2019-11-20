@@ -5,19 +5,19 @@
 
     ClientService.getAll = function(onTheFlyData, callbackContext, callBackFunction, callbackError) {
       var url;
-      url = '/client/all';
+      url = '../api/client/all';
       return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
     };
 
     ClientService.save = function(data, onTheFlyData, callbackContext, callBackFunction, callbackError) {
       var url;
-      url = '/client/save';
+      url = '../api/client/save';
       return AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError);
     };
 
     ClientService.getClient = function(clientId, onTheFlyData, callbackContext, callBackFunction, callbackError) {
       var url;
-      url = '/client/id/' + clientId;
+      url = '../api/client/id/' + clientId;
       return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
     };
 

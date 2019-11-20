@@ -19,7 +19,7 @@ import com.dakiplast.responses.CustomResponse;
 import com.dakiplast.services.ClientService;
 
 @Controller
-@RequestMapping("/client")
+@RequestMapping("/api/client")
 public class ClientController {
 
 	@Autowired

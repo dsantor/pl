@@ -1,14 +1,14 @@
 class @ClientService
 
     @getAll: (onTheFlyData, callbackContext, callBackFunction, callbackError) ->
-        url = '/client/all'
+        url = '../api/client/all'
         AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)
 
 
     @save: (data, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
-        url = '/client/save'
+        url = '../api/client/save'
         AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError)
 
     @getClient: (clientId, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
-        url = '/client/id/' + clientId
+        url = '../api/client/id/' + clientId
         AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)

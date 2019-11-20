@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<script>
+		window.isAdmin = [[${isAdmin}]]
+		window.loggedUserId = [[${id}]]
+	</script>
+	<title class="js--page--title">Homepage</title>
+</head>
+<body>
+<div class="scroll-body">
+
+		<!-- <div class="form-group form-inline header">
+				<div>
+					<img src="https://www.dakiplast.rs/wp-content/uploads/2017/05/logo-small-01-300x75.png" style="max-width: 50%;">
+				</div>
+				<div>
+					<button class="cbtn btn-light #{NEGATIVE_BUTTON}" value="Izmeni">Otkazi</button>
+					<button class="cbtn  btn-primary #{POSITIVE_BUTTON}" value="Izmeni">Sacuvaj</button>
+				</div>
+			</div> -->
+	<nav class="navbar navbar-expand-md navbar-dark blue-color js--nav--bar">
+			<div class="collapse navbar-collapse" id="navbarCollapse">
+				<div class="navbar-nav">
+					<a href="#profile" class="nav-item nav-link js--nav--item active" data-tab="profile">Profil</a>
+					<a href="#users" class="nav-item nav-link js--nav--item" data-tab="users">Korisnici</a>
+					<a href="#clients" class="nav-item nav-link js--nav--item" data-tab="clients">Klijenti</a>
+					<a href="#bids" class="nav-item nav-link js--nav--item" data-tab="bids">Porudzbina</a>
+				</div>
+				<div class="navbar-nav ml-auto">
+					<a href="/logout" class="nav-item nav-link">Login</a>
+				</div>
+			</div>
+		</nav>
+<div class="container js--page--container">
+
+</div>
+<div class="side-dialog js--side--dialog--container" visibility=false></div>
+
+<div class="floating-message js--floating--message" visibility=false></div>
+
+</div>
+
+<script type="text/javascript" th:src="@{/js/mainNavigation.js}"></script>
+<script type="text/javascript" th:src="@{/js/utils/ajaxRequest.js}"></script>
+<script type="text/javascript" th:src="@{/js/utils/componentsUtils.js}"></script>
+<script type="text/javascript" th:src="@{/js/utils/abstractPage.js}"></script>
+<script type="text/javascript" th:src="@{/js/utils/abstractDialog.js}"></script>
+<script type="text/javascript" th:src="@{/js/components/floatingMessage.js}"></script>
+
+<script type="text/javascript" th:src="@{/js/utils/validation.js}"></script>
+<script type="text/javascript" th:src="@{/js/utils/eventUtils.js}"></script>
+
+
+<!-- USER -->
+<script type="text/javascript" th:src="@{/js/editProfileDialog.js}"></script>
+<script type="text/javascript" th:src="@{/js/user/userService.js}"></script>
+<script type="text/javascript" th:src="@{/js/user/userProfile.js}"></script>
+<script type="text/javascript" th:src="@{/js/user/usersPage.js}"></script>
+<script type="text/javascript" th:src="@{/js/user/createUserDialog.js}"></script>
+<script type="text/javascript" th:src="@{/js/user/userDetailsDialog.js}"></script>
+
+
+<!-- CLIENTS -->
+<script type="text/javascript" th:src="@{/js/clients/clientService.js}"></script>
+<script type="text/javascript" th:src="@{/js/clients/clientsPage.js}"></script>
+<script type="text/javascript" th:src="@{/js/clients/createClientDialog.js}"></script>
+<script type="text/javascript" th:src="@{/js/clients/showClientDialog.js}"></script>
+
+<!-- BIDS -->
+<script type="text/javascript" th:src="@{/js/bids/bidsPage.js}"></script>
+<script type="text/javascript" th:src="@{/js/bids/abstractBidDialog.js}"></script>
+
+<script type="text/javascript" th:src="@{/js/bids/doorBidDialog.js}"></script>
+<script type="text/javascript" th:src="@{/js/bids/thresholdBidDialog.js}"></script>
+<script type="text/javascript" th:src="@{/js/bids/mosquitoRepellerBidDialog.js}"></script>
+
+<script type="text/javascript" th:src="@{/js/bids/windowBidDialog.js}"></script>
+<script type="text/javascript" th:src="@{/js/bids/shutterBidDialog.js}"></script>
+
+
+</body> 
+</html> 

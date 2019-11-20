@@ -12,12 +12,21 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
+	@Autowired
+	RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+	
+	@Autowired
+	CAuthenticationFailureHandler authenticationFailureHandler;
+	
+	@Autowired
+	CustomAuthenticationProvider authenticationProvider;
 	
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -43,6 +52,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //			
 			auth.inMemoryAuthentication()
 			.withUser("a").password(password).roles("ADMIN");
+			
+			auth.authenticationProvider(authenticationProvider);
 	}
 
 	@Override
@@ -52,28 +63,47 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		String[] userRoutes = new String[] {"/user/**"};
 
-		String[] adminRoutes = new String[] { "/**","/user/**", "/secure/**"}; //, "/login" , "/homepage", "/error", "/api/**", "/secure/**"
+		String[] adminRoutes = new String[] { "/api", "/pages/secure/**", "/api/**", "/user/**", "/secure/**"}; //, "/login" , "/homepage", "/error", "/api/**", "/secure/**"
+
+//		String[] publicRoutes = new String[] { "/**","/error"}; // "/login" , "/homepage", 
+//
+//		String[] userRoutes = new String[] {"/user/**"};
+//
+//		String[] adminRoutes = new String[] { "/api/**", "/pages/**"}; //, "/login" , "/homepage", "/error", "/api/**", "/secure/**"
+		
 		
 		 http
 		 .authorizeRequests()
+//		 .antMatchers("/**").hasRole("ANONYMOUS")
 		 .antMatchers(publicRoutes).permitAll()
-		 .antMatchers(adminRoutes).hasRole("ADMIN") //.access("hasRole('ADMIN')")
 		 .antMatchers(userRoutes).hasRole("USER")//.access("hasRole('USER')")
+		 .antMatchers(adminRoutes).hasRole("ADMIN") //.access("hasRole('ADMIN')")
 		 .anyRequest()
 		 .authenticated()
 		 .and()
 		 .csrf()
 		 .disable()
 		 .formLogin().loginPage("/login").permitAll()
-//		 .successHandler(authenticationSuccessHandler)
-		 .failureUrl("/login?error")
-		 .defaultSuccessUrl("/homepage")
+//		 .failureForwardUrl("/login?error")
+//		 .successHandler(authsucc)
+		 .successForwardUrl("/")
+		 .failureHandler(authenticationFailureHandler)
+		 .defaultSuccessUrl("/")
 		 .usernameParameter("username")
 		 .passwordParameter("password")
-		 .and().logout().invalidateHttpSession(true)
+		 .and().logout()
+		 .logoutUrl("/logout")
+		 .invalidateHttpSession(true)
 		 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 		 .logoutSuccessUrl("/login?logout").permitAll().and().exceptionHandling()
-		 .accessDeniedPage("/error-404");
+		 .accessDeniedPage("/error-404")
+		 .and()
+		 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint)
+		 .and()
+		 .sessionManagement()//.invalidSessionUrl("/loginFailed")
+		 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+		 .maximumSessions(1)
+		 .expiredUrl("/login?expired");
 
 //		http  
 //			.authorizeRequests()
@@ -98,4 +128,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) {
 		web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
 	}
+	
 }
+

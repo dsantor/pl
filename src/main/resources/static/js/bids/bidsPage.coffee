@@ -45,19 +45,19 @@ class @BidsPage
                 <div class='flex flex-row justify-content-center'>
                     <div class='item-order text-center mb-5'>
                             <div class='js--create--door'>
-                                <img class='item-order pointer' src='images/door.png'>
+                                <img class='item-order pointer' src='/images/door.png'>
                             </div>
                             <label>Vrata</label>
                         </div>
                         <div class='item-order text-center'>
                             <div class='js--create--threshold'>
-                                <img class='item-order pointer' src='images/threshold.png'>
+                                <img class='item-order pointer' src='/images/threshold.png'>
                             </div>
                             <label>Prag</label>
                         </div>
                         <div class='item-order text-center'>
                             <div class='js--create--mosquito--repeller'>
-                                <img class='item-order pointer' src='images/mosquitoRepeller.png'>
+                                <img class='item-order pointer' src='/images/mosquitoRepeller.png'>
                             </div>
                             <label>Komarnik</label>
                         </div>
@@ -65,13 +65,13 @@ class @BidsPage
                  <div class='flex flex-row justify-content-center'>
                    <div class='item-order text-center mb-5'>
                         <div class='js--create--window'>
-                            <img class='item-order pointer' src='images/window.png'>
+                            <img class='item-order pointer' src='/images/window.png'>
                         </div>
                         <label>Prozor</label>
                     </div>
                     <div class='item-order text-center'>
                         <div class='js--create--shutter'>
-                            <img class='item-order pointer' src='images/shutter.png'>
+                            <img class='item-order pointer' src='/images/shutter.png'>
                         </div>
                         <label>Roletne</label>
                     </div>

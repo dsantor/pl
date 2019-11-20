@@ -22,7 +22,7 @@ import com.dakiplast.services.UserService;
 import com.dakiplast.services.impl.SessionService;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 	
 	@Autowired
