@@ -1,54 +1,42 @@
-class @ShowClientDialog extends AbstractDialog
+class @ClientProfilePage
 
-    constructor: () ->
-        super()
-        @negativeButtonVisibility(false)
-        @positiveButtonText("Zatvori")
+    constructor: (clientId) ->
+        @container = $('.js--page--container')
 
-    show: (clientId) ->
+        # clientId = @_getClientIdFromURL()
+        @clientId = Number(clientId)
+        @client = null
         ClientService.getClient(clientId, null, this, @_loadedClient, @_loadedClientError)
-        super()
-        
-    hide: () ->
-        super()
+
+        @clickEvent = @_clickEventHandler.bind(this)
+        @container.on 'click', @clickEvent
+
+    getPageTitle: () ->
+        return 'Klijent profil'
         
     destroy: () ->
-        super()
+        @container.html('')
 
-    positiveAction: () ->
-        @hide()
-    
-    negativeAction: () ->
-        @hide()
+        @container.off 'click', @clickEvent
+        @clickEvent = null
 
-    save: () ->
-        @_collectDataFromForm()
-        super()
-
-    cancel: () ->
-        super()
-
-    _loadedClient: (response) ->
-        @client = response.data
-        profileHTML = @_generateClientProfileHTML(@client)
-        @container.append(profileHTML)
-        
-
-    _loadedClientError: (error) ->
-        console.log error
-
-    _pageClientEventHandler: (event) ->
-        target = $(event.target) 
-
-        if ComponentsUtils.closest(target, '.js--create--bids')
-            alert("h1")
+    _clickEventHandler: (event) ->
+        target = $(event.target)
+        if closest(target, '.js--create--bids')
+            window.location.hash = 'bids/'+@clientId
             return
+            
+    _getClientIdFromURL: () ->
+        hash = window.location.hash
+        return hash.substring(hash.indexOf('/'))
 
-        if ComponentsUtils.closest(target, '.js--change--color')
-            alert("h2")
-            return
+    _loadedClient:(response) ->
+        @container.html(@_templateHTML(response.data))
 
-    _generateClientProfileHTML: (client) ->
+    _loadedClientError: () ->
+        console.log 'error'
+
+    _templateHTML: (client) ->
         return "<div class='container '>
                 <nav class='nav header justify-content-end pt-3'>
                     <span class='nav-link span-a js--change--color'>Promeni oznaku</span>

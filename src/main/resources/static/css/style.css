@@ -10505,3 +10505,17 @@ html {
   display: block;
   position: fixed;
 }
+
+.tooltip .tooltip:hover {
+  display: block;
+}
+.tooltip {
+  background-color: rgba(72, 71, 72, 0.9);
+  border-radius: 5px;
+  padding-left: 5px;
+  min-width: 100px;
+  max-width: fit-content;
+  display: none;
+  position: absolute;
+  margin-top: -10px;
+}

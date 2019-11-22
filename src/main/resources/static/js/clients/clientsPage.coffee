@@ -64,17 +64,19 @@ class @ClientsPage #extends @AbstractPage
                         <th class='table-text w-15'>Ime</th>
                         <th class='table-text w-20'>Prezime</th>
                         <th class='table-text w-15'>Telefon</th>
-                        <th class='table-text w-20'>Mobilni</th>
+                        <th class='table-text w-20'>Ulica</th>
                         <th class='table-text w-20'>Email</th>
                     </tr>
                 </table>
                 <table class='table table-striped'>"
         rowHtml = ""
         for client in clients
-            firstName   = client.firstName or '/'
-            lastName    = client.lastName or '/'
-            phoneNumber = client.phoneNumber or '/'
-            mobileNumber= client.mobileNumber or '/'
+            firstName    = client.firstName or '/'
+            lastName     = client.lastName or '/'
+            phoneNumber  = client.phoneNumber or '/'
+            mobileNumber = client.mobileNumber or '/'
+            street       = client.street or '/'
+            email        = client.email or '/'
 
             rowHtml = "<tr class='js--client--row' data-client-id=#{client.id}>
                         <td class='table-text w-10'>
@@ -83,8 +85,8 @@ class @ClientsPage #extends @AbstractPage
 				        <td class='table-text w-15'>#{firstName}</td>
 				        <td class='table-text w-20'>#{lastName}</td>
                         <td class='table-text w-15'>#{phoneNumber}</td>
-                        <td class='table-text w-20'>#{mobileNumber}</td>
-                        <td class='table-text w-20'>#{client.email}</td>
+                        <td class='table-text w-20'>#{street}</td>
+                        <td class='table-text w-20'>#{email}</td>
 			        </tr>"
             
             tableHtml += rowHtml
@@ -101,7 +103,10 @@ class @ClientsPage #extends @AbstractPage
             return
 
         if @_closest(target, '.js--show--client')
-            @showClientDialog.show(target.attr('data-client-id'))
+            # @clientProfilePage = new ClientProfilePage(target.attr('data-client-id'))
+            id = target.attr('data-client-id')
+            window.location.hash = 'client/' + id
+            # @showClientDialog.show(target.attr('data-client-id'))
             return
 
 

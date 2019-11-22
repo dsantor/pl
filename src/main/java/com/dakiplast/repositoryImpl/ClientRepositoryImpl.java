@@ -12,9 +12,9 @@ import com.dakiplast.entities.Client;
 import com.dakiplast.entities.interfaces.IClient;
 import com.dakiplast.repository.ClientRepository;
 import com.dakiplast.requests.ClientRequest;
-
 @Repository
 @Transactional
+@SuppressWarnings("unchecked")
 public class ClientRepositoryImpl implements ClientRepository {
 
 	@Autowired
@@ -24,6 +24,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 	public IClient getClientById(Long id) {
 		return em.find(Client.class, id);
 	}
+
 
 	@Override
 	public List<IClient> getAll() {
@@ -40,7 +41,6 @@ public class ClientRepositoryImpl implements ClientRepository {
 		entity.setEmail(clientRequest.getEmail());
 		entity.setFirstName(clientRequest.getFirstName());
 		entity.setLastName(clientRequest.getLastName());
-//		entity.setMobileNumber(clientRequest.getMobileNumber());
 		entity.setPhoneNumber(clientRequest.getPhoneNumber());
 		entity.setStreet(clientRequest.getStreet());
 		

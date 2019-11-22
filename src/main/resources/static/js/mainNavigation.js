@@ -2,7 +2,15 @@
 (function() {
   this.MainNavigation = (function() {
     function MainNavigation() {
+      this.pageAndHash = {
+        '#profile': 'profile',
+        '#users': 'users',
+        '#clients': "clients",
+        "#bids": 'bids',
+        '#client': 'clients'
+      };
       this.currentPage = null;
+      this.pageFromTab = true;
       this.pageTitle = $('.js--page--title');
       this.navigationBar = $('.js--nav--bar');
       this.container = $('.js--page--container');
@@ -13,22 +21,29 @@
       if (window.location.hash === '') {
         this._redirectToHomepage();
       } else {
-        this._handleNavigationButtons();
-        this._openPage(window.location.hash);
+        this._handlePage();
       }
     }
 
+    MainNavigation.prototype._handlePage = function() {
+      var hashValue, tab;
+      hashValue = this._extractHashValue();
+      this._openPage(hashValue);
+      tab = this.pageAndHash[hashValue.page];
+      return this._handleNavigationButtons(tab);
+    };
+
     MainNavigation.prototype._hashChangedHandler = function(event) {
-      this._handleNavigationButtons();
       if (this.currentPage) {
         this.currentPage.destroy();
       }
-      this._openPage(window.location.hash);
+      this._handlePage();
       return document.title = this.currentPage.getPageTitle();
     };
 
     MainNavigation.prototype._openPage = function(hash) {
-      switch (hash) {
+      this.pageFromTab = true;
+      switch (hash.page) {
         case '#profile':
           this.currentPage = new UserProfile();
           break;
@@ -39,8 +54,11 @@
           this.currentPage = new ClientsPage();
           break;
         case '#bids':
-          this.currentPage = new BidsPage();
+          this.currentPage = new BidsPage(hash.value);
           break;
+        case '#client':
+          this.pageFromTab = false;
+          return this.currentPage = new ClientProfilePage(hash.value);
         default:
           this._redirectToErrorPage();
       }
@@ -54,10 +72,7 @@
       }
     };
 
-    MainNavigation.prototype._handleNavigationButtons = function(element) {
-      var tab;
-      tab = window.location.hash;
-      tab = tab.replace('#', '');
+    MainNavigation.prototype._handleNavigationButtons = function(tab) {
       $('.js--nav--item').removeClass('active');
       return $(".js--nav--item[data-tab=" + tab + "]").addClass('active');
     };
@@ -73,6 +88,23 @@
 
     MainNavigation.prototype._mainNavigationHandler = function(event) {
       return this.mainNavigation.toggleClass('open');
+    };
+
+    MainNavigation.prototype._extractHashValue = function() {
+      var dash, hash, hashObject, page, value;
+      hashObject = {};
+      hash = window.location.hash;
+      dash = hash.indexOf('/');
+      page = hash;
+      value = null;
+      if (dash > 0) {
+        page = hash.substring(0, dash);
+        value = hash.substring(dash + 1);
+      }
+      return {
+        page: page,
+        value: value
+      };
     };
 
     return MainNavigation;

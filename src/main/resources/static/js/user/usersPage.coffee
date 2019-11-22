@@ -9,8 +9,6 @@ class @UserPage #extends @AbstractPage
 
         UserService.getUsers(null, this, @_getUsersSuccess, @_getUsersError)
 
-       
-
         @createdNewUser = @_createdNewUser.bind(this)
         EventUtils.bindCreatedNewUser(@createdNewUser)
 

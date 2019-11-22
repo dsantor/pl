@@ -8,12 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/templates")
 public class TemplatesController {
 
-	@GetMapping("/userProfile")
-	public String userProfile() {
-		return "userProfile.html";
-	}
-	
-	
+		
 	@GetMapping("/createUser")
 	public String create() {
 		return "createUser.html";

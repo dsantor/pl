@@ -15,7 +15,7 @@ class @AjaxRequest
                     location.reload()
                     return
                 if callbackError
-                    callbackError.call(callbackContext, data)
+                    callbackError.call(callbackContext, 500, "Internal server error")
         });
 
     @POST: (url, data, onTheFlyData, callbackContext, callBackFunction, callbackError) ->

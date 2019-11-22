@@ -19,8 +19,8 @@ import com.dakiplast.enums.RolesEnum;
 @Entity
 @Table(name = "users")
 @NamedQueries({
-	@NamedQuery( name = "User.findAll", query = "Select u from User u where u.active = true"),
-	@NamedQuery( name = "User.findAllExcludeUser", query = "Select u from User u where u.active = true and u.id !=: userId"),
+	@NamedQuery( name = "User.findAll", query = "Select u from User u where u.deleted = true"),
+	@NamedQuery( name = "User.findAllExcludeUser", query = "Select u from User u where u.deleted = false and u.id !=: userId"),
 	@NamedQuery( name = "User.findById", query = "Select u from User u where user_id =: user_id"),
 	@NamedQuery( name = "User.findByEmail", query = "Select u from User u where email =: email")
 })
@@ -58,15 +58,17 @@ public class User implements Serializable, IUser {
 	private String password;
 	
 	@Column(name = "active")
-	private boolean active;
+	private boolean active = true;
 	
+	@Column(name = "deleted")
+	private boolean deleted = false;
+	
+	@Column(name = "created_by")
+	private Long createdBy;
 	
 	@Column(name = "role")
 	@Enumerated(EnumType.STRING)
 	private RolesEnum role;
-//	@ManyToMany(cascade = CascadeType.ALL)
-//	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-//	private Set<Role> roles;
 
 	public Long getId() {
 		return id;
@@ -153,5 +155,21 @@ public class User implements Serializable, IUser {
 
 	public void setRole(RolesEnum role) {
 		this.role = role;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public Long getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(Long createdBy) {
+		this.createdBy = createdBy;
 	}
 }

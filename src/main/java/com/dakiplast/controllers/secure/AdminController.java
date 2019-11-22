@@ -43,7 +43,7 @@ public class AdminController {
 		String email 	   = userRequest.getEmail();		
 		String password    = userRequest.getPassword();
 		
-		IUser user = userService.create(firstName, lastName, email, phoneNumber, city, street, buildNumber, password);
+		IUser user = userService.create(null, firstName, lastName, email, phoneNumber, city, street, buildNumber, password);
 		
 		return user;
 	}

@@ -2,7 +2,6 @@ package com.dakiplast.repositoryImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -18,6 +17,7 @@ import com.dakiplast.repository.UserRepository;
 
 @Repository
 @Transactional
+@SuppressWarnings("unchecked")
 public class UserRepositoryImpl implements UserRepository {
 
 	@Autowired
@@ -30,6 +30,7 @@ public class UserRepositoryImpl implements UserRepository {
 		IUser user = entityManager.find(User.class, id);
 		return user;
 	}
+
 
 	@Override
 	public User findByEmail(String email) {
@@ -79,7 +80,6 @@ public class UserRepositoryImpl implements UserRepository {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> findAll() {
 		 Query query = entityManager.createNamedQuery("User.findAll");
@@ -95,7 +95,7 @@ public class UserRepositoryImpl implements UserRepository {
 		if (entity == null) {
 			return false;
 		}
-		entity.setActive(false);
+		entity.setDeleted(true);
 		entityManager.persist(entity);
 		
 		return true;

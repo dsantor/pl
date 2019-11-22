@@ -16,10 +16,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.dakiplast.entities.User;
 import com.dakiplast.entities.interfaces.IUser;
 import com.dakiplast.enums.RolesEnum;
+import com.dakiplast.enums.UserActivityLogType;
 import com.dakiplast.requests.UserRequest;
 import com.dakiplast.responses.CustomResponse;
+import com.dakiplast.services.UserActivityLogService;
 import com.dakiplast.services.UserService;
 import com.dakiplast.services.impl.SessionService;
+import com.dakiplast.utils.Validation;
 
 @Controller
 @RequestMapping("/api/user")
@@ -27,6 +30,8 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private UserActivityLogService userActivityLogService; 
 	
 	@GetMapping("/{id}")
 	public @ResponseBody IUser getUser(@PathVariable ("id") Long id) {
@@ -62,10 +67,10 @@ public class UserController {
 	@PostMapping("/save")
 	public @ResponseBody CustomResponse save(@RequestBody UserRequest user, HttpServletRequest request) {
 		
-		Long userId = SessionService.getLoggedUserId(request);
-		IUser loggedUser = userService.getById(userId);
+		Long loggedUserId = SessionService.getLoggedUserId(request);
+		IUser loggedUser = userService.getById(loggedUserId);
 		
-		if (!RolesEnum.ROLE_ADMIN.equals(loggedUser.getRole())) {
+		if (!Validation.isAdmin(loggedUser)) {
 			return new CustomResponse(null, true, "Privilege error!");
 		}
 		
@@ -85,7 +90,13 @@ public class UserController {
 				return new CustomResponse(null, true, "Korisnik sa " + email + " vec postoji.");
 			}
 			
-			createdUser = userService.create(firstName, lastName, email, phoneNumber, city, street, buildNumber, password);
+			createdUser = userService.create(loggedUserId, firstName, lastName, email, phoneNumber, city, street, buildNumber, password);
+			
+			// Save activity
+			if (createdUser != null) {
+				userActivityLogService.create(loggedUserId, createdUser.getId(), null, UserActivityLogType.CREATED_USER);
+			}
+			
 			return new CustomResponse(createdUser, false, "Uspesno sacuvane izmene.");
 
 		}catch (Exception e) {

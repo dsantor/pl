@@ -1,4 +1,4 @@
-class @CreateUserDialog extends @AbstractDialog
+class @CreateUserDialog extends AbstractDialog
 
     constructor: () ->
         super()
@@ -13,7 +13,7 @@ class @CreateUserDialog extends @AbstractDialog
 
     show: () ->
         super()
-        @container.append(@_html())
+        
         # Inputs
         @firstName   = @container.find('.js--firstName')
         @lastName    = @container.find('.js--lastName')
@@ -44,7 +44,7 @@ class @CreateUserDialog extends @AbstractDialog
         @email          = null
         @password       = null
 
-    _html: () ->
+    _customHTML: () ->
         "<div class='col-7 m-auto h-75 pt-5 flex'>
             <div class='container w-50'>
                 <div class='form-group'>

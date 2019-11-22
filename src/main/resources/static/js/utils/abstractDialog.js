@@ -14,7 +14,7 @@
     AbstractDialog.prototype.show = function() {
       this.clickEvent = this._clickEventHandler.bind(this);
       this.container.on('click', this.clickEvent);
-      this.container.html(this._templateWrapperHTML());
+      this.container.html(this._templateHTML());
       return this.container.attr('visibility', true);
     };
 
@@ -66,13 +66,15 @@
       return this.hide();
     };
 
-    AbstractDialog.prototype._templateWrapperHTML = function() {
-      return "<div style=background-color:white;>" + (this._templateHTML()) + "</div>";
+    AbstractDialog.prototype._templateHTML = function() {
+      return "<div style=background-color:white;> <div class='form-group form-inline header'> <div> <img src='https://www.dakiplast.rs/wp-content/uploads/2017/05/logo-small-01-300x75.png' style='max-width: 50%;'> </div> <div> <button class='cbtn btn-light " + ComponentsUtils.NEGATIVE_BUTTON + " " + this.JS_NEGATIVE_BUTTON_VISIBILITY + "'> " + this.JS_NEGATIVE_BUTTON_TEXT + " </button> <button class='cbtn  btn-primary " + ComponentsUtils.POSITIVE_BUTTON + " " + this.JS_POSITIVE_BUTTON_VISIBILITY + "'> " + this.JS_POSITIVE_BUTTON_TEXT + " </button> </div> </div> </div> " + (this._customHTML());
     };
 
-    AbstractDialog.prototype._templateHTML = function() {
-      return "<div class='form-group form-inline header'> <div> <img src='https://www.dakiplast.rs/wp-content/uploads/2017/05/logo-small-01-300x75.png' style='max-width: 50%;'> </div> <div> <button class='cbtn btn-light " + ComponentsUtils.NEGATIVE_BUTTON + " " + this.JS_NEGATIVE_BUTTON_VISIBILITY + "'> " + this.JS_NEGATIVE_BUTTON_TEXT + " </button> <button class='cbtn  btn-primary " + ComponentsUtils.POSITIVE_BUTTON + " " + this.JS_POSITIVE_BUTTON_VISIBILITY + "'> " + this.JS_POSITIVE_BUTTON_TEXT + " </button> </div> </div>";
+    AbstractDialog.prototype._customHTML = function() {
+      return '';
     };
+
+    AbstractDialog.prototype._pageClientEventHandler = function(event) {};
 
     AbstractDialog.prototype._clickEventHandler = function(event) {
       var element, target;
@@ -85,7 +87,9 @@
       element = target.closest(this.JS_POSITIVE_BUTTON);
       if (element.length > 0) {
         this.positiveAction();
+        return;
       }
+      return this._pageClientEventHandler(event);
     };
 
     return AbstractDialog;

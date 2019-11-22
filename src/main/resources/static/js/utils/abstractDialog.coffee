@@ -19,7 +19,7 @@ class @AbstractDialog
         @clickEvent = @_clickEventHandler.bind(this)
         @container.on 'click', @clickEvent
 
-        @container.html(@_templateWrapperHTML())
+        @container.html(@_templateHTML())
         @container.attr('visibility', true)
 
     hide: () ->
@@ -54,22 +54,29 @@ class @AbstractDialog
     negativeAction: () ->
         @hide()
 
-    _templateWrapperHTML: () ->
-        return "<div style=background-color:white;>#{@_templateHTML()}</div>"
     _templateHTML: () ->
-        return "<div class='form-group form-inline header'>
-                    <div>
-                        <img src='https://www.dakiplast.rs/wp-content/uploads/2017/05/logo-small-01-300x75.png' style='max-width: 50%;'>
+        return "<div style=background-color:white;>
+                    <div class='form-group form-inline header'>
+                        <div>
+                            <img src='https://www.dakiplast.rs/wp-content/uploads/2017/05/logo-small-01-300x75.png' style='max-width: 50%;'>
+                        </div>
+                        <div>
+                            <button class='cbtn btn-light #{ComponentsUtils.NEGATIVE_BUTTON} #{@JS_NEGATIVE_BUTTON_VISIBILITY}'>
+                                #{@JS_NEGATIVE_BUTTON_TEXT}
+                            </button>
+                            <button class='cbtn  btn-primary #{ComponentsUtils.POSITIVE_BUTTON} #{@JS_POSITIVE_BUTTON_VISIBILITY}'>
+                                #{@JS_POSITIVE_BUTTON_TEXT}
+                            </button>
+                        </div>
                     </div>
-                    <div>
-                        <button class='cbtn btn-light #{ComponentsUtils.NEGATIVE_BUTTON} #{@JS_NEGATIVE_BUTTON_VISIBILITY}'>
-                            #{@JS_NEGATIVE_BUTTON_TEXT}
-                        </button>
-                        <button class='cbtn  btn-primary #{ComponentsUtils.POSITIVE_BUTTON} #{@JS_POSITIVE_BUTTON_VISIBILITY}'>
-                            #{@JS_POSITIVE_BUTTON_TEXT}
-                        </button>
-                    </div>
-                </div>"
+                </div>
+                #{@_customHTML()}"
+
+    _customHTML: () ->
+        return ''
+
+    _pageClientEventHandler: (event) ->
+        return
 
     _clickEventHandler: (event) ->
         target = $(event.target)
@@ -83,3 +90,5 @@ class @AbstractDialog
         if element.length > 0
             @positiveAction()
             return
+        
+        @_pageClientEventHandler(event)

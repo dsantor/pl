@@ -1,9 +1,5 @@
 class @UserService
 
-    @loadProfileTemplate: (onTheFlyData, callbackContext, callBackFunction, callbackError) ->
-        url = '../templates/userProfile'
-        AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)
-
     @loadCreateUserTemplate: (onTheFlyData, callbackContext, callBackFunction, callbackError) ->
         url = '../templates/createUser'
         AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)

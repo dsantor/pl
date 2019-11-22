@@ -3,6 +3,9 @@ package com.dakiplast.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.dakiplast.entities.interfaces.IUser;
+import com.dakiplast.enums.RolesEnum;
+
 public class Validation {
 
 	public static boolean email(String email) {
@@ -28,5 +31,9 @@ public class Validation {
 			return true;
 		}
 		return false;
+	}
+	
+	public static boolean isAdmin(IUser user) {
+		return RolesEnum.ROLE_ADMIN.equals(user.getRole());
 	}
 }

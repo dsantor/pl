@@ -18,7 +18,6 @@
       this.userId = userId;
       UserDetailsDialog.__super__.show.call(this);
       UserService.getUser(this.userId, null, this, this._getUserSuccess, null);
-      this.container.append(ComponentsUtils.userDetailsHTML());
       this.firstName = this.container.find('.js--first--name');
       this.lastName = this.container.find('.js--last--name');
       this.street = this.container.find('.js--street');
@@ -52,8 +51,8 @@
       return this.buildNumber.text(user.buildNumber);
     };
 
-    UserDetailsDialog.prototype._templateHTML = function() {
-      return UserDetailsDialog.__super__._templateHTML.call(this);
+    UserDetailsDialog.prototype._customHTML = function() {
+      return ComponentsUtils.userDetailsHTML();
     };
 
     UserDetailsDialog.prototype.positiveAction = function() {
@@ -62,6 +61,6 @@
 
     return UserDetailsDialog;
 
-  })(this.AbstractDialog);
+  })(AbstractDialog);
 
 }).call(this);

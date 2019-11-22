@@ -3,7 +3,12 @@ class @ComponentsUtils
     @POSITIVE_BUTTON = 'js--positive--button'
     @NEGATIVE_BUTTON = 'js--negative--button'
 
+    
+    @TAB_PAGES   = ['#profile', '#users', '#clients', '#bids']
+    @OTHER_PAGES = ['#client/']
 
+    window.closest = (target, closestTo) ->
+        return target.closest(closestTo).length > 0
 
     @userDetailsHTML: () ->
          return "<div class='col-7 h-75 pt-5 flex'>

@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User create(String firstName, String lastName, String email, String phoneNumber, String city, String street, String buildNumber, String password) {
+	public User create(Long createdById, String firstName, String lastName, String email, String phoneNumber, String city, String street, String buildNumber, String password) {
 		// TODO: Add validation
 		User entity = new User();
 		
@@ -45,6 +45,8 @@ public class UserServiceImpl implements UserService {
 		entity.setStreet(street);
 		entity.setBuildNumber(buildNumber);
 		entity.setActive(true);
+		entity.setDeleted(false);
+		entity.setCreatedBy(createdById);
 		entity.setPassword(bCryptPasswordEncoder.encode(password));
 		entity.setRole(RolesEnum.ROLE_USER);
 		

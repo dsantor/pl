@@ -1,7 +1,9 @@
 class @MainNavigation
     constructor: () ->
-        @currentPage = null
 
+        @pageAndHash = {'#profile': 'profile', '#users': 'users', '#clients': "clients", "#bids": 'bids', '#client': 'clients'}
+        @currentPage = null
+        @pageFromTab = true
         @pageTitle = $('.js--page--title')
         @navigationBar = $('.js--nav--bar')
         @container = $('.js--page--container')
@@ -10,28 +12,33 @@ class @MainNavigation
         @mainNavigation.on 'click', @_mainNavigationHandler.bind(this)
 		
         @_restrictPage()
-
-        $(window).on 'hashchange', @_hashChangedHandler.bind(this)
         
+        $(window).on 'hashchange', @_hashChangedHandler.bind(this)
+
         if window.location.hash == ''
         	@_redirectToHomepage()
-        else 
-            @_handleNavigationButtons()
-            @_openPage(window.location.hash)
+        else
+            @_handlePage()
+            
 
+    _handlePage: () ->
+        hashValue = @_extractHashValue()
+        @_openPage(hashValue)
+        tab = @pageAndHash[hashValue.page]
+        @_handleNavigationButtons(tab)
 
     _hashChangedHandler: (event) ->
-        @_handleNavigationButtons()
+        
         if @currentPage
             @currentPage.destroy() 
-            
-        @_openPage(window.location.hash)
+
+        @_handlePage()  
         document.title = @currentPage.getPageTitle()
 
 
     _openPage: (hash) ->
-
-        switch hash
+        @pageFromTab = true
+        switch hash.page
             when '#profile'
                 @currentPage = new UserProfile()
                 return
@@ -42,8 +49,11 @@ class @MainNavigation
                 @currentPage = new ClientsPage()
                 return
             when '#bids'
-                @currentPage = new BidsPage()
+                @currentPage = new BidsPage(hash.value)
                 return
+            when '#client'
+                @pageFromTab = false
+                @currentPage = new ClientProfilePage(hash.value)
             else
                 @_redirectToErrorPage()
                 return
@@ -54,10 +64,7 @@ class @MainNavigation
             onlyAdmin = $('.js--admin--only')
             onlyAdmin.remove()
 
-    _handleNavigationButtons: (element) ->
-        tab = window.location.hash
-        tab = tab.replace('#', '')
-
+    _handleNavigationButtons: (tab) ->
         $('.js--nav--item').removeClass('active')
         $(".js--nav--item[data-tab=#{tab}]").addClass('active')
 
@@ -71,5 +78,16 @@ class @MainNavigation
     _mainNavigationHandler: (event) ->
         @mainNavigation.toggleClass('open')
 
+    _extractHashValue: () ->
+        hashObject = {}
+        hash = window.location.hash
+        dash = hash.indexOf('/')
+        page = hash
+        value = null
+        if dash > 0
+            page = hash.substring(0, dash)
+            value = hash.substring(dash + 1) 
+        
+        return {page: page, value: value}
 $(document).ready ->
     new MainNavigation()

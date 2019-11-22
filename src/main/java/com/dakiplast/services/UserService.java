@@ -10,7 +10,7 @@ public interface UserService {
 	
 	public IUser getById(Long id);
 	
-	public User create(String firstName, String lastName, String email, String phoneNumber, String city, String street, String buildNumber, String password);
+	public User create(Long createdById, String firstName, String lastName, String email, String phoneNumber, String city, String street, String buildNumber, String password);
 	
 	public boolean update(Long userId, UserRequest entity);
 	

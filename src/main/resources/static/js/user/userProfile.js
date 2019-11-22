@@ -2,12 +2,23 @@
 (function() {
   this.UserProfile = (function() {
     function UserProfile() {
+      UserService.getUser(window.loggedUserId, null, this, this._getUserSuccess, null);
       this.container = $('.js--page--container');
-      this.loggedUser = null;
+      this.container.html(this._html());
       this.editProfilePage = new EditProfileDialog();
+      this.activityDialog = new ActivityDialog();
       this.clickEvent = this._clickEventHandler.bind(this);
       this.container.on('click', this.clickEvent);
-      UserService.loadProfileTemplate(null, this, this._loadProfileTemplateSucess, null);
+      UserActionLogService.getUserActivityLogForUser(window.loggedUserId, null, this, this.s, this.e);
+      this.closest = ComponentsUtils.closest;
+      this.loggedUser = null;
+      this.firstname = this.container.find(".js--firstname");
+      this.lastname = this.container.find(".js--lastname");
+      this.phone = this.container.find(".js--phone");
+      this.email = this.container.find(".js--email");
+      this.street = this.container.find(".js--street");
+      this.city = this.container.find(".js--city");
+      this.buildNumber = this.container.find(".js--buildNumber");
     }
 
     UserProfile.prototype.getPageTitle = function() {
@@ -18,30 +29,31 @@
       this.container.off('click', this.clickEvent);
       this.clickEvent = null;
       this.loggedUser = null;
+      this.closest = null;
       this.editProfilePage.destroy();
       this.editProfilePage = null;
       return this.container.html('');
     };
 
     UserProfile.prototype._clickEventHandler = function(event) {
-      var element, target;
+      var target;
       target = $(event.target);
-      element = target.closest('.js--edit--profile');
-      if (element.length !== 0) {
+      if (this.closest(target, '.js--edit--profile')) {
         this.editProfilePage.show(this, this.loggedUser);
+        return;
+      }
+      if (this.closest(target, '.js--activity')) {
+        this.activityDialog.show(this.data);
       }
     };
 
-    UserProfile.prototype._loadProfileTemplateSucess = function(template) {
-      this.container.html(template);
-      this.firstname = this.container.find(".js--firstname");
-      this.lastname = this.container.find(".js--lastname");
-      this.phone = this.container.find(".js--phone");
-      this.email = this.container.find(".js--email");
-      this.street = this.container.find(".js--street");
-      this.city = this.container.find(".js--city");
-      this.buildNumber = this.container.find(".js--buildNumber");
-      return UserService.getUser(window.loggedUserId, null, this, this._getUserSuccess, null);
+    UserProfile.prototype.s = function(data) {
+      this.data = data.data;
+      return console.log(data);
+    };
+
+    UserProfile.prototype.e = function(data) {
+      return console.log(data);
     };
 
     UserProfile.prototype._getUserSuccess = function(user) {
@@ -59,6 +71,10 @@
     UserProfile.prototype.editProfileDialogSuccess = function(user) {
       this.loggedUser = user;
       return this._getUserSuccess(this.loggedUser);
+    };
+
+    UserProfile.prototype._html = function() {
+      return "<nav class='nav justify-content-start header pt-3'> <span class='nav-link span-a js--edit--profile'>Izmeni</span> <span class='nav-link span-a js--activity'>Aktivnosti</span> </nav> <div class='col-7 h-75 pt-5 flex'> <div class='container w-50'> <div class='profile-image'> </div> </div> <div class='container w-50'> <table class='table table-borderless'> <tr> <td>Ime</td> <td class='js--firstname'></td> </tr> <tr> <td>Prezime</td> <td class='js--lastname'></td> </tr> <tr> <td>Ulica</td> <td class='js--street'></td> </tr> <tr> <td>Broj stana</td> <td class='js--buildNumber'></td> </tr> <tr> <td>Grad</td> <td class='js--city'></td> </tr> <tr> <td>Telefon</td> <td class='js--phone'></td> </tr> <tr> <td>Email</td> <td class='js--email'></td> </tr> </table> </div> </div>";
     };
 
     return UserProfile;

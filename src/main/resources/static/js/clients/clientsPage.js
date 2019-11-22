@@ -50,8 +50,8 @@
     };
 
     ClientsPage.prototype._renderClientsHTML = function(clients) {
-      var client, firstName, i, lastName, len, mobileNumber, phoneNumber, rowHtml, tableHtml;
-      tableHtml = "<nav class='nav justify-content-end pt-3'> <span class='nav-link span-a js--create--client'>Dodaj klijenta</span> </nav> <div> <table class='table mb-0'> <tr> <th class='table-text w-10'>Profil</th> <th class='table-text w-15'>Ime</th> <th class='table-text w-20'>Prezime</th> <th class='table-text w-15'>Telefon</th> <th class='table-text w-20'>Mobilni</th> <th class='table-text w-20'>Email</th> </tr> </table> <table class='table table-striped'>";
+      var client, email, firstName, i, lastName, len, mobileNumber, phoneNumber, rowHtml, street, tableHtml;
+      tableHtml = "<nav class='nav justify-content-end pt-3'> <span class='nav-link span-a js--create--client'>Dodaj klijenta</span> </nav> <div> <table class='table mb-0'> <tr> <th class='table-text w-10'>Profil</th> <th class='table-text w-15'>Ime</th> <th class='table-text w-20'>Prezime</th> <th class='table-text w-15'>Telefon</th> <th class='table-text w-20'>Ulica</th> <th class='table-text w-20'>Email</th> </tr> </table> <table class='table table-striped'>";
       rowHtml = "";
       for (i = 0, len = clients.length; i < len; i++) {
         client = clients[i];
@@ -59,7 +59,9 @@
         lastName = client.lastName || '/';
         phoneNumber = client.phoneNumber || '/';
         mobileNumber = client.mobileNumber || '/';
-        rowHtml = "<tr class='js--client--row' data-client-id=" + client.id + "> <td class='table-text w-10'> <span class='client-details-icon js--show--client' data-client-id=" + client.id + "></span> </td> <td class='table-text w-15'>" + firstName + "</td> <td class='table-text w-20'>" + lastName + "</td> <td class='table-text w-15'>" + phoneNumber + "</td> <td class='table-text w-20'>" + mobileNumber + "</td> <td class='table-text w-20'>" + client.email + "</td> </tr>";
+        street = client.street || '/';
+        email = client.email || '/';
+        rowHtml = "<tr class='js--client--row' data-client-id=" + client.id + "> <td class='table-text w-10'> <span class='client-details-icon js--show--client' data-client-id=" + client.id + "></span> </td> <td class='table-text w-15'>" + firstName + "</td> <td class='table-text w-20'>" + lastName + "</td> <td class='table-text w-15'>" + phoneNumber + "</td> <td class='table-text w-20'>" + street + "</td> <td class='table-text w-20'>" + email + "</td> </tr>";
         tableHtml += rowHtml;
       }
       tableHtml += "</table></div>";
@@ -67,14 +69,15 @@
     };
 
     ClientsPage.prototype._clickEventHandler = function(event) {
-      var target;
+      var id, target;
       target = $(event.target);
       if (this._closest(target, ".js--create--client")) {
         this.createClientDialog.show();
         return;
       }
       if (this._closest(target, '.js--show--client')) {
-        this.showClientDialog.show(target.attr('data-client-id'));
+        id = target.attr('data-client-id');
+        window.location.hash = 'client/' + id;
       }
     };
 

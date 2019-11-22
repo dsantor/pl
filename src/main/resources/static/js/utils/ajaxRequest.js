@@ -22,7 +22,7 @@
             return;
           }
           if (callbackError) {
-            return callbackError.call(callbackContext, data);
+            return callbackError.call(callbackContext, 500, "Internal server error");
           }
         }
       });
@@ -44,6 +44,10 @@
           }
         },
         error: function() {
+          if (jqXHR.status === 401 || jqXHR.status === 400) {
+            location.reload();
+            return;
+          }
           if (callbackError) {
             return callbackError.call(callbackContext, data);
           }

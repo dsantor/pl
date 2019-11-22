@@ -35,12 +35,12 @@
       return this.doorType = $('.js--door--type');
     };
 
-    ThresholdBidDialog.prototype._templateHTML = function() {
-      return "<div class='form-group form-inline header'> <div> <img src='https://www.dakiplast.rs/wp-content/uploads/2017/05/logo-small-01-300x75.png' style='max-width: 50%;'> </div> <div > <button class='cbtn btn-light " + ComponentsUtils.NEGATIVE_BUTTON + "' value='Izmeni'>Otkazi</button> <button class='cbtn  btn-primary " + ComponentsUtils.POSITIVE_BUTTON + "' value='Izmeni'>Sacuvaj</button> </div> </div> <div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta praga</label> <select> <option selected>---</option> <option>Alu prag</option> <option>Stok</option> </select> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Sirina</label> <input type='number' class='form-control' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Visina</label> <input type='number' class='form-control' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Unutrasnja sirina</label> <input type='number' class='form-control' placeholder='cm'> </div> </div> </div> </div>";
+    ThresholdBidDialog.prototype._customHTML = function() {
+      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta praga</label> <select> <option selected>---</option> <option>Alu prag</option> <option>Stok</option> </select> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Sirina</label> <input type='number' class='form-control' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Visina</label> <input type='number' class='form-control' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Unutrasnja sirina</label> <input type='number' class='form-control' placeholder='cm'> </div> </div> </div> </div>";
     };
 
     return ThresholdBidDialog;
 
-  })(this.AbstractDialog);
+  })(AbstractDialog);
 
 }).call(this);

@@ -1,4 +1,4 @@
-class @UserDetailsDialog extends @AbstractDialog
+class @UserDetailsDialog extends AbstractDialog
 
     constructor: () ->
         super()
@@ -10,7 +10,6 @@ class @UserDetailsDialog extends @AbstractDialog
     show: (@userId) ->
         super()
         UserService.getUser(@userId, null, this, @_getUserSuccess, null)
-        @container.append(ComponentsUtils.userDetailsHTML())
         # Inputs
         @firstName   = @container.find('.js--first--name')
         @lastName    = @container.find('.js--last--name')
@@ -43,8 +42,8 @@ class @UserDetailsDialog extends @AbstractDialog
         @buildNumber.text(user.buildNumber)
 
 
-    _templateHTML: () ->
-        super()
+    _customHTML: () ->
+        ComponentsUtils.userDetailsHTML()
     
     positiveAction: () ->
         @hide()

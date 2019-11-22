@@ -14,4 +14,6 @@ public interface IUser {
 	public String getPhoneNumber();
 	public RolesEnum getRole();
 	public boolean isActive();
+	public boolean isDeleted();
+	public Long getCreatedBy();
 }

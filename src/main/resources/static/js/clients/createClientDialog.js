@@ -11,12 +11,11 @@
     }
 
     CreateClientDialog.prototype.getPageTitle = function() {
-      return 'Create user';
+      return 'Kreiranje klijenta';
     };
 
     CreateClientDialog.prototype.show = function() {
       CreateClientDialog.__super__.show.call(this);
-      this.container.append(this._html());
       this.firstName = this.container.find('.js--firstName');
       this.lastName = this.container.find('.js--lastName');
       this.street = this.container.find('.js--street');
@@ -42,8 +41,8 @@
       return this.password = null;
     };
 
-    CreateClientDialog.prototype._html = function() {
-      return "<div class='col-7 m-auto h-75 pt-5 flex'> <div class='container w-50'> <div class='form-group'> <label>Email*</label> <input type='email' class='form-control js--email' placeholder='email'/> </div> <div class='form-group'> <label>Ime</label> <input type='text' class='form-control js--firstName' placeholder='ime'/> </div> <div class='form-group'> <label>Prezime</label> <input type='text' class='form-control js--lastName' placeholder='prezime'/> </div> <div class='form-group'> <label>Ulica</label> <input type='text' class='form-control js--street' placeholder='ulica'/> </div> </div> <div class='container w-50'> <div class='form-group'> <label>Broj stana</label> <input type='text' class='form-control js--buildNumber' placeholder='broj kuce/stana'/> </div> <div class='form-group'> <label>Grad</label> <input type='text' class='form-control js--city' placeholder='grad'/> </div> <div class='form-group'> <label>Telefon</label> <input type='tel' class='form-control js--phoneNumber' placeholder='telefon'/> </div> </div> </div>";
+    CreateClientDialog.prototype._customHTML = function() {
+      return "<div class='col-7 m-auto h-75 pt-5 flex'> <div class='container w-50'> <div class='form-group'> <label>Email    </label> <input type='email' class='form-control js--email' placeholder='email'/> </div> <div class='form-group'> <label>Ime*</label> <input type='text' class='form-control js--firstName' placeholder='ime'/> </div> <div class='form-group'> <label>Prezime*</label> <input type='text' class='form-control js--lastName' placeholder='prezime'/> </div> <div class='form-group'> <label>Ulica</label> <input type='text' class='form-control js--street' placeholder='ulica'/> </div> </div> <div class='container w-50'> <div class='form-group'> <label>Broj stana</label> <input type='text' class='form-control js--buildNumber' placeholder='broj kuce/stana'/> </div> <div class='form-group'> <label>Grad</label> <input type='text' class='form-control js--city' placeholder='grad'/> </div> <div class='form-group'> <label>Telefon*</label> <input type='tel' class='form-control js--phoneNumber' placeholder='telefon'/> </div> </div> </div>";
     };
 
     CreateClientDialog.prototype.negativeAction = function() {
@@ -107,6 +106,6 @@
 
     return CreateClientDialog;
 
-  })(this.AbstractDialog);
+  })(AbstractDialog);
 
 }).call(this);

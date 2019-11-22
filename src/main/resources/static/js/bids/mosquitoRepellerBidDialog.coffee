@@ -1,4 +1,4 @@
-class @MosquitoRepellerBidDialog extends @AbstractDialog
+class @MosquitoRepellerBidDialog extends AbstractDialog
 
     constructor: () ->
         super()
@@ -23,17 +23,8 @@ class @MosquitoRepellerBidDialog extends @AbstractDialog
     _collectDataFromForm: () ->
         @doorType = $('.js--door--type')
 
-    _templateHTML: () ->
-        return "<div class='form-group form-inline header'>
-                    <div>
-                        <img src='https://www.dakiplast.rs/wp-content/uploads/2017/05/logo-small-01-300x75.png' style='max-width: 50%;'>
-                    </div>
-                    <div >
-                        <button class='cbtn btn-light #{ComponentsUtils.NEGATIVE_BUTTON}' value='Izmeni'>Otkazi</button>
-                        <button class='cbtn  btn-primary #{ComponentsUtils.POSITIVE_BUTTON}' value='Izmeni'>Sacuvaj</button>
-                    </div>
-                </div>
-                <div class='col-7 m-auto p-5 flex'>
+    _customHTML: () ->
+        return "<div class='col-7 m-auto p-5 flex'>
                     <div class='container container-padding w-50'>
                          <h5>Opste</h5>     
                     <br>

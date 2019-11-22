@@ -3,12 +3,6 @@
   this.UserService = (function() {
     function UserService() {}
 
-    UserService.loadProfileTemplate = function(onTheFlyData, callbackContext, callBackFunction, callbackError) {
-      var url;
-      url = '../templates/userProfile';
-      return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
-    };
-
     UserService.loadCreateUserTemplate = function(onTheFlyData, callbackContext, callBackFunction, callbackError) {
       var url;
       url = '../templates/createUser';
