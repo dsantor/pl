@@ -6,12 +6,32 @@
   this.DoorBidDialog = (function(superClass) {
     extend(DoorBidDialog, superClass);
 
+    DoorBidDialog.BID_TYPE = 'DOOR';
+
     function DoorBidDialog() {
       DoorBidDialog.__super__.constructor.call(this);
     }
 
-    DoorBidDialog.prototype.show = function() {
-      return DoorBidDialog.__super__.show.call(this);
+    DoorBidDialog.prototype._pageClientEventHandler = function(event) {
+      var target;
+      DoorBidDialog.__super__._pageClientEventHandler.call(this);
+      target = $(event.target);
+      if (closest(target, '.select--input')) {
+        return this._validateInput(target);
+      }
+    };
+
+    DoorBidDialog.prototype.show = function(parentPage) {
+      this.parentPage = parentPage;
+      DoorBidDialog.__super__.show.call(this);
+      this.doorSort = this.container.find('.js--door--sort');
+      this.doorType = this.container.find('.js--door--type');
+      this.doorOpenSide = this.container.find('.js--door--open--side');
+      this.doorGlass = this.container.find('.js--door--glass');
+      this.doorWidth = this.container.find('.js--door--width');
+      this.doorHeight = this.container.find('.js--door--height');
+      this.doorInnerWidth = this.container.find('.js--door--inner-width');
+      return this.doorCount = this.container.find('.js--door--count');
     };
 
     DoorBidDialog.prototype.hide = function() {
@@ -19,24 +39,73 @@
     };
 
     DoorBidDialog.prototype.destroy = function() {
+      this.parentPage = null;
       return DoorBidDialog.__super__.destroy.call(this);
     };
 
-    DoorBidDialog.prototype.save = function() {
-      this._collectDataFromForm();
-      return DoorBidDialog.__super__.save.call(this);
+    DoorBidDialog.prototype.positiveAction = function() {
+      var formData;
+      if (!this._validateForm()) {
+        return;
+      }
+      formData = this._collectDataFromForm();
+      this.parentPage.bidDialogResult(formData);
+      return this.hide();
     };
 
-    DoorBidDialog.prototype.cancel = function() {
-      return DoorBidDialog.__super__.cancel.call(this);
+    DoorBidDialog.prototype.negativeAction = function() {
+      return DoorBidDialog.__super__.negativeAction.call(this);
     };
 
     DoorBidDialog.prototype._collectDataFromForm = function() {
-      return this.doorType = $('.js--door--type');
+      return {
+        bidType: DoorBidDialog.BID_TYPE,
+        doorSort: this._valueOf(this.doorSort.val()),
+        doorType: this._valueOf(this.doorType.val()),
+        doorOpenSide: this._valueOf(this.doorOpenSide.val()),
+        doorGlass: this._valueOf(this.doorGlass.val()),
+        doorWidth: this._valueOf(this.doorWidth.val()),
+        doorHeight: this._valueOf(this.doorHeight.val()),
+        doorInnerWidth: this._valueOf(this.doorInnerWidth.val()),
+        doorCount: this._valueOf(this.doorCount.val())
+      };
+    };
+
+    DoorBidDialog.prototype._valueOf = function(value) {
+      if (!value || value === '---') {
+        return null;
+      }
+      return value.trim();
+    };
+
+    DoorBidDialog.prototype._validateInput = function(input) {
+      var valid;
+      valid = true;
+      if (this._valueOf(input.val())) {
+        input.removeClass(ComponentsUtils.CSS_INVALID_INPUT);
+      } else {
+        valid = false;
+        input.addClass(ComponentsUtils.CSS_INVALID_INPUT);
+      }
+      return valid;
+    };
+
+    DoorBidDialog.prototype._validateForm = function() {
+      var valid, validInput;
+      valid = true;
+      validInput = this._validateInput(this.doorSort);
+      valid &= validInput;
+      validInput = this._validateInput(this.doorType);
+      valid &= validInput;
+      validInput = this._validateInput(this.doorOpenSide);
+      valid &= validInput;
+      validInput = this._validateInput(this.doorGlass);
+      valid &= validInput;
+      return valid;
     };
 
     DoorBidDialog.prototype._customHTML = function() {
-      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta vrata</label> <select class='js--door--type'> <option selected>---</option> <option>Ulazna</option> <option>Sobna</option> <option>Jednokrilna balkonska</option> <option>Dvokrilna balkonska</option> <option>Garažna</option> <option>segmentna garazna</option> <option>Rolo</option> </select> </div> <div class='form-group'> <label>Tip vrata</label> <select> <option selected>---</option> <option>Sa staklom</option> <option>Pun panel</option> <option>Panel/staklo</option> <option>Dekorativni modeli</option> </select> </div> <div class='form-group'> <label>Strana otvora</label> <select> <option selected>---</option> <option>Levi otvor</option> <option>Desni otvor</option> </select> </div> <div class='form-group'> <label>Staklo</label> <select> <option selected>---</option> <option>Providno</option> <option>Griz</option> <option>Delta</option> <option>Vitraz</option> </select> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Sirina</label> <input type='number' class='form-control' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Visina</label> <input type='number' class='form-control' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Unutrasnja sirina</label> <input type='number' class='form-control' placeholder='cm'> </div> </div> </div> </div>";
+      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta vrata*</label> <select class='select--input js--door--sort'> <option selected>---</option> <option>Ulazna</option> <option>Sobna</option> <option>Jednokrilna balkonska</option> <option>Dvokrilna balkonska</option> <option>Garažna</option> <option>segmentna garazna</option> <option>Rolo</option> </select> </div> <div class='form-group'> <label>Tip vrata*</label> <select class='select--input js--door--type'> <option selected>---</option> <option>Sa staklom</option> <option>Pun panel</option> <option>Panel/staklo</option> <option>Dekorativni modeli</option> </select> </div> <div class='form-group'> <label>Strana otvora*</label> <select class='select--input js--door--open--side'> <option selected>---</option> <option>Levi otvor</option> <option>Desni otvor</option> </select> </div> <div class='form-group'> <label>Staklo*</label> <select class='select--input js--door--glass'> <option selected>---</option> <option>Providno</option> <option>Griz</option> <option>Delta</option> <option>Vitraz</option> </select> </div> <div class='form-group'> <label>Kolicina*</label> <input type='number' min='1' class='form-control js--door--count' value='1'> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Sirina*</label> <input type='number' min='0' class='form-control js--door--width' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Visina*</label> <input type='number' min='0' class='form-control js--door--height' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Unutrasnja sirina*</label> <input type='number' min='0' class='form-control js--door--inner-width' placeholder='cm'> </div> </div> </div> </div>";
     };
 
     return DoorBidDialog;

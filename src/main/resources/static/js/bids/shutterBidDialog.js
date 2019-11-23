@@ -4,7 +4,11 @@
     hasProp = {}.hasOwnProperty;
 
   this.ShutterBidDialog = (function(superClass) {
+    var BID_TYPE;
+
     extend(ShutterBidDialog, superClass);
+
+    BID_TYPE = 'SHUTTER';
 
     function ShutterBidDialog() {
       ShutterBidDialog.__super__.constructor.call(this);

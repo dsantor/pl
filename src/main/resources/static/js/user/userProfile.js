@@ -10,7 +10,6 @@
       this.clickEvent = this._clickEventHandler.bind(this);
       this.container.on('click', this.clickEvent);
       UserActionLogService.getUserActivityLogForUser(window.loggedUserId, null, this, this.s, this.e);
-      this.closest = ComponentsUtils.closest;
       this.loggedUser = null;
       this.firstname = this.container.find(".js--firstname");
       this.lastname = this.container.find(".js--lastname");
@@ -29,7 +28,6 @@
       this.container.off('click', this.clickEvent);
       this.clickEvent = null;
       this.loggedUser = null;
-      this.closest = null;
       this.editProfilePage.destroy();
       this.editProfilePage = null;
       return this.container.html('');
@@ -38,11 +36,11 @@
     UserProfile.prototype._clickEventHandler = function(event) {
       var target;
       target = $(event.target);
-      if (this.closest(target, '.js--edit--profile')) {
+      if (closest(target, '.js--edit--profile')) {
         this.editProfilePage.show(this, this.loggedUser);
         return;
       }
-      if (this.closest(target, '.js--activity')) {
+      if (closest(target, '.js--activity')) {
         this.activityDialog.show(this.data);
       }
     };

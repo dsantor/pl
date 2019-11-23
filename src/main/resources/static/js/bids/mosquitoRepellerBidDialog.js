@@ -4,7 +4,11 @@
     hasProp = {}.hasOwnProperty;
 
   this.MosquitoRepellerBidDialog = (function(superClass) {
+    var BID_TYPE;
+
     extend(MosquitoRepellerBidDialog, superClass);
+
+    BID_TYPE = 'MOSQUITO_REPELLER';
 
     function MosquitoRepellerBidDialog() {
       MosquitoRepellerBidDialog.__super__.constructor.call(this);

@@ -16,7 +16,6 @@ class @UserProfile
         
         UserActionLogService.getUserActivityLogForUser(window.loggedUserId, null, this, @s, @e)
 
-        @closest = ComponentsUtils.closest
         @loggedUser = null
         
         @firstname   = @container.find(".js--firstname")
@@ -36,7 +35,6 @@ class @UserProfile
         @clickEvent = null
 
         @loggedUser = null
-        @closest    = null
         @editProfilePage.destroy()
         @editProfilePage = null
         @container.html('')
@@ -44,11 +42,11 @@ class @UserProfile
     _clickEventHandler: (event) ->
         target = $(event.target)
 
-        if @closest(target, '.js--edit--profile')
+        if closest(target, '.js--edit--profile')
             @editProfilePage.show(this, @loggedUser)
             return
         
-        if @closest(target, '.js--activity')
+        if closest(target, '.js--activity')
             @activityDialog.show(@data)
             return
 

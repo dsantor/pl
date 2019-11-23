@@ -1,5 +1,7 @@
 class @MosquitoRepellerBidDialog extends AbstractDialog
 
+    BID_TYPE = 'MOSQUITO_REPELLER'
+
     constructor: () ->
         super()
 

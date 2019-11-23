@@ -3,16 +3,17 @@
   this.BidsPage = (function() {
     function BidsPage(clientId) {
       this.clientId = clientId;
+      this.bidCurrentId = 1;
       this.container = $('.js--page--container');
-      this.container.html(this._html());
+      this._choseBidHTML();
       this.clickEvent = this._clickEventHandler.bind(this);
       this.container.on('click', this.clickEvent);
       this.doorBidDialog = new DoorBidDialog();
+      this.thresholdBidDialog = new ThresholdBidDialog();
       this.windowBidDialog = new WindowBidDialog();
       this.shutterBidDialog = new ShutterBidDialog();
-      this.thresholdBidDialog = new ThresholdBidDialog();
       this.mosquitoRepellerBidDialog = new MosquitoRepellerBidDialog();
-      this.bidsResultPage = new BidsResultPage();
+      this.cartList = {};
     }
 
     BidsPage.prototype.destroy = function() {
@@ -26,8 +27,6 @@
       this.thresholdBidDialog = null;
       this.mosquitoRepellerBidDialog.destroy();
       this.mosquitoRepellerBidDialog = null;
-      this.bidsResultPage.destroy();
-      this.bidsResultPage = null;
       this.container.off('click', this.clickEvent);
       this.clickEvent = null;
       this.container.html('');
@@ -40,24 +39,27 @@
       return "Porudzbine";
     };
 
-    BidsPage.prototype._html = function() {
-      var createClientButton;
-      createClientButton = '';
-      if (this.clientId) {
-        createClientButton = 'hide';
-      }
-      return "<div class='container '> <nav class='nav header justify-content-end pt-3'> <span class='nav-link span-a js--bids-overview'>Pregled porudzbine</span> <span class='nav-link span-a " + createClientButton + " js--chose--client'>Unesi klijenta</span> <span class='nav-link span-a " + createClientButton + " js--save--bids'>Poruči</span> </nav> <div class='col-7 m-auto w-100 pt-3 flex flex-column'> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--door'> <img class='item-order pointer' src='/images/door.png'> </div> <label>Vrata</label> </div> <div class='item-order text-center'> <div class='js--create--threshold'> <img class='item-order pointer' src='/images/threshold.png'> </div> <label>Prag</label> </div> <div class='item-order text-center'> <div class='js--create--mosquito--repeller'> <img class='item-order pointer' src='/images/mosquitoRepeller.png'> </div> <label>Komarnik</label> </div> </div> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--window'> <img class='item-order pointer' src='/images/window.png'> </div> <label>Prozor</label> </div> <div class='item-order text-center'> <div class='js--create--shutter'> <img class='item-order pointer' src='/images/shutter.png'> </div> <label>Roletne</label> </div> </div> </div> </div>";
+    BidsPage.prototype._choseBidHTML = function() {
+      var bodyHTML;
+      bodyHTML = "<div class='container'> <nav class='nav header justify-content-end pt-3'> <span class='nav-link span-a js--bids-overview'>Pregled porudzbine</span> <span class='nav-link span-a " + (this._createClientButtonClass()) + " js--chose--client'>Unesi klijenta</span> <span class='nav-link span-a js--save--bids'>Poruči</span> </nav> <div class='col-7 m-auto w-100 pt-3 flex flex-column'> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--door'> <img class='item-order pointer' draggable=false src='/images/door.png'> </div> <label>Vrata</label> </div> <div class='item-order text-center'> <div class='js--create--threshold'> <img class='item-order pointer' draggable=false src='/images/threshold.png'> </div> <label>Prag</label> </div> <div class='item-order text-center'> <div class='js--create--mosquito--repeller'> <img class='item-order pointer' draggable=false src='/images/mosquitoRepeller.png'> </div> <label>Komarnik</label> </div> </div> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--window'> <img class='item-order pointer' draggable=false src='/images/window.png'> </div> <label>Prozor</label> </div> <div class='item-order text-center'> <div class='js--create--shutter'> <img class='item-order pointer' draggable=false src='/images/shutter.png'> </div> <label>Roletne</label> </div> </div> </div> </div>";
+      return this.container.html(bodyHTML);
+    };
+
+    BidsPage.prototype._overviewBidsHTML = function(html) {
+      var bodyHTML;
+      bodyHTML = "<div class='container'> <nav class='nav header justify-content-end pt-3'> <span class='nav-link span-a js--chose--bids'>Odaberi proizvod</span> <span class='nav-link span-a " + (this._createClientButtonClass()) + " js--chose--client'>Unesi klijenta</span> <span class='nav-link span-a js--save--bids'>Poruči</span> </nav> <div class=' pt-3 flex flex-column'> " + html + " </div>";
+      return this.container.html(bodyHTML);
     };
 
     BidsPage.prototype._clickEventHandler = function(event) {
       var target;
       target = $(event.target);
       if (closest(target, ".js--create--door")) {
-        this.doorBidDialog.show();
+        this.doorBidDialog.show(this);
         return;
       }
       if (closest(target, ".js--create--threshold")) {
-        this.thresholdBidDialog.show();
+        this.thresholdBidDialog.show(this);
         return;
       }
       if (closest(target, ".js--create--mosquito--repeller")) {
@@ -73,7 +75,11 @@
         return;
       }
       if (closest(target, '.js--bids-overview')) {
-        this.bidsResultPage.show();
+        this._showBids();
+        return;
+      }
+      if (closest(target, '.js--chose--bids')) {
+        this._choseBidHTML();
         return;
       }
       if (closest(target, '.js--chose--client')) {
@@ -88,6 +94,114 @@
       var hash;
       hash = window.location.hash;
       return hash.substring(hash.indexOf('/'));
+    };
+
+    BidsPage.prototype.bidDialogResult = function(data) {
+      if (this.cartList[data.bidType] === void 0) {
+        this.cartList[data.bidType] = [];
+      }
+      data.id = this.bidCurrentId++;
+      return this.cartList[data.bidType].push(data);
+    };
+
+    BidsPage.prototype.removeBid = function(bidId, bidType) {
+      return console.log(bidId, bidType);
+    };
+
+    BidsPage.prototype._showBids = function() {
+      var html, i, key, keys, len;
+      keys = Object.keys(this.cartList);
+      html = '';
+      for (i = 0, len = keys.length; i < len; i++) {
+        key = keys[i];
+        if (this.cartList[key].length > 0) {
+          html += this._renderOverviewBidSection(key);
+        }
+      }
+      if (html === '') {
+        html = this._bidsEmptyStateHTML();
+      }
+      return this._overviewBidsHTML(html);
+    };
+
+    BidsPage.prototype._renderOverviewBidSection = function(bidType) {
+      switch (bidType) {
+        case DoorBidDialog.BID_TYPE:
+          return this._renderDoorSectionHTML(this.cartList[bidType]);
+        case ThresholdBidDialog.BID_TYPE:
+          return this._renderThresholdSectionHTML(this.cartList[bidType]);
+        default:
+          return '';
+      }
+    };
+
+    BidsPage.prototype._renderDoorSectionHTML = function(items) {
+      var html;
+      html = "<div class='js--door--section'>";
+      html += this._getSectionNameHTML('Vrata');
+      html += this._getDoorSectionHTML(items);
+      html += "</div>";
+      return html;
+    };
+
+    BidsPage.prototype._getSectionNameHTML = function(sectionName) {
+      return "<div class='container'><h4>" + sectionName + "</h4></div> <table class='table mb-0'> <tr> <th class='table-text w-15'>Vrsta</th> <th class='table-text w-15'>Tip</th> <th class='table-text w-10'>Otvor</th> <th class='table-text w-10'>Staklo</th> <th class='table-text w-10'>Dimenzije</th> <th class='table-text w-10'>Količina</th> <th class='table-text w-10'>Izmeni</th> <th class='table-text w-10'>Obriši</th> </tr> </table>";
+    };
+
+    BidsPage.prototype._getDoorSectionHTML = function(items) {
+      var html, i, item, len;
+      html = "<table class='table table-striped'>";
+      for (i = 0, len = items.length; i < len; i++) {
+        item = items[i];
+        html += this._renderTable(item);
+      }
+      html += '</table>';
+      return html;
+    };
+
+    BidsPage.prototype._renderTable = function(item) {
+      var dimension;
+      dimension = '/';
+      if (item.doorWidth && item.doorHeight && item.doorInnerWidth) {
+        dimension = item.doorWidth + 'x' + item.doorHeight + 'x' + item.doorInnerWidth;
+      }
+      return "<tr class='js--bid--row' data-bid-id=" + item.id + " data-bid-type=" + item.bidType + "> <td class='table-text w-15'>" + item.doorSort + "</td> <td class='table-text w-15'>" + item.doorType + "</td> <td class='table-text w-10'>" + item.doorOpenSide + "</td> <td class='table-text w-10'>" + item.doorGlass + "</td> <td class='table-text w-10'>" + dimension + "</td> <td class='table-text w-10'>" + item.doorCount + "</td> <td class='table-text w-10'> <span class='edit-icon js--show--client' data-bid-id=" + item.id + "></span> </td> <td class='table-text w-10'> <span class='remove-icon js--remove--bid' data-bid-id=" + item.id + "></span> </td> </tr>";
+    };
+
+    BidsPage.prototype._createClientButtonClass = function() {
+      if (this.clientId) {
+        return 'hide';
+      } else {
+        return '';
+      }
+    };
+
+    BidsPage.prototype._renderThresholdSectionHTML = function(items) {
+      var html;
+      html = "<div class='js--door--section'>";
+      html += "<div class='container'><h4>Prag</h4></div> <table class='table mb-0'> <tr> <th class='table-text w-20'>Vrsta</th> <th class='table-text w-20'>Širina</th> <th class='table-text w-10'>Visina</th> <th class='table-text w-20'>Unutrašnja širina</th> <th class='table-text w-10'>Količina</th> <th class='table-text w-10'>Promeni</th> <th class='table-text w-10'>Obriši</th> </tr> </table>";
+      html += this._geThresholdSectionHTML(items);
+      html += "</div>";
+      return html;
+    };
+
+    BidsPage.prototype._geThresholdSectionHTML = function(items) {
+      var html, i, item, len;
+      html = "<table class='table table-striped'>";
+      for (i = 0, len = items.length; i < len; i++) {
+        item = items[i];
+        html += this._renderThresholdTable(item);
+      }
+      html += '</table>';
+      return html;
+    };
+
+    BidsPage.prototype._renderThresholdTable = function(item) {
+      return "<tr class='js--bid--row' data-bid-id=" + item.id + " data-bid-type=" + item.bidType + "> <td class='table-text w-20'>" + item.sort + "</td> <td class='table-text w-20'>" + (item.width || '/') + "</td> <td class='table-text w-10'>" + (item.height || '/') + "</td> <td class='table-text w-20'>" + (item.innerWidth || '/') + "</td> <td class='table-text w-10'>" + item.count + "</td> <td class='table-text w-10'> <span class='edit-icon js--show--client' data-bid-id=" + item.id + "></span> </td> <td class='table-text w-10'> <span class='remove-icon js--remove--bid' data-bid-id=" + item.id + "></span> </td> </tr>";
+    };
+
+    BidsPage.prototype._bidsEmptyStateHTML = function() {
+      return "<div class='col-5 m-auto h-75 pt-5 text-center'>Nema porudžbina u korpi :(</div>";
     };
 
     return BidsPage;

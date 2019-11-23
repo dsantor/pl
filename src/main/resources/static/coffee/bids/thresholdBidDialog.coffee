@@ -1,27 +1,63 @@
 class @ThresholdBidDialog extends AbstractDialog
 
+    @BID_TYPE = 'THRASHOLD'
+
     constructor: () ->
         super()
 
-    show: () ->
+    show: (@parentPage) ->
         super()
-
+        @sort       = @container.find('.js--sort')
+        @width      = @container.find('.js--width')
+        @height     = @container.find('.js--height')
+        @innerWidth = @container.find('.js--inner-width')
+        @count      = @container.find('.js--count')
+        
     hide: () ->
         super()
 
     destroy: () ->
+        @parentPage = null
         super()
 
-    save: () ->
-        @_collectDataFromForm()
-        super()
+    positiveAction: () ->
+        if not @_validateForm()
+            return
+        formData = @_collectDataFromForm()
+        @parentPage.bidDialogResult(formData)
+        @hide()
 
-    cancel: () ->
+    negativeAction: () ->
         super()
 
 
     _collectDataFromForm: () ->
-        @doorType = $('.js--door--type')
+        return {
+            bidType    : ThresholdBidDialog.BID_TYPE
+            sort       : @_valueOf(@sort.val())
+            width      : @_valueOf(@width.val())
+            height     : @_valueOf(@height.val())
+            innerWidth : @_valueOf(@innerWidth.val())
+            count      : @_valueOf(@count.val())
+        }
+
+    _validateForm: () ->
+        return @_validateInput(@sort)
+
+    _valueOf: (value) ->
+        if not value or value is '---'
+            return null
+        return value.trim()
+
+
+    _validateInput: (input) ->
+        valid = true
+        if @_valueOf(input.val())
+            input.removeClass(ComponentsUtils.CSS_INVALID_INPUT)
+        else
+            valid = false
+            input.addClass(ComponentsUtils.CSS_INVALID_INPUT)
+        return valid
 
     _customHTML: () ->
         return "<div class='col-7 m-auto p-5 flex'>
@@ -30,7 +66,7 @@ class @ThresholdBidDialog extends AbstractDialog
                         <br>
                         <div class='form-group'>
                             <label>Vrsta praga</label>
-                            <select>
+                            <select class='js--sort'>
                                 <option selected>---</option>
                                 <option>Alu prag</option>
                                 <option>Stok</option>
@@ -38,20 +74,24 @@ class @ThresholdBidDialog extends AbstractDialog
                         </div>
 
                         <div class='form-group'>
+                            <label>Kolicina*</label>
+                            <input type='number' min='1' class='form-control js--count' value='1'>
+                        </div>
+                        <div class='form-group'>
                             <br> <hr>
                             <h5>Dimenzije</h5>     
                             <br>
                             <div class='form-group form-inline'>
                                 <label class='mr-2 wh-10 left-label'>Sirina</label>
-                                <input type='number' class='form-control' placeholder='cm'>
+                                <input type='number' min='0' class='form-control js--width' placeholder='cm'>
                             </div>
                             <div class='form-group form-inline'>
                                 <label class='mr-2 wh-10 left-label'>Visina</label>
-                                <input type='number' class='form-control' placeholder='cm'>
+                                <input type='number' min='0' class='form-control js--height' placeholder='cm'>
                             </div>
                             <div class='form-group form-inline'>
                                 <label class='mr-2 wh-10 left-label'>Unutrasnja sirina</label>
-                                <input type='number' class='form-control' placeholder='cm'>
+                                <input type='number' min='0' class='form-control js--inner--width' placeholder='cm'>
                             </div>
                         </div>
                     </div>

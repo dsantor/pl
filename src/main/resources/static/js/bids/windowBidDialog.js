@@ -4,7 +4,11 @@
     hasProp = {}.hasOwnProperty;
 
   this.WindowBidDialog = (function(superClass) {
+    var BID_TYPE;
+
     extend(WindowBidDialog, superClass);
+
+    BID_TYPE = 'WINDOW';
 
     function WindowBidDialog() {
       WindowBidDialog.__super__.constructor.call(this);

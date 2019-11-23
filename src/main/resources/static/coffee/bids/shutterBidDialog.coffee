@@ -1,5 +1,7 @@
 class @ShutterBidDialog extends AbstractDialog
 
+    BID_TYPE = 'SHUTTER'
+
     constructor: () ->
         super()
 

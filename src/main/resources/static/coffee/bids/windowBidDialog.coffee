@@ -1,5 +1,7 @@
 class @WindowBidDialog extends AbstractDialog
 
+    BID_TYPE = 'WINDOW'
+
     constructor: () ->
         super()
 

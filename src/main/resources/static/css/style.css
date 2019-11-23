@@ -10085,22 +10085,22 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 .remove-icon {
-    position: relative;
-    display: block;
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-	background: url(../images/remove.svg);
-	background-repeat: no-repeat;
-	background-size: 24px;
+  position: relative;
+  display: block;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  background: url(../images/remove.svg);
+  background-repeat: no-repeat;
+  background-size: 24px;
 }
 
-.side-dialog {
+/* .side-dialog {
   position: absolute;
   right: 0;
   top: 0;
-  width: 0px;
-  height: 100vh;
+  width: 0%;
+  height: 100%;
   background-color: white;
   z-index: 100;
 }
@@ -10109,14 +10109,47 @@ a.text-dark:hover, a.text-dark:focus {
   position: fixed;
   display: block;
   width: 100%;
+  height: 100%;
+  left: 0;
   transition: all 0.5s cubic-bezier(0.26, 0.49, 0.96, 0.72);
   overflow: auto;
 }
 
 .side-dialog[visibility=false] {
   display: block;
-  width: 0%;
+  width: 100%;
+  left: 101%;
   transition: all 0.5s cubic-bezier(0.26, 0.49, 0.96, 0.72);
+} */
+
+
+.side-dialog {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 0px;
+  height: 100%;
+  background-color: white;
+  z-index: 100;
+  overflow: auto;
+}
+
+.side-dialog[visibility=true] {
+  display: block;
+  width: 100%;
+  height: 100%;
+  left:0px;
+  /* transition: all 0.5s cubic-bezier(0.26, 0.49, 0.96, 0.72); */
+  transition: all 0.5s ease-in-out;
+  transform: translateX(0);
+}
+
+.side-dialog[visibility=false] {
+  display: block;
+  width: 100%;
+  left: 101%;
+  /* transition: all 0.5s cubic-bezier(0.26, 0.49, 0.96, 0.72); */
+  transition: all 0.5s ease-in-out;
 }
 
 body {
@@ -10295,15 +10328,15 @@ label.left-label {
   background-size: contain;
 }
 
-.profile-edit {
-	position: absolute;
-	width: 25px;
-  height: 25px;
-  right: 0;
+.edit-icon {
+  position: relative;
+  display: block;
+  width: 24px;
+  height: 24px;
   cursor: pointer;
-	background: url(../images/edit.png);
-	background-repeat: no-repeat;
-  background-size: 25px;
+  background: url(../images/edit.png);
+  background-repeat: no-repeat;
+  background-size: 24px;
 }
 .search-icon {
   background-image: url(../images/search.svg);
@@ -10322,33 +10355,6 @@ label.left-label {
   background-size: 30px;
 }
 
-.side-dialog {
-  position: fixed;
-  right: 0;
-  top: 0;
-  width: 0px;
-  height: 100%;
-  background-color: white;
-  z-index: 100;
-}
-
-.side-dialog[visibility=true] {
-  display: block;
-  width: 100%;
-  height: 100vh;
-  left:0px;
-  /* transition: all 0.5s cubic-bezier(0.26, 0.49, 0.96, 0.72); */
-  transition: all 0.5s ease-in-out;
-  transform: translateX(0);
-}
-
-.side-dialog[visibility=false] {
-  display: block;
-  width: 100%;
-  left: 101%;
-  /* transition: all 0.5s cubic-bezier(0.26, 0.49, 0.96, 0.72); */
-  transition: all 0.5s ease-in-out;
-}
 
 body {
 	position: relative;
