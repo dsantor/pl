@@ -10519,3 +10519,7 @@ html {
   position: absolute;
   margin-top: -10px;
 }
+
+.mr-15px {
+  margin-right: 15px;
+}

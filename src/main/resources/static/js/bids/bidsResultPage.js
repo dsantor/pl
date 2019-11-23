@@ -9,6 +9,8 @@
     function BidsResultPage(parentPage) {
       this.parentPage = parentPage;
       BidsResultPage.__super__.constructor.call(this);
+      this.negativeButtonVisibility(false);
+      this.positiveButtonText('Zatvori');
     }
 
     BidsResultPage.prototype.destroy = function() {

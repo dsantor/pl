@@ -42,6 +42,7 @@ class @AbstractDialog
             @JS_NEGATIVE_BUTTON_VISIBILITY = ''
         else
             @JS_NEGATIVE_BUTTON_VISIBILITY = 'hide'
+
     positiveButtonText: (text) ->
         @JS_POSITIVE_BUTTON_TEXT = text
 
@@ -64,7 +65,7 @@ class @AbstractDialog
                             <button class='cbtn btn-light #{ComponentsUtils.NEGATIVE_BUTTON} #{@JS_NEGATIVE_BUTTON_VISIBILITY}'>
                                 #{@JS_NEGATIVE_BUTTON_TEXT}
                             </button>
-                            <button class='cbtn  btn-primary #{ComponentsUtils.POSITIVE_BUTTON} #{@JS_POSITIVE_BUTTON_VISIBILITY}'>
+                            <button class='cbtn btn-primary mr-15px #{ComponentsUtils.POSITIVE_BUTTON} #{@JS_POSITIVE_BUTTON_VISIBILITY}'>
                                 #{@JS_POSITIVE_BUTTON_TEXT}
                             </button>
                         </div>

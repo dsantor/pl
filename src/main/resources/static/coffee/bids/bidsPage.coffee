@@ -56,8 +56,9 @@ class @BidsPage
         return "
                 <div class='container '>
                     <nav class='nav header justify-content-end pt-3'>
-                        <span class='nav-link span-a js--change--color'>Pregled porudzbine</span>
-                        <span class='nav-link span-a #{createClientButton} js--create--bids'>Unesi klijenta</span>
+                        <span class='nav-link span-a js--bids-overview'>Pregled porudzbine</span>
+                        <span class='nav-link span-a #{createClientButton} js--chose--client'>Unesi klijenta</span>
+                        <span class='nav-link span-a #{createClientButton} js--save--bids'>Poruči</span>
                     </nav>
                     <div class='col-7 m-auto w-100 pt-3 flex flex-column'>
                         <div class='flex flex-row justify-content-center'>
@@ -98,34 +99,38 @@ class @BidsPage
                 </div>"
 
 
-    _closest: (target, closestTo) ->
-        return target.closest(closestTo).length > 0
-
     _clickEventHandler: (event) ->
         target = $(event.target)
         
-        if @_closest(target, ".js--create--door")
+        if closest(target, ".js--create--door")
             @doorBidDialog.show()
             return
 
-        if @_closest(target, ".js--create--threshold")
+        if closest(target, ".js--create--threshold")
             @thresholdBidDialog.show()
             return
         
-        if @_closest(target, ".js--create--mosquito--repeller")
+        if closest(target, ".js--create--mosquito--repeller")
             @mosquitoRepellerBidDialog.show()
             return
 
-        if @_closest(target, ".js--create--window")
+        if closest(target, ".js--create--window")
             @windowBidDialog.show()
             return
 
-        if @_closest(target, ".js--create--shutter")
+        if closest(target, ".js--create--shutter")
             @shutterBidDialog.show()
             return
-
-        if @_closest(target, '.js--change--color')
+       
+        if closest(target, '.js--bids-overview')
             @bidsResultPage.show()
+            return
+        
+        if closest(target, '.js--chose--client')
+
+            return
+
+        if closest(target, '.js--save--bids')
             return
 
     _getClientIdFromURL: () ->

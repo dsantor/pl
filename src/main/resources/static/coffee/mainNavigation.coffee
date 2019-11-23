@@ -32,7 +32,7 @@ class @MainNavigation
         if @currentPage
             @currentPage.destroy() 
 
-        @_handlePage()  
+        @_handlePage()
         document.title = @currentPage.getPageTitle()
 
 
