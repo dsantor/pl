@@ -6,20 +6,32 @@
   this.ThresholdBidDialog = (function(superClass) {
     extend(ThresholdBidDialog, superClass);
 
-    ThresholdBidDialog.BID_TYPE = 'THRASHOLD';
+    ThresholdBidDialog.BID_TYPE = 'THRESHOLD';
 
     function ThresholdBidDialog() {
       ThresholdBidDialog.__super__.constructor.call(this);
     }
 
-    ThresholdBidDialog.prototype.show = function(parentPage) {
+    ThresholdBidDialog.prototype.show = function(parentPage, updateItem) {
       this.parentPage = parentPage;
+      if (updateItem == null) {
+        updateItem = null;
+      }
       ThresholdBidDialog.__super__.show.call(this);
       this.sort = this.container.find('.js--sort');
       this.width = this.container.find('.js--width');
       this.height = this.container.find('.js--height');
       this.innerWidth = this.container.find('.js--inner-width');
-      return this.count = this.container.find('.js--count');
+      this.count = this.container.find('.js--count');
+      this.id = null;
+      if (updateItem) {
+        this.sort.val(updateItem.sort);
+        this.width.val(updateItem.width || '');
+        this.height.val(updateItem.height || '');
+        this.innerWidth.val(updateItem.innerWidth || '');
+        this.count.val(updateItem.count || '');
+        return this.id = updateItem.id;
+      }
     };
 
     ThresholdBidDialog.prototype.hide = function() {
@@ -48,6 +60,7 @@
     ThresholdBidDialog.prototype._collectDataFromForm = function() {
       return {
         bidType: ThresholdBidDialog.BID_TYPE,
+        id: this.id,
         sort: this._valueOf(this.sort.val()),
         width: this._valueOf(this.width.val()),
         height: this._valueOf(this.height.val()),

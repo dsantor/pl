@@ -20,6 +20,15 @@ class @WindowBidDialog extends AbstractDialog
 
     destroy: () ->
         @parentPage = null
+
+        @sort     = null
+        @openSide = null
+        @glass    = null
+        @tipper   = null
+        @width    = null
+        @height   = null    
+        @count    = null
+
         super()
 
     positiveAction: () ->

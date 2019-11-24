@@ -129,7 +129,6 @@ class @BidsPage
             return
        
         if closest(target, '.js--bids-overview')
-            # @bidsResultPage.show(this, @cartList)
             @_showBids()
             return
         
@@ -144,6 +143,52 @@ class @BidsPage
         if closest(target, '.js--save--bids')
             return
 
+        if closest(target, '.js--remove--bid')
+            @_removeBid(target)
+            return
+
+        if closest(target, '.js--edit--bid')
+            @_editBid(target)
+            return
+
+    _editBid: (element) ->
+        bidId = Number(element.attr('data-bid-id'))
+        bidRow = $(".js--bid--row[data-bid-id='#{bidId}']")
+        bidType = bidRow.attr('data-bid-type')
+        data = null
+        for item in @cartList[bidType]
+            if item.id is bidId
+                data = item
+                break
+        console.log data
+        @thresholdBidDialog.show(this, data)
+
+    _removeBid: (target) ->
+        bidId = Number(target.attr('data-bid-id'))
+        bidRow = $(".js--bid--row[data-bid-id='#{bidId}']")
+        bidType = bidRow.attr('data-bid-type')
+        bidRow.remove()
+        
+        for bid in @cartList[bidType]
+            if bid.id is bidId
+                @cartList[bidType].splice(bid, 1)
+                break
+        
+        @_updateResultSections()
+
+    _updateResultSections: () ->
+        keys = Object.keys(@cartList)
+        for key in keys
+            if @cartList[key].length is 0
+                keyLowecase = key.toLowerCase()
+                sectionName = ".js--#{keyLowecase}--section"
+                $(sectionName).remove()
+                delete @cartList[key]
+
+        keys = Object.keys(@cartList)
+        if keys.length is 0
+            @_showBidsEmptyStateHTML()
+
     _getClientIdFromURL: () ->
         hash = window.location.hash
         return hash.substring(hash.indexOf('/'))
@@ -152,13 +197,20 @@ class @BidsPage
     bidDialogResult: (data) ->
         if @cartList[data.bidType] is undefined
             @cartList[data.bidType] = []
+
+        if data.id is null
+            @_addItemToCartList(data)
+        else
+            @_updateItemFromCartList(data)
+
+    _addItemToCartList: (data) ->
         data.id = @bidCurrentId++
         @cartList[data.bidType].push(data)
 
-
-    removeBid: (bidId, bidType) ->
-        console.log bidId, bidType
-
+    _updateItemFromCartList: (data) ->
+        for item in @cartList[data.bidType]
+            if item.id is data.id
+                @cartList[data.bidType][item] = data
 
     _showBids: () ->
         keys = Object.keys(@cartList)
@@ -168,19 +220,26 @@ class @BidsPage
                 html += @_renderOverviewBidSection(key)
         
         if html is ''
-            html = @_bidsEmptyStateHTML()
-        @_overviewBidsHTML(html)
+            @_showBidsEmptyStateHTML()
+        else
+            @_overviewBidsHTML(html)
         
     _renderOverviewBidSection: (bidType) ->
         switch bidType
             when DoorBidDialog.BID_TYPE
                 return @_renderDoorSectionHTML(@cartList[bidType])
+
             when ThresholdBidDialog.BID_TYPE
                 return @_renderThresholdSectionHTML(@cartList[bidType])
+
             when MosquitoRepellerBidDialog.BID_TYPE
                 return BidSectionsHTML.mosquitoRepellerSectionHTML(@cartList[bidType])
+
             when WindowBidDialog.BID_TYPE
                 return BidSectionsHTML.windowSectionHTML(@cartList[bidType])
+                
+            when ShutterBidDialog.BID_TYPE
+                return BidSectionsHTML.shutterSectionHTML(@cartList[bidType])
             else 
                 return ''             
 
@@ -240,7 +299,7 @@ class @BidsPage
 
 
     _renderThresholdSectionHTML: (items) ->
-        html = "<div class='js--door--section'>"
+        html = "<div class='js--threshold--section'>"
         html += "<div class='container'><h4>Prag</h4></div>
                 <table class='table mb-0'>
                     <tr>
@@ -272,12 +331,14 @@ class @BidsPage
                     <td class='table-text w-20'>#{item.innerWidth or '/'}</td>
                     <td class='table-text w-10'>#{item.count}</td>
                     <td class='table-text w-10'>
-                        <span class='edit-icon js--show--client' data-bid-id=#{item.id}></span>
+                        <span class='edit-icon js--edit--bid' data-bid-id=#{item.id}></span>
                     </td>
                     <td class='table-text w-10'>
                         <span class='remove-icon js--remove--bid' data-bid-id=#{item.id}></span>
                     </td>
             </tr>"
 
-    _bidsEmptyStateHTML: () ->
-        return "<div class='col-5 m-auto h-75 pt-5 text-center'>Nema porudžbina u korpi :(</div>"
+    _showBidsEmptyStateHTML: () ->
+        html = "<div class='col-5 m-auto h-75 pt-5 text-center'>Nema porudžbina u korpi :(</div>"
+        @_overviewBidsHTML(html)
+        

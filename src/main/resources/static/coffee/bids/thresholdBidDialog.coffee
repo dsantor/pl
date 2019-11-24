@@ -1,17 +1,25 @@
 class @ThresholdBidDialog extends AbstractDialog
 
-    @BID_TYPE = 'THRASHOLD'
+    @BID_TYPE = 'THRESHOLD'
 
     constructor: () ->
         super()
 
-    show: (@parentPage) ->
+    show: (@parentPage, updateItem = null) ->
         super()
         @sort       = @container.find('.js--sort')
         @width      = @container.find('.js--width')
         @height     = @container.find('.js--height')
         @innerWidth = @container.find('.js--inner-width')
         @count      = @container.find('.js--count')
+        @id         = null
+        if updateItem
+            @sort.val(updateItem.sort)
+            @width.val(updateItem.width or '')
+            @height.val(updateItem.height or '')
+            @innerWidth.val(updateItem.innerWidth or '')
+            @count.val(updateItem.count or '')
+            @id = updateItem.id
         
     hide: () ->
         super()
@@ -34,6 +42,7 @@ class @ThresholdBidDialog extends AbstractDialog
     _collectDataFromForm: () ->
         return {
             bidType    : ThresholdBidDialog.BID_TYPE
+            id         : @id
             sort       : @_valueOf(@sort.val())
             width      : @_valueOf(@width.val())
             height     : @_valueOf(@height.val())

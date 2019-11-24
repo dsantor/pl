@@ -86,7 +86,67 @@
         return;
       }
       if (closest(target, '.js--save--bids')) {
+        return;
+      }
+      if (closest(target, '.js--remove--bid')) {
+        this._removeBid(target);
+        return;
+      }
+      if (closest(target, '.js--edit--bid')) {
+        this._editBid(target);
+      }
+    };
 
+    BidsPage.prototype._editBid = function(element) {
+      var bidId, bidRow, bidType, data, i, item, len, ref;
+      bidId = Number(element.attr('data-bid-id'));
+      bidRow = $(".js--bid--row[data-bid-id='" + bidId + "']");
+      bidType = bidRow.attr('data-bid-type');
+      data = null;
+      ref = this.cartList[bidType];
+      for (i = 0, len = ref.length; i < len; i++) {
+        item = ref[i];
+        if (item.id === bidId) {
+          data = item;
+          break;
+        }
+      }
+      console.log(data);
+      return this.thresholdBidDialog.show(this, data);
+    };
+
+    BidsPage.prototype._removeBid = function(target) {
+      var bid, bidId, bidRow, bidType, i, len, ref;
+      bidId = Number(target.attr('data-bid-id'));
+      bidRow = $(".js--bid--row[data-bid-id='" + bidId + "']");
+      bidType = bidRow.attr('data-bid-type');
+      bidRow.remove();
+      ref = this.cartList[bidType];
+      for (i = 0, len = ref.length; i < len; i++) {
+        bid = ref[i];
+        if (bid.id === bidId) {
+          this.cartList[bidType].splice(bid, 1);
+          break;
+        }
+      }
+      return this._updateResultSections();
+    };
+
+    BidsPage.prototype._updateResultSections = function() {
+      var i, key, keyLowecase, keys, len, sectionName;
+      keys = Object.keys(this.cartList);
+      for (i = 0, len = keys.length; i < len; i++) {
+        key = keys[i];
+        if (this.cartList[key].length === 0) {
+          keyLowecase = key.toLowerCase();
+          sectionName = ".js--" + keyLowecase + "--section";
+          $(sectionName).remove();
+          delete this.cartList[key];
+        }
+      }
+      keys = Object.keys(this.cartList);
+      if (keys.length === 0) {
+        return this._showBidsEmptyStateHTML();
       }
     };
 
@@ -100,12 +160,31 @@
       if (this.cartList[data.bidType] === void 0) {
         this.cartList[data.bidType] = [];
       }
+      if (data.id === null) {
+        return this._addItemToCartList(data);
+      } else {
+        return this._updateItemFromCartList(data);
+      }
+    };
+
+    BidsPage.prototype._addItemToCartList = function(data) {
       data.id = this.bidCurrentId++;
       return this.cartList[data.bidType].push(data);
     };
 
-    BidsPage.prototype.removeBid = function(bidId, bidType) {
-      return console.log(bidId, bidType);
+    BidsPage.prototype._updateItemFromCartList = function(data) {
+      var i, item, len, ref, results;
+      ref = this.cartList[data.bidType];
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        item = ref[i];
+        if (item.id === data.id) {
+          results.push(this.cartList[data.bidType][item] = data);
+        } else {
+          results.push(void 0);
+        }
+      }
+      return results;
     };
 
     BidsPage.prototype._showBids = function() {
@@ -119,9 +198,10 @@
         }
       }
       if (html === '') {
-        html = this._bidsEmptyStateHTML();
+        return this._showBidsEmptyStateHTML();
+      } else {
+        return this._overviewBidsHTML(html);
       }
-      return this._overviewBidsHTML(html);
     };
 
     BidsPage.prototype._renderOverviewBidSection = function(bidType) {
@@ -134,6 +214,8 @@
           return BidSectionsHTML.mosquitoRepellerSectionHTML(this.cartList[bidType]);
         case WindowBidDialog.BID_TYPE:
           return BidSectionsHTML.windowSectionHTML(this.cartList[bidType]);
+        case ShutterBidDialog.BID_TYPE:
+          return BidSectionsHTML.shutterSectionHTML(this.cartList[bidType]);
         default:
           return '';
       }
@@ -182,7 +264,7 @@
 
     BidsPage.prototype._renderThresholdSectionHTML = function(items) {
       var html;
-      html = "<div class='js--door--section'>";
+      html = "<div class='js--threshold--section'>";
       html += "<div class='container'><h4>Prag</h4></div> <table class='table mb-0'> <tr> <th class='table-text w-20'>Vrsta</th> <th class='table-text w-20'>Širina</th> <th class='table-text w-10'>Visina</th> <th class='table-text w-20'>Unutrašnja širina</th> <th class='table-text w-10'>Količina</th> <th class='table-text w-10'>Promeni</th> <th class='table-text w-10'>Obriši</th> </tr> </table>";
       html += this._geThresholdSectionHTML(items);
       html += "</div>";
@@ -201,11 +283,13 @@
     };
 
     BidsPage.prototype._renderThresholdTable = function(item) {
-      return "<tr class='js--bid--row' data-bid-id=" + item.id + " data-bid-type=" + item.bidType + "> <td class='table-text w-20'>" + item.sort + "</td> <td class='table-text w-20'>" + (item.width || '/') + "</td> <td class='table-text w-10'>" + (item.height || '/') + "</td> <td class='table-text w-20'>" + (item.innerWidth || '/') + "</td> <td class='table-text w-10'>" + item.count + "</td> <td class='table-text w-10'> <span class='edit-icon js--show--client' data-bid-id=" + item.id + "></span> </td> <td class='table-text w-10'> <span class='remove-icon js--remove--bid' data-bid-id=" + item.id + "></span> </td> </tr>";
+      return "<tr class='js--bid--row' data-bid-id=" + item.id + " data-bid-type=" + item.bidType + "> <td class='table-text w-20'>" + item.sort + "</td> <td class='table-text w-20'>" + (item.width || '/') + "</td> <td class='table-text w-10'>" + (item.height || '/') + "</td> <td class='table-text w-20'>" + (item.innerWidth || '/') + "</td> <td class='table-text w-10'>" + item.count + "</td> <td class='table-text w-10'> <span class='edit-icon js--edit--bid' data-bid-id=" + item.id + "></span> </td> <td class='table-text w-10'> <span class='remove-icon js--remove--bid' data-bid-id=" + item.id + "></span> </td> </tr>";
     };
 
-    BidsPage.prototype._bidsEmptyStateHTML = function() {
-      return "<div class='col-5 m-auto h-75 pt-5 text-center'>Nema porudžbina u korpi :(</div>";
+    BidsPage.prototype._showBidsEmptyStateHTML = function() {
+      var html;
+      html = "<div class='col-5 m-auto h-75 pt-5 text-center'>Nema porudžbina u korpi :(</div>";
+      return this._overviewBidsHTML(html);
     };
 
     return BidsPage;

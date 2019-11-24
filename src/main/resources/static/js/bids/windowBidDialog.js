@@ -30,6 +30,13 @@
 
     WindowBidDialog.prototype.destroy = function() {
       this.parentPage = null;
+      this.sort = null;
+      this.openSide = null;
+      this.glass = null;
+      this.tipper = null;
+      this.width = null;
+      this.height = null;
+      this.count = null;
       return WindowBidDialog.__super__.destroy.call(this);
     };
 
