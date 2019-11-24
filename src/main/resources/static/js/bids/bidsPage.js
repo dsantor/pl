@@ -63,15 +63,15 @@
         return;
       }
       if (closest(target, ".js--create--mosquito--repeller")) {
-        this.mosquitoRepellerBidDialog.show();
+        this.mosquitoRepellerBidDialog.show(this);
         return;
       }
       if (closest(target, ".js--create--window")) {
-        this.windowBidDialog.show();
+        this.windowBidDialog.show(this);
         return;
       }
       if (closest(target, ".js--create--shutter")) {
-        this.shutterBidDialog.show();
+        this.shutterBidDialog.show(this);
         return;
       }
       if (closest(target, '.js--bids-overview')) {
@@ -130,6 +130,10 @@
           return this._renderDoorSectionHTML(this.cartList[bidType]);
         case ThresholdBidDialog.BID_TYPE:
           return this._renderThresholdSectionHTML(this.cartList[bidType]);
+        case MosquitoRepellerBidDialog.BID_TYPE:
+          return BidSectionsHTML.mosquitoRepellerSectionHTML(this.cartList[bidType]);
+        case WindowBidDialog.BID_TYPE:
+          return BidSectionsHTML.windowSectionHTML(this.cartList[bidType]);
         default:
           return '';
       }

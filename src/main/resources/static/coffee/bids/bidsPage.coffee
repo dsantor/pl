@@ -117,15 +117,15 @@ class @BidsPage
             return
         
         if closest(target, ".js--create--mosquito--repeller")
-            @mosquitoRepellerBidDialog.show()
+            @mosquitoRepellerBidDialog.show(this)
             return
 
         if closest(target, ".js--create--window")
-            @windowBidDialog.show()
+            @windowBidDialog.show(this)
             return
 
         if closest(target, ".js--create--shutter")
-            @shutterBidDialog.show()
+            @shutterBidDialog.show(this)
             return
        
         if closest(target, '.js--bids-overview')
@@ -177,6 +177,10 @@ class @BidsPage
                 return @_renderDoorSectionHTML(@cartList[bidType])
             when ThresholdBidDialog.BID_TYPE
                 return @_renderThresholdSectionHTML(@cartList[bidType])
+            when MosquitoRepellerBidDialog.BID_TYPE
+                return BidSectionsHTML.mosquitoRepellerSectionHTML(@cartList[bidType])
+            when WindowBidDialog.BID_TYPE
+                return BidSectionsHTML.windowSectionHTML(@cartList[bidType])
             else 
                 return ''             
 

@@ -4,18 +4,23 @@
     hasProp = {}.hasOwnProperty;
 
   this.MosquitoRepellerBidDialog = (function(superClass) {
-    var BID_TYPE;
-
     extend(MosquitoRepellerBidDialog, superClass);
 
-    BID_TYPE = 'MOSQUITO_REPELLER';
+    MosquitoRepellerBidDialog.BID_TYPE = 'MOSQUITO_REPELLER';
 
     function MosquitoRepellerBidDialog() {
       MosquitoRepellerBidDialog.__super__.constructor.call(this);
     }
 
-    MosquitoRepellerBidDialog.prototype.show = function() {
-      return MosquitoRepellerBidDialog.__super__.show.call(this);
+    MosquitoRepellerBidDialog.prototype.show = function(parentPage) {
+      this.parentPage = parentPage;
+      MosquitoRepellerBidDialog.__super__.show.call(this);
+      this.sort = this.container.find('.js--sort');
+      this.type = this.container.find('.js--type');
+      this.openSide = this.container.find('.js--open--side');
+      this.width = this.container.find('.js--width');
+      this.height = this.container.find('.js--height');
+      return this.count = this.container.find('.js--count');
     };
 
     MosquitoRepellerBidDialog.prototype.hide = function() {
@@ -26,21 +31,65 @@
       return MosquitoRepellerBidDialog.__super__.destroy.call(this);
     };
 
-    MosquitoRepellerBidDialog.prototype.save = function() {
-      this._collectDataFromForm();
-      return MosquitoRepellerBidDialog.__super__.save.call(this);
+    MosquitoRepellerBidDialog.prototype.positiveAction = function() {
+      var formData;
+      if (!this._validateForm()) {
+        return;
+      }
+      formData = this._collectDataFromForm();
+      this.parentPage.bidDialogResult(formData);
+      return this.hide();
     };
 
-    MosquitoRepellerBidDialog.prototype.cancel = function() {
-      return MosquitoRepellerBidDialog.__super__.cancel.call(this);
+    MosquitoRepellerBidDialog.prototype.negativeAction = function() {
+      return MosquitoRepellerBidDialog.__super__.negativeAction.call(this);
     };
 
     MosquitoRepellerBidDialog.prototype._collectDataFromForm = function() {
-      return this.doorType = $('.js--door--type');
+      return {
+        bidType: MosquitoRepellerBidDialog.BID_TYPE,
+        sort: this._valueOf(this.sort.val()),
+        type: this._valueOf(this.type.val()),
+        openSide: this._valueOf(this.openSide.val()),
+        width: this._valueOf(this.width.val()),
+        height: this._valueOf(this.height.val()),
+        count: this._valueOf(this.count.val())
+      };
+    };
+
+    MosquitoRepellerBidDialog.prototype._valueOf = function(value) {
+      if (!value || value === '---') {
+        return null;
+      }
+      return value.trim();
+    };
+
+    MosquitoRepellerBidDialog.prototype._validateInput = function(input) {
+      var valid;
+      valid = true;
+      if (this._valueOf(input.val())) {
+        input.removeClass(ComponentsUtils.CSS_INVALID_INPUT);
+      } else {
+        valid = false;
+        input.addClass(ComponentsUtils.CSS_INVALID_INPUT);
+      }
+      return valid;
+    };
+
+    MosquitoRepellerBidDialog.prototype._validateForm = function() {
+      var valid, validInput;
+      valid = true;
+      validInput = this._validateInput(this.sort);
+      valid &= validInput;
+      validInput = this._validateInput(this.type);
+      valid &= validInput;
+      validInput = this._validateInput(this.openSide);
+      valid &= validInput;
+      return valid;
     };
 
     MosquitoRepellerBidDialog.prototype._customHTML = function() {
-      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta komarnika</label> <select> <option selected>---</option> <option>Fiksni</option> <option>Rolo</option> </select> </div> <div class='form-group'> <label>Tip komarnika</label> <select> <option selected>---</option> <option>Vrata</option> <option>Rolo</option> </select> </div> <div class='form-group'> <label>Strana otvora</label> <select> <option selected>---</option> <option>Levi otvor</option> <option>Desni otvor</option> </select> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Sirina</label> <input type='number' class='form-control' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Visina</label> <input type='number' class='form-control' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Unutrasnja sirina</label> <input type='number' class='form-control' placeholder='cm'> </div> </div> </div> </div>";
+      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta komarnika*</label> <select class='js--sort'> <option selected>---</option> <option>Fiksni</option> <option>Rolo</option> </select> </div> <div class='form-group'> <label>Tip komarnika*</label> <select class='js--type'> <option selected>---</option> <option>Vrata</option> <option>Rolo</option> </select> </div> <div class='form-group'> <label>Strana otvora*</label> <select class='js--open--side'> <option selected>---</option> <option>Levi otvor</option> <option>Desni otvor</option> </select> </div> <div class='form-group'> <label>Kolicina*</label> <input type='number' min='1' class='form-control js--count' value='1'> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Sirina</label> <input type='number' class='form-control js--width' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Visina</label> <input type='number' class='form-control js--height' placeholder='cm'> </div> </div> </div> </div>";
     };
 
     return MosquitoRepellerBidDialog;
