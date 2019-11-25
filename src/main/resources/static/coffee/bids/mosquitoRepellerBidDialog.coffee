@@ -5,7 +5,7 @@ class @MosquitoRepellerBidDialog extends AbstractDialog
     constructor: () ->
         super()
 
-    show: (@parentPage) ->
+    show: (@parentPage, updateItem = null) ->
         super()
         @sort     = @container.find('.js--sort')
         @type     = @container.find('.js--type')
@@ -13,6 +13,16 @@ class @MosquitoRepellerBidDialog extends AbstractDialog
         @width    = @container.find('.js--width')
         @height   = @container.find('.js--height')
         @count    = @container.find('.js--count')
+        @id       = null
+
+        if updateItem
+            @sort.val(updateItem.sort or '---')
+            @type.val(updateItem.type or '---')
+            @openSide.val(updateItem.openSide or '---')
+            @width.val(updateItem.width or '')
+            @height.val(updateItem.height or '')
+            @count.val(updateItem.count or '')
+            @id = updateItem.id
 
     hide: () ->
         super()
@@ -34,6 +44,7 @@ class @MosquitoRepellerBidDialog extends AbstractDialog
     _collectDataFromForm: () ->
         return {
             bidType    : MosquitoRepellerBidDialog.BID_TYPE
+            id         : @id
             sort       : @_valueOf(@sort.val())
             type       : @_valueOf(@type.val())
             openSide   : @_valueOf(@openSide.val())

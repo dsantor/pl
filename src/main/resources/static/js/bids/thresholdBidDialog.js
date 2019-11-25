@@ -25,7 +25,7 @@
       this.count = this.container.find('.js--count');
       this.id = null;
       if (updateItem) {
-        this.sort.val(updateItem.sort);
+        this.sort.val(updateItem.sort || '---');
         this.width.val(updateItem.width || '');
         this.height.val(updateItem.height || '');
         this.innerWidth.val(updateItem.innerWidth || '');

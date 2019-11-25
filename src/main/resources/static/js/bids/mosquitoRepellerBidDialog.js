@@ -12,15 +12,28 @@
       MosquitoRepellerBidDialog.__super__.constructor.call(this);
     }
 
-    MosquitoRepellerBidDialog.prototype.show = function(parentPage) {
+    MosquitoRepellerBidDialog.prototype.show = function(parentPage, updateItem) {
       this.parentPage = parentPage;
+      if (updateItem == null) {
+        updateItem = null;
+      }
       MosquitoRepellerBidDialog.__super__.show.call(this);
       this.sort = this.container.find('.js--sort');
       this.type = this.container.find('.js--type');
       this.openSide = this.container.find('.js--open--side');
       this.width = this.container.find('.js--width');
       this.height = this.container.find('.js--height');
-      return this.count = this.container.find('.js--count');
+      this.count = this.container.find('.js--count');
+      this.id = null;
+      if (updateItem) {
+        this.sort.val(updateItem.sort || '---');
+        this.type.val(updateItem.type || '---');
+        this.openSide.val(updateItem.openSide || '---');
+        this.width.val(updateItem.width || '');
+        this.height.val(updateItem.height || '');
+        this.count.val(updateItem.count || '');
+        return this.id = updateItem.id;
+      }
     };
 
     MosquitoRepellerBidDialog.prototype.hide = function() {
@@ -48,6 +61,7 @@
     MosquitoRepellerBidDialog.prototype._collectDataFromForm = function() {
       return {
         bidType: MosquitoRepellerBidDialog.BID_TYPE,
+        id: this.id,
         sort: this._valueOf(this.sort.val()),
         type: this._valueOf(this.type.val()),
         openSide: this._valueOf(this.openSide.val()),

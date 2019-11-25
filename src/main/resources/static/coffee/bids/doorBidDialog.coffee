@@ -12,18 +12,29 @@ class @DoorBidDialog extends AbstractDialog
         if closest(target, '.select--input')
             @_validateInput(target)
 
-    show: (@parentPage) ->
+    show: (@parentPage, updateItem = null) ->
         super()
 
-        @doorSort       = @container.find('.js--door--sort')
-        @doorType       = @container.find('.js--door--type')
-        @doorOpenSide   = @container.find('.js--door--open--side')
-        @doorGlass      = @container.find('.js--door--glass')
-        @doorWidth      = @container.find('.js--door--width')
-        @doorHeight     = @container.find('.js--door--height')
-        @doorInnerWidth = @container.find('.js--door--inner-width')
-        @doorCount      = @container.find('.js--door--count')
+        @sort       = @container.find('.js--sort')
+        @type       = @container.find('.js--type')
+        @openSide   = @container.find('.js--open--side')
+        @glass      = @container.find('.js--glass')
+        @width      = @container.find('.js--width')
+        @height     = @container.find('.js--height')
+        @innerWidth = @container.find('.js--inner-width')
+        @count      = @container.find('.js--count')
+        @id         = null
 
+        if updateItem
+            @sort.val(updateItem.sort or '---')
+            @type.val(updateItem.type or '---')
+            @openSide.val(updateItem.openSide or '---')
+            @glass.val(updateItem.glass or '---')
+            @width.val(updateItem.width or '')
+            @height.val(updateItem.height or '')
+            @innerWidth.val(updateItem.innerWidth or '')
+            @count.val(updateItem.count or '')
+            @id = updateItem.id
     hide: () ->
         super()
 
@@ -44,15 +55,16 @@ class @DoorBidDialog extends AbstractDialog
     _collectDataFromForm: () ->
 
         return {
-            bidType        : DoorBidDialog.BID_TYPE
-            doorSort       : @_valueOf(@doorSort.val())
-            doorType       : @_valueOf(@doorType.val())
-            doorOpenSide   : @_valueOf(@doorOpenSide.val())
-            doorGlass      : @_valueOf(@doorGlass.val())
-            doorWidth      : @_valueOf(@doorWidth.val())
-            doorHeight     : @_valueOf(@doorHeight.val())
-            doorInnerWidth : @_valueOf(@doorInnerWidth.val())
-            doorCount      : @_valueOf(@doorCount.val())
+            bidType    : DoorBidDialog.BID_TYPE
+            id         : @id
+            sort       : @_valueOf(@sort.val())
+            type       : @_valueOf(@type.val())
+            openSide   : @_valueOf(@openSide.val())
+            glass      : @_valueOf(@glass.val())
+            width      : @_valueOf(@width.val())
+            height     : @_valueOf(@height.val())
+            innerWidth : @_valueOf(@innerWidth.val())
+            count      : @_valueOf(@count.val())
         }
 
 
@@ -73,16 +85,16 @@ class @DoorBidDialog extends AbstractDialog
 
     _validateForm: () ->
         valid = true
-        validInput = @_validateInput(@doorSort)
+        validInput = @_validateInput(@sort)
         valid &= validInput
         
-        validInput = @_validateInput(@doorType)
+        validInput = @_validateInput(@type)
         valid &= validInput
         
-        validInput = @_validateInput(@doorOpenSide)
+        validInput = @_validateInput(@openSide)
         valid &= validInput
 
-        validInput = @_validateInput(@doorGlass)
+        validInput = @_validateInput(@glass)
         valid &= validInput
 
         return valid
@@ -94,7 +106,7 @@ class @DoorBidDialog extends AbstractDialog
                             <br>
                             <div class='form-group'>
                                 <label>Vrsta vrata*</label>
-                                <select class='select--input js--door--sort'>
+                                <select class='select--input js--sort'>
                                     <option selected>---</option>
                                     <option>Ulazna</option>
                                     <option>Sobna</option>
@@ -108,7 +120,7 @@ class @DoorBidDialog extends AbstractDialog
                             
                             <div class='form-group'>
                                 <label>Tip vrata*</label>
-                                <select class='select--input js--door--type'>
+                                <select class='select--input js--type'>
                                     <option selected>---</option>
                                     <option>Sa staklom</option>
                                     <option>Pun panel</option>
@@ -118,7 +130,7 @@ class @DoorBidDialog extends AbstractDialog
                             </div>                    
                             <div class='form-group'>
                                     <label>Strana otvora*</label>
-                                    <select class='select--input js--door--open--side'>
+                                    <select class='select--input js--open--side'>
                                         <option selected>---</option>
                                         <option>Levi otvor</option>
                                         <option>Desni otvor</option>
@@ -127,7 +139,7 @@ class @DoorBidDialog extends AbstractDialog
 
                             <div class='form-group'>
                                 <label>Staklo*</label>
-                                <select class='select--input js--door--glass'>
+                                <select class='select--input js--glass'>
                                     <option selected>---</option>
                                     <option>Providno</option>
                                     <option>Griz</option>
@@ -138,7 +150,7 @@ class @DoorBidDialog extends AbstractDialog
 
                              <div class='form-group'>
                                 <label>Kolicina*</label>
-                                <input type='number' min='1' class='form-control js--door--count' value='1'>
+                                <input type='number' min='1' class='form-control js--count' value='1'>
                             </div>
 
                             <div class='form-group'>
@@ -147,15 +159,15 @@ class @DoorBidDialog extends AbstractDialog
                                 <br>
                                 <div class='form-group form-inline'>
                                     <label class='mr-2 wh-10 left-label'>Sirina*</label>
-                                    <input type='number' min='0' class='form-control js--door--width' placeholder='cm'>
+                                    <input type='number' min='0' class='form-control js--width' placeholder='cm'>
                                 </div>
                                 <div class='form-group form-inline'>
                                     <label class='mr-2 wh-10 left-label'>Visina*</label>
-                                    <input type='number' min='0' class='form-control js--door--height' placeholder='cm'>
+                                    <input type='number' min='0' class='form-control js--height' placeholder='cm'>
                                 </div>
                                 <div class='form-group form-inline'>
                                     <label class='mr-2 wh-10 left-label'>Unutrasnja sirina*</label>
-                                    <input type='number' min='0' class='form-control js--door--inner-width' placeholder='cm'>
+                                    <input type='number' min='0' class='form-control js--inner-width' placeholder='cm'>
                                 </div>
                             </div>
                     </div>

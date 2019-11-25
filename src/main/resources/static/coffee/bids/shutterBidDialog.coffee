@@ -5,7 +5,7 @@ class @ShutterBidDialog extends AbstractDialog
     constructor: () ->
         super()
 
-    show: (@parentPage) ->
+    show: (@parentPage, updateItem = null) ->
         super()
         @sort     = @container.find('.js--sort')
         @box      = @container.find('.js--box')
@@ -14,9 +14,24 @@ class @ShutterBidDialog extends AbstractDialog
         @count    = @container.find('.js--count')
         @width    = @container.find('.js--width')
         @height   = @container.find('.js--height')
+        @id       = null
 
         @additionBoxOptions = @container.find('.js--box--type--option')
         @additionBoxActive  = false
+
+        if updateItem
+            @sort.val(updateItem.sort or '---')
+            @box.val(updateItem.box or '---')
+            @boxType.val(updateItem.boxType or '---')
+            @openSide.val(updateItem.openSide or '---')
+            @count.val(updateItem.count or '')
+            @width.val(updateItem.width or '')
+            @height.val(updateItem.height or '')
+            @id = updateItem.id
+
+            if updateItem.boxType
+                @additionBoxOptions.removeClass('hide')
+                @additionBoxActive = true
     hide: () ->
         super()
 
@@ -52,11 +67,16 @@ class @ShutterBidDialog extends AbstractDialog
             @_checkBoxTypeOptions(target)
 
     _collectDataFromForm: () ->
+        if @box.val() isnt 'Spoljasnja'
+            boxType = null
+        else 
+            boxType = @_valueOf(@boxType.val()) 
         return {
             bidType    : ShutterBidDialog.BID_TYPE
+            id         : @id
             sort       : @_valueOf(@sort.val())
             box        : @_valueOf(@box.val())
-            boxType    : @_valueOf(@boxType.val())
+            boxType    : boxType
             openSide   : @_valueOf(@openSide.val())
             count      : @_valueOf(@count.val())
             width      : @_valueOf(@width.val())

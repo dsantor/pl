@@ -12,8 +12,11 @@
       ShutterBidDialog.__super__.constructor.call(this);
     }
 
-    ShutterBidDialog.prototype.show = function(parentPage) {
+    ShutterBidDialog.prototype.show = function(parentPage, updateItem) {
       this.parentPage = parentPage;
+      if (updateItem == null) {
+        updateItem = null;
+      }
       ShutterBidDialog.__super__.show.call(this);
       this.sort = this.container.find('.js--sort');
       this.box = this.container.find('.js--box');
@@ -22,8 +25,23 @@
       this.count = this.container.find('.js--count');
       this.width = this.container.find('.js--width');
       this.height = this.container.find('.js--height');
+      this.id = null;
       this.additionBoxOptions = this.container.find('.js--box--type--option');
-      return this.additionBoxActive = false;
+      this.additionBoxActive = false;
+      if (updateItem) {
+        this.sort.val(updateItem.sort || '---');
+        this.box.val(updateItem.box || '---');
+        this.boxType.val(updateItem.boxType || '---');
+        this.openSide.val(updateItem.openSide || '---');
+        this.count.val(updateItem.count || '');
+        this.width.val(updateItem.width || '');
+        this.height.val(updateItem.height || '');
+        this.id = updateItem.id;
+        if (updateItem.boxType) {
+          this.additionBoxOptions.removeClass('hide');
+          return this.additionBoxActive = true;
+        }
+      }
     };
 
     ShutterBidDialog.prototype.hide = function() {
@@ -67,11 +85,18 @@
     };
 
     ShutterBidDialog.prototype._collectDataFromForm = function() {
+      var boxType;
+      if (this.box.val() !== 'Spoljasnja') {
+        boxType = null;
+      } else {
+        boxType = this._valueOf(this.boxType.val());
+      }
       return {
         bidType: ShutterBidDialog.BID_TYPE,
+        id: this.id,
         sort: this._valueOf(this.sort.val()),
         box: this._valueOf(this.box.val()),
-        boxType: this._valueOf(this.boxType.val()),
+        boxType: boxType,
         openSide: this._valueOf(this.openSide.val()),
         count: this._valueOf(this.count.val()),
         width: this._valueOf(this.width.val()),

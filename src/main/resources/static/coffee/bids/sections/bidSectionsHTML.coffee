@@ -7,17 +7,17 @@ class @BidSectionsHTML
         innerHtml = ""
         for item in items
             dimension = '/'
-            if item.doorWidth and item.doorHeight and item.doorInnerWidth
-                dimension = item.doorWidth + 'x' + item.doorHeight + 'x' + item.doorInnerWidth
+            if item.width and item.height and item.innerWidth
+                dimension = item.width + 'x' + item.height + 'x' + item.innerWidth
             innerHtml += "<tr class='js--bid--row' data-bid-id=#{item.id} data-bid-type=#{item.bidType}>
-                            <td class='table-text w-15'>#{item.doorSort}</td>
-                            <td class='table-text w-15'>#{item.doorType}</td>
-                            <td class='table-text w-10'>#{item.doorOpenSide}</td>
-                            <td class='table-text w-10'>#{item.doorGlass}</td>
+                            <td class='table-text w-15'>#{item.sort}</td>
+                            <td class='table-text w-15'>#{item.type}</td>
+                            <td class='table-text w-10'>#{item.openSide}</td>
+                            <td class='table-text w-10'>#{item.glass}</td>
                             <td class='table-text w-10'>#{dimension}</td>
-                            <td class='table-text w-10'>#{item.doorCount}</td>
+                            <td class='table-text w-10'>#{item.count}</td>
                             <td class='table-text w-10'>
-                                <span class='edit-icon js--show--client' data-bid-id=#{item.id}></span>
+                                <span class='edit-icon js--edit--bid' data-bid-id=#{item.id}></span>
                             </td>
                             <td class='table-text w-10'>
                                 <span class='remove-icon js--remove--bid' data-bid-id=#{item.id}></span>
@@ -89,7 +89,7 @@ class @BidSectionsHTML
                             <td class='table-text w-10'>#{dimension}</td>
                             <td class='table-text w-10'>#{item.count}</td>
                             <td class='table-text w-10'>
-                                <span class='edit-icon js--show--client' data-bid-id=#{item.id}></span>
+                                <span class='edit-icon js--edit--bid' data-bid-id=#{item.id}></span>
                             </td>
                             <td class='table-text w-10'>
                                 <span class='remove-icon js--remove--bid' data-bid-id=#{item.id}></span>
@@ -128,7 +128,7 @@ class @BidSectionsHTML
                             <td class='table-text w-10'>#{dimension}</td>
                             <td class='table-text w-10'>#{item.count}</td>
                             <td class='table-text w-10'>
-                                <span class='edit-icon js--show--client' data-bid-id=#{item.id}></span>
+                                <span class='edit-icon js--edit--bid' data-bid-id=#{item.id}></span>
                             </td>
                             <td class='table-text w-10'>
                                 <span class='remove-icon js--remove--bid' data-bid-id=#{item.id}></span>
@@ -167,7 +167,7 @@ class @BidSectionsHTML
                             <td class='table-text w-10'>#{dimension}</td>
                             <td class='table-text w-10'>#{item.count}</td>
                             <td class='table-text w-10'>
-                                <span class='edit-icon js--show--client' data-bid-id=#{item.id}></span>
+                                <span class='edit-icon js--edit--bid' data-bid-id=#{item.id}></span>
                             </td>
                             <td class='table-text w-10'>
                                 <span class='remove-icon js--remove--bid' data-bid-id=#{item.id}></span>

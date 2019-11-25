@@ -5,7 +5,7 @@ class @WindowBidDialog extends AbstractDialog
     constructor: () ->
         super()
 
-    show: (@parentPage) ->
+    show: (@parentPage, updateItem = null) ->
         super()
         @sort     = @container.find('.js--sort')
         @openSide = @container.find('.js--open--side')
@@ -14,6 +14,17 @@ class @WindowBidDialog extends AbstractDialog
         @width    = @container.find('.js--width')
         @height   = @container.find('.js--height')
         @count    = @container.find('.js--count')
+        @id       = null
+
+        if updateItem
+            @sort.val(updateItem.sort or '---')
+            @openSide.val(updateItem.openSide or '---')
+            @glass.val(updateItem.glass or '---')
+            @tipper.val(updateItem.tipper or '---')
+            @width.val(updateItem.width or '')
+            @height.val(updateItem.height or '')
+            @count.val(updateItem.count or '')
+            @id = updateItem.id
 
     hide: () ->
         super()
@@ -45,6 +56,7 @@ class @WindowBidDialog extends AbstractDialog
     _collectDataFromForm: () ->
         return {
             bidType    : WindowBidDialog.BID_TYPE
+            id         : @id
             sort       : @_valueOf(@sort.val())
             openSide   : @_valueOf(@openSide.val())
             glass      : @_valueOf(@glass.val())

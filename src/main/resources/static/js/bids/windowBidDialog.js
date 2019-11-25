@@ -12,8 +12,11 @@
       WindowBidDialog.__super__.constructor.call(this);
     }
 
-    WindowBidDialog.prototype.show = function(parentPage) {
+    WindowBidDialog.prototype.show = function(parentPage, updateItem) {
       this.parentPage = parentPage;
+      if (updateItem == null) {
+        updateItem = null;
+      }
       WindowBidDialog.__super__.show.call(this);
       this.sort = this.container.find('.js--sort');
       this.openSide = this.container.find('.js--open--side');
@@ -21,7 +24,18 @@
       this.tipper = this.container.find('.js--tipper');
       this.width = this.container.find('.js--width');
       this.height = this.container.find('.js--height');
-      return this.count = this.container.find('.js--count');
+      this.count = this.container.find('.js--count');
+      this.id = null;
+      if (updateItem) {
+        this.sort.val(updateItem.sort || '---');
+        this.openSide.val(updateItem.openSide || '---');
+        this.glass.val(updateItem.glass || '---');
+        this.tipper.val(updateItem.tipper || '---');
+        this.width.val(updateItem.width || '');
+        this.height.val(updateItem.height || '');
+        this.count.val(updateItem.count || '');
+        return this.id = updateItem.id;
+      }
     };
 
     WindowBidDialog.prototype.hide = function() {
@@ -57,6 +71,7 @@
     WindowBidDialog.prototype._collectDataFromForm = function() {
       return {
         bidType: WindowBidDialog.BID_TYPE,
+        id: this.id,
         sort: this._valueOf(this.sort.val()),
         openSide: this._valueOf(this.openSide.val()),
         glass: this._valueOf(this.glass.val()),
