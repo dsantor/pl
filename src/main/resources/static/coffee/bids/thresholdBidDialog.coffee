@@ -10,7 +10,7 @@ class @ThresholdBidDialog extends AbstractDialog
         @sort       = @container.find('.js--sort')
         @width      = @container.find('.js--width')
         @height     = @container.find('.js--height')
-        @innerWidth = @container.find('.js--inner-width')
+        @innerWidth = @container.find('.js--inner--width')
         @count      = @container.find('.js--count')
         @id         = null
         if updateItem

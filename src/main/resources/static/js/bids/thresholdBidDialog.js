@@ -21,7 +21,7 @@
       this.sort = this.container.find('.js--sort');
       this.width = this.container.find('.js--width');
       this.height = this.container.find('.js--height');
-      this.innerWidth = this.container.find('.js--inner-width');
+      this.innerWidth = this.container.find('.js--inner--width');
       this.count = this.container.find('.js--count');
       this.id = null;
       if (updateItem) {

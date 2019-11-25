@@ -1,5 +1,8 @@
 class @BidSectionsHTML
 
+    @emptyState: () ->
+        return "<div class='col-5 m-auto h-75 pt-5 text-center'>Nema porudžbina u korpi :(</div>"
+        
     @doorSectionHTML: (items) ->
         innerHtml = ""
         for item in items
@@ -21,7 +24,7 @@ class @BidSectionsHTML
                             </td>
                          </tr>"
 
-        html = "<div class='container'><h4>Vrata</h4></div>
+        html = "<div class='container js--section--door'><h4>Vrata</h4></div>
                 <table class='table mb-0'>
                     <tr>
                         <th class='table-text w-15'>Vrsta</th>
@@ -56,7 +59,7 @@ class @BidSectionsHTML
                             </td>
                          </tr>"
 
-        html = "<div class='container'><h4>Prag</h4></div>
+        html = "<div class='container js--section--threshold'><h4>Prag</h4></div>
                 <table class='table mb-0'>
                     <tr>
                         <th class='table-text w-20'>Vrsta</th>
@@ -93,7 +96,7 @@ class @BidSectionsHTML
                             </td>
                          </tr>"
 
-        html = "<div class='container'><h4>Komarnik</h4></div>
+        html = "<div class='container js--section--mosquito--repeller'><h4>Komarnik</h4></div>
                 <table class='table mb-0'>
                     <tr>
                         <th class='table-text w-20'>Vrsta</th>
@@ -132,7 +135,7 @@ class @BidSectionsHTML
                             </td>
                          </tr>"
 
-        html = "<div class='container'><h4>Prozor</h4></div>
+        html = "<div class='container js--section--window'><h4>Prozor</h4></div>
                 <table class='table mb-0'>
                     <tr>
                         <th class='table-text w-20'>Vrsta</th>
@@ -171,7 +174,7 @@ class @BidSectionsHTML
                             </td>
                          </tr>"
 
-        html = "<div class='container'><h4>Prozor</h4></div>
+        html = "<div class='container js--section--shutter'><h4>Prozor</h4></div>
                 <table class='table mb-0'>
                     <tr>
                         <th class='table-text w-15'>Vrsta</th>

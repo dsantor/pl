@@ -4,7 +4,8 @@ class @BidsPage
         @clientId = clientId
         @bidCurrentId = 1
         @container = $('.js--page--container')
-        @_choseBidHTML()
+        @choseBidActive = true
+        @_renderChoseBidHTML()
         
         @clickEvent = @_clickEventHandler.bind(this)
         @container.on 'click', @clickEvent
@@ -47,13 +48,10 @@ class @BidsPage
     getPageTitle: () ->
         return "Porudzbine"
     
-    _choseBidHTML: () ->
+    _renderChoseBidHTML: () ->
+        @choseBidActive = true
         bodyHTML = "<div class='container'>
-                        <nav class='nav header justify-content-end pt-3'>
-                            <span class='nav-link span-a js--bids-overview'>Pregled porudzbine</span>
-                            <span class='nav-link span-a #{@_createClientButtonClass()} js--chose--client'>Unesi klijenta</span>
-                            <span class='nav-link span-a js--save--bids'>Poruči</span>
-                        </nav>
+                        #{@_getNavHTML()}
                         <div class='col-7 m-auto w-100 pt-3 flex flex-column'>
                             <div class='flex flex-row justify-content-center'>
                                 <div class='item-order text-center mb-5'>
@@ -93,15 +91,26 @@ class @BidsPage
                     </div>"
         @container.html(bodyHTML)
 
-    _overviewBidsHTML: (html) ->
+    _getNavHTML: () ->
+        choseBidCss = ''
+        overviewCss = 'hide'
+        if @choseBidActive
+            choseBidCss = 'hide'
+            overviewCss = ''
+        return "<nav class='nav header justify-content-end pt-3'>
+                    <span class='nav-link span-a js--chose--bids #{choseBidCss}'>Odaberi proizvod</span>
+                    <span class='nav-link span-a js--bids-overview #{overviewCss}'>Pregled porudzbine</span>
+                    <span class='nav-link span-a #{@_createClientButtonClass()} js--chose--client'>Unesi klijenta</span>
+                    <span class='nav-link span-a js--save--bids'>Poruči</span>
+                </nav>"
+
+    _renderOverviewHTML: (innerHTML) ->
+        navHTML = @_getNavHTML()
         bodyHTML = "<div class='container'>
-                    <nav class='nav header justify-content-end pt-3'>
-                        <span class='nav-link span-a js--chose--bids'>Odaberi proizvod</span>
-                        <span class='nav-link span-a #{@_createClientButtonClass()} js--chose--client'>Unesi klijenta</span>
-                        <span class='nav-link span-a js--save--bids'>Poruči</span>
-                    </nav>
-                    <div class=' pt-3 flex flex-column'>              
-                        #{html}
+                        #{navHTML}
+                        <div class=' pt-3 flex flex-column'>              
+                            #{innerHTML}
+                        </div>
                     </div>"
         @container.html(bodyHTML)
 
@@ -133,7 +142,7 @@ class @BidsPage
             return
         
         if closest(target, '.js--chose--bids')
-            @_choseBidHTML()
+            @_renderChoseBidHTML()
             return
 
         if closest(target, '.js--chose--client')
@@ -160,8 +169,33 @@ class @BidsPage
             if item.id is bidId
                 data = item
                 break
-        console.log data
-        @thresholdBidDialog.show(this, data)
+        @_openEditDialog(bidType, data)
+    
+    _openEditDialog: (bidType, data) ->
+        switch bidType
+            when DoorBidDialog.BID_TYPE
+                @doorBidDialog.show(this, data)
+                break
+
+            when ThresholdBidDialog.BID_TYPE
+                @thresholdBidDialog.show(this, data)
+                break
+
+            when MosquitoRepellerBidDialog.BID_TYPE
+                @mosquitoBidDialog.show(this, data)
+                break
+
+            when WindowBidDialog.BID_TYPE
+                @windowBidDialog.show(this, data)
+                break
+
+            when ShutterBidDialog.BID_TYPE
+                @shutterBidDialog.show(this, data)
+                break
+
+            else 
+                console.log 'Dialog is not supported'       
+        
 
     _removeBid: (target) ->
         bidId = Number(target.attr('data-bid-id'))
@@ -169,9 +203,9 @@ class @BidsPage
         bidType = bidRow.attr('data-bid-type')
         bidRow.remove()
         
-        for bid in @cartList[bidType]
+        for bid, index in @cartList[bidType]
             if bid.id is bidId
-                @cartList[bidType].splice(bid, 1)
+                @cartList[bidType].splice(index, 1)
                 break
         
         @_updateResultSections()
@@ -181,13 +215,13 @@ class @BidsPage
         for key in keys
             if @cartList[key].length is 0
                 keyLowecase = key.toLowerCase()
-                sectionName = ".js--#{keyLowecase}--section"
+                sectionName = ".js--section--#{keyLowecase}"
                 $(sectionName).remove()
                 delete @cartList[key]
 
         keys = Object.keys(@cartList)
         if keys.length is 0
-            @_showBidsEmptyStateHTML()
+            @_renderOverviewHTML(BidSectionsHTML.emptyState())
 
     _getClientIdFromURL: () ->
         hash = window.location.hash
@@ -208,29 +242,34 @@ class @BidsPage
         @cartList[data.bidType].push(data)
 
     _updateItemFromCartList: (data) ->
-        for item in @cartList[data.bidType]
+        for item, index in @cartList[data.bidType]
             if item.id is data.id
-                @cartList[data.bidType][item] = data
+                @cartList[data.bidType][index] = data
+                break
+        @_showBids()
 
     _showBids: () ->
         keys = Object.keys(@cartList)
+
+        @choseBidActive = false
+        if keys.length is 0
+            @_renderOverviewHTML(BidSectionsHTML.emptyState())
+            return
+
         html = ''    
         for key in keys
             if @cartList[key].length > 0
                 html += @_renderOverviewBidSection(key)
         
-        if html is ''
-            @_showBidsEmptyStateHTML()
-        else
-            @_overviewBidsHTML(html)
+        @_renderOverviewHTML(html)
         
     _renderOverviewBidSection: (bidType) ->
         switch bidType
             when DoorBidDialog.BID_TYPE
-                return @_renderDoorSectionHTML(@cartList[bidType])
+                return BidSectionsHTML.DoorSectionHTML(@cartList[bidType])
 
             when ThresholdBidDialog.BID_TYPE
-                return @_renderThresholdSectionHTML(@cartList[bidType])
+                return BidSectionsHTML.thresholdSectionHTML(@cartList[bidType])
 
             when MosquitoRepellerBidDialog.BID_TYPE
                 return BidSectionsHTML.mosquitoRepellerSectionHTML(@cartList[bidType])
@@ -243,102 +282,5 @@ class @BidsPage
             else 
                 return ''             
 
-
-
-    _renderDoorSectionHTML: (items) ->
-        html = "<div class='js--door--section'>"
-        html += @_getSectionNameHTML('Vrata')
-        html += @_getDoorSectionHTML(items)
-        html += "</div>"
-        return html
-
-    _getSectionNameHTML: (sectionName) ->
-        return "<div class='container'><h4>#{sectionName}</h4></div>
-                <table class='table mb-0'>
-                    <tr>
-                        <th class='table-text w-15'>Vrsta</th>
-                        <th class='table-text w-15'>Tip</th>
-                        <th class='table-text w-10'>Otvor</th>
-                        <th class='table-text w-10'>Staklo</th>
-                        <th class='table-text w-10'>Dimenzije</th>
-                        <th class='table-text w-10'>Količina</th>
-                        <th class='table-text w-10'>Izmeni</th>
-                        <th class='table-text w-10'>Obriši</th>
-                    </tr>
-                </table>"
-
-    _getDoorSectionHTML: (items) ->
-        html = "<table class='table table-striped'>"
-        for item in items
-            html += @_renderTable(item)
-        
-        html += '</table>'
-        return html
-
-    _renderTable: (item) ->
-        dimension = '/'
-        if item.doorWidth and item.doorHeight and item.doorInnerWidth
-            dimension = item.doorWidth + 'x' + item.doorHeight + 'x' + item.doorInnerWidth
-        "<tr class='js--bid--row' data-bid-id=#{item.id} data-bid-type=#{item.bidType}>
-                    <td class='table-text w-15'>#{item.doorSort}</td>
-                    <td class='table-text w-15'>#{item.doorType}</td>
-                    <td class='table-text w-10'>#{item.doorOpenSide}</td>
-                    <td class='table-text w-10'>#{item.doorGlass}</td>
-                    <td class='table-text w-10'>#{dimension}</td>
-                    <td class='table-text w-10'>#{item.doorCount}</td>
-                    <td class='table-text w-10'>
-                        <span class='edit-icon js--show--client' data-bid-id=#{item.id}></span>
-                    </td>
-                    <td class='table-text w-10'>
-                        <span class='remove-icon js--remove--bid' data-bid-id=#{item.id}></span>
-                    </td>
-            </tr>"
-    
     _createClientButtonClass: () ->
         if @clientId then return 'hide' else return ''
-
-
-    _renderThresholdSectionHTML: (items) ->
-        html = "<div class='js--threshold--section'>"
-        html += "<div class='container'><h4>Prag</h4></div>
-                <table class='table mb-0'>
-                    <tr>
-                        <th class='table-text w-20'>Vrsta</th>
-                        <th class='table-text w-20'>Širina</th>
-                        <th class='table-text w-10'>Visina</th>
-                        <th class='table-text w-20'>Unutrašnja širina</th>
-                        <th class='table-text w-10'>Količina</th>
-                        <th class='table-text w-10'>Promeni</th>
-                        <th class='table-text w-10'>Obriši</th>
-                    </tr>
-                </table>"
-        html += @_geThresholdSectionHTML(items)
-        html += "</div>"
-        return html
-
-    _geThresholdSectionHTML: (items) ->
-        html = "<table class='table table-striped'>"
-        for item in items
-            html += @_renderThresholdTable(item)
-        html += '</table>'
-        return html
-
-    _renderThresholdTable: (item) ->
-        return   "<tr class='js--bid--row' data-bid-id=#{item.id} data-bid-type=#{item.bidType}>
-                    <td class='table-text w-20'>#{item.sort}</td>
-                    <td class='table-text w-20'>#{item.width or '/'}</td>
-                    <td class='table-text w-10'>#{item.height or '/'}</td>
-                    <td class='table-text w-20'>#{item.innerWidth or '/'}</td>
-                    <td class='table-text w-10'>#{item.count}</td>
-                    <td class='table-text w-10'>
-                        <span class='edit-icon js--edit--bid' data-bid-id=#{item.id}></span>
-                    </td>
-                    <td class='table-text w-10'>
-                        <span class='remove-icon js--remove--bid' data-bid-id=#{item.id}></span>
-                    </td>
-            </tr>"
-
-    _showBidsEmptyStateHTML: () ->
-        html = "<div class='col-5 m-auto h-75 pt-5 text-center'>Nema porudžbina u korpi :(</div>"
-        @_overviewBidsHTML(html)
-        
