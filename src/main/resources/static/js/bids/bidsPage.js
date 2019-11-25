@@ -6,6 +6,7 @@
       this.bidCurrentId = 1;
       this.container = $('.js--page--container');
       this.choseBidActive = true;
+      this.allowedSaveBidsButton = false;
       this._renderChoseBidHTML();
       this.clickEvent = this._clickEventHandler.bind(this);
       this.container.on('click', this.clickEvent);
@@ -34,8 +35,6 @@
       return this.clientId = null;
     };
 
-    BidsPage.prototype.show = function() {};
-
     BidsPage.prototype.getPageTitle = function() {
       return "Porudzbine";
     };
@@ -48,14 +47,18 @@
     };
 
     BidsPage.prototype._getNavHTML = function() {
-      var choseBidCss, overviewCss;
+      var choseBidCss, overviewCss, saveBidsCss;
       choseBidCss = '';
       overviewCss = 'hide';
       if (this.choseBidActive) {
         choseBidCss = 'hide';
         overviewCss = '';
       }
-      return "<nav class='nav header justify-content-end pt-3'> <span class='nav-link span-a js--chose--bids " + choseBidCss + "'>Odaberi proizvod</span> <span class='nav-link span-a js--bids-overview " + overviewCss + "'>Pregled porudzbine</span> <span class='nav-link span-a " + (this._createClientButtonClass()) + " js--chose--client'>Unesi klijenta</span> <span class='nav-link span-a js--save--bids'>Poruči</span> </nav>";
+      saveBidsCss = 'disabled';
+      if (this.allowedSaveBidsButton) {
+        saveBidsCss = '';
+      }
+      return "<nav class='nav header justify-content-end pt-3'> <span class='nav-link span-a js--chose--bids " + choseBidCss + "'>Odaberi proizvod</span> <span class='nav-link span-a js--bids-overview " + overviewCss + "'>Pregled porudzbine</span> <span class='nav-link span-a " + (this._createClientButtonClass()) + " js--chose--client'>Unesi klijenta</span> <span class='nav-link span-a " + saveBidsCss + " js--save--bids'>Poruči</span> </nav>";
     };
 
     BidsPage.prototype._renderOverviewHTML = function(innerHTML) {
@@ -181,6 +184,7 @@
       }
       keys = Object.keys(this.cartList);
       if (keys.length === 0) {
+        this.allowedSaveBidsButton = false;
         return this._renderOverviewHTML(BidSectionsHTML.emptyState());
       }
     };
@@ -192,6 +196,8 @@
     };
 
     BidsPage.prototype.bidDialogResult = function(data) {
+      this.allowedSaveBidsButton = true;
+      $('.js--save--bids').removeClass('disabled');
       if (this.cartList[data.bidType] === void 0) {
         this.cartList[data.bidType] = [];
       }
@@ -225,7 +231,9 @@
       keys = Object.keys(this.cartList);
       this.choseBidActive = false;
       if (keys.length === 0) {
+        this.allowedSaveBidsButton = false;
         this._renderOverviewHTML(BidSectionsHTML.emptyState());
+        this.save;
         return;
       }
       html = '';
@@ -257,7 +265,7 @@
 
     BidsPage.prototype._createClientButtonClass = function() {
       if (this.clientId) {
-        return 'hide';
+        return 'disabled';
       } else {
         return '';
       }

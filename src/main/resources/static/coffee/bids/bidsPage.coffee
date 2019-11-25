@@ -5,6 +5,7 @@ class @BidsPage
         @bidCurrentId = 1
         @container = $('.js--page--container')
         @choseBidActive = true
+        @allowedSaveBidsButton = false
         @_renderChoseBidHTML()
         
         @clickEvent = @_clickEventHandler.bind(this)
@@ -12,9 +13,8 @@ class @BidsPage
 
         @doorBidDialog             = new DoorBidDialog()
         @thresholdBidDialog        = new ThresholdBidDialog()
-        @windowBidDialog = new WindowBidDialog()
-        @shutterBidDialog = new ShutterBidDialog()
-
+        @windowBidDialog           = new WindowBidDialog()
+        @shutterBidDialog          = new ShutterBidDialog()
         @mosquitoRepellerBidDialog = new MosquitoRepellerBidDialog()
 
         @cartList = {}
@@ -41,9 +41,6 @@ class @BidsPage
 
         @container.html('')
         @clientId = null
-
-
-    show: () ->
 
     getPageTitle: () ->
         return "Porudzbine"
@@ -97,11 +94,15 @@ class @BidsPage
         if @choseBidActive
             choseBidCss = 'hide'
             overviewCss = ''
+        saveBidsCss = 'disabled'
+        if @allowedSaveBidsButton
+            saveBidsCss = ''
+            
         return "<nav class='nav header justify-content-end pt-3'>
                     <span class='nav-link span-a js--chose--bids #{choseBidCss}'>Odaberi proizvod</span>
                     <span class='nav-link span-a js--bids-overview #{overviewCss}'>Pregled porudzbine</span>
                     <span class='nav-link span-a #{@_createClientButtonClass()} js--chose--client'>Unesi klijenta</span>
-                    <span class='nav-link span-a js--save--bids'>Poruči</span>
+                    <span class='nav-link span-a #{saveBidsCss} js--save--bids'>Poruči</span>
                 </nav>"
 
     _renderOverviewHTML: (innerHTML) ->
@@ -221,6 +222,7 @@ class @BidsPage
 
         keys = Object.keys(@cartList)
         if keys.length is 0
+            @allowedSaveBidsButton = false
             @_renderOverviewHTML(BidSectionsHTML.emptyState())
 
     _getClientIdFromURL: () ->
@@ -229,6 +231,8 @@ class @BidsPage
 
     
     bidDialogResult: (data) ->
+        @allowedSaveBidsButton = true
+        $('.js--save--bids').removeClass('disabled')
         if @cartList[data.bidType] is undefined
             @cartList[data.bidType] = []
 
@@ -253,7 +257,9 @@ class @BidsPage
 
         @choseBidActive = false
         if keys.length is 0
+            @allowedSaveBidsButton = false
             @_renderOverviewHTML(BidSectionsHTML.emptyState())
+            @save
             return
 
         html = ''    
@@ -283,4 +289,4 @@ class @BidsPage
                 return ''             
 
     _createClientButtonClass: () ->
-        if @clientId then return 'hide' else return ''
+        if @clientId then return 'disabled' else return ''
