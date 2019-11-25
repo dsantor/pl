@@ -10529,3 +10529,8 @@ html {
 .mr-15px {
   margin-right: 15px;
 }
+
+.back-button {
+  position: absolute;
+  left: 0;
+}
