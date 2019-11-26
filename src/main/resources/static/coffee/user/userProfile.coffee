@@ -2,22 +2,12 @@ class @UserProfile
 
     constructor: () ->
         
-        UserService.getUser(window.loggedUserId, null, this, @_getUserSuccess, null)
-        
         @container = $('.js--page--container')
         @container.html(@_html())
 
         @editProfilePage = new EditProfileDialog()
         @activityDialog  = new ActivityDialog()
 
-        @clickEvent = @_clickEventHandler.bind(this)
-        @container.on 'click', @clickEvent
-
-        
-        UserActionLogService.getUserActivityLogForUser(window.loggedUserId, null, this, @s, @e)
-
-        @loggedUser = null
-        
         @firstname   = @container.find(".js--firstname")
         @lastname    = @container.find(".js--lastname")
         @phone       = @container.find(".js--phone")
@@ -25,6 +15,13 @@ class @UserProfile
         @street      = @container.find(".js--street")
         @city        = @container.find(".js--city")
         @buildNumber = @container.find(".js--buildNumber")
+
+        @loggedUser = window.loggerUserInfo
+        @_renderUserInfo(@loggedUser)
+
+        @clickEvent = @_clickEventHandler.bind(this)
+        @container.on 'click', @clickEvent
+
 
     getPageTitle: () ->
         return 'Profile'
@@ -47,21 +44,13 @@ class @UserProfile
             return
         
         if closest(target, '.js--activity')
-            @activityDialog.show(@data)
+            @activityDialog.show(@loggedUser.id)
             return
 
 
-    s: (data) ->
-        @data = data.data
-        console.log data
 
-    e: (data) ->
-        console.log data
-    _getUserSuccess: (user) ->
+    _renderUserInfo: (user) ->
 
-       
-
-        window.loggedUser = user
         @loggedUser = user
         @firstname.text(user.firstName)
         @lastname.text(user.lastName)
@@ -73,8 +62,14 @@ class @UserProfile
 
     
     editProfileDialogSuccess: (user) ->
-        @loggedUser = user
-        @_getUserSuccess(@loggedUser)
+        @loggedUser.firstName   = user.firstName
+        @loggedUser.lastName    = user.lastName
+        @loggedUser.street      = user.street
+        @loggedUser.buildNumber = user.buildNumber
+        @loggedUser.city        = user.city
+        @loggedUser.phoneNumber = user.phoneNumber
+        window.loggedUserInfo = @loggedUser
+        @_renderUserInfo(@loggedUser)
 
     
     _html: () ->

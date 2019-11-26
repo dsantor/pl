@@ -4,18 +4,27 @@ class @ActivityDialog extends AbstractDialog
         super()
         @negativeButtonVisibility(false)
         @positiveButtonText("Zatvori")
+        @loadedActivity = false
     
-    show:(@actionLogs) ->
+    show:(userId) ->
         super()
+        if not @loadedActivity
+            UserActionLogService.getUserActivityLogForUser(userId, null, this, @s, @e)
 
     hide: () ->
         super()
 
     destory: () ->
-        @actionLogs = null
+        @actionLogs     = null
+        @loadedActivity = null
         super()
 
     _customHTML: () ->
+        if not @loadedActivity
+            return "<div>
+                        <span class='loader-icon'></span>
+                    </div>"
+
         actionLogs = @_prettyPrint(@actionLogs)
         tableHtml = "<div>
                         <table class='table mb-0'>
@@ -84,3 +93,14 @@ class @ActivityDialog extends AbstractDialog
         day  = date.getDate()
 
         return day + '-' + month + '-' + year
+
+
+
+    s: (data) ->
+        @actionLogs = data.data
+        @loadedActivity = true
+        @refresh()
+        console.log data
+
+    e: (data) ->
+        console.log data

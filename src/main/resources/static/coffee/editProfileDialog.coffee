@@ -1,18 +1,13 @@
-class @EditProfileDialog
+class @EditProfileDialog extends AbstractDialog
 
     constructor: () ->
-        @container = $('.js--side--dialog--container')
-        @template = @_html()
+        super()
 
-        @clickEvent = @_clickEventHandler.bind(this)
-        @container.on 'click', @clickEvent
 
     
     show: (@parentController, user) ->
-        
+        super()
         # @container.addClass('show')
-        @container.attr('visibility', true)
-        @container.html(@template)
 
         # Buttons
         @negativeButton = @container.find(".#{ComponentsUtils.NEGATIVE_BUTTON}")
@@ -38,10 +33,10 @@ class @EditProfileDialog
         @email.val(user.email)
 
 
-    hide: () ->
-        @container.attr('visibility', false)
+    negativeAction: () ->
+        super()
     
-    save: () ->
+    positiveAction: () ->
 
         valid = true
 
@@ -108,12 +103,10 @@ class @EditProfileDialog
 
 
     destroy: () ->
-        @container.off('click', @clickEvent)
-        @clickEvent = null
-        @template = null
+        super()
         @parentController = null
 
-    _html: () ->
+    _customHTML: () ->
         "<div class='col-7 m-auto h-75 pt-5 flex'>
             <div class='container w-50'>
         
@@ -160,27 +153,8 @@ class @EditProfileDialog
                     <label>Email*</label>
                     <input type='email' class='form-control js--email' disabled='disabled' placeholder='email'/>
                 </div>
-                
-                <div class='form-group form-inline'>
-                    <button class='btn btn-lg btn-light btn-block w-50 #{ComponentsUtils.NEGATIVE_BUTTON}' value='Izmeni'>Otkazi</button>
-                    <button class='btn btn-lg btn-primary btn-block w-50 #{ComponentsUtils.POSITIVE_BUTTON}' value='Izmeni'>Izmeni</button>
-                </div>
             </div>
     	</div>"
-
-    _clickEventHandler: (e) ->
-        target = $(e.target)
-
-        element = target.closest(@negativeButton)
-        if element.length != 0
-            @hide()
-            return
-
-        element = target.closest(@positiveButton)
-        if element.length != 0
-            @save()
-            return
-
 
     _saveSuccess: (data) ->
         FloatingMessage.success(data.message)

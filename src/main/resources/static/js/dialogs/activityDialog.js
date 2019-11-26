@@ -10,11 +10,14 @@
       ActivityDialog.__super__.constructor.call(this);
       this.negativeButtonVisibility(false);
       this.positiveButtonText("Zatvori");
+      this.loadedActivity = false;
     }
 
-    ActivityDialog.prototype.show = function(actionLogs1) {
-      this.actionLogs = actionLogs1;
-      return ActivityDialog.__super__.show.call(this);
+    ActivityDialog.prototype.show = function(userId) {
+      ActivityDialog.__super__.show.call(this);
+      if (!this.loadedActivity) {
+        return UserActionLogService.getUserActivityLogForUser(userId, null, this, this.s, this.e);
+      }
     };
 
     ActivityDialog.prototype.hide = function() {
@@ -23,11 +26,15 @@
 
     ActivityDialog.prototype.destory = function() {
       this.actionLogs = null;
+      this.loadedActivity = null;
       return ActivityDialog.__super__.destory.call(this);
     };
 
     ActivityDialog.prototype._customHTML = function() {
       var actionLogs, al, i, len, rowHtml, tableHtml;
+      if (!this.loadedActivity) {
+        return "<div> <span class='loader-icon'></span> </div>";
+      }
       actionLogs = this._prettyPrint(this.actionLogs);
       tableHtml = "<div> <table class='table mb-0'> <tr> <th class='table-text w-20'>Osoba</th> <th class='table-text w-20'>Akcija</th> <th class='table-text w-20'>Vreme</th> </tr> </table> <table class='table table-striped'>";
       rowHtml = "";
@@ -88,6 +95,17 @@
       month = date.getMonth();
       day = date.getDate();
       return day + '-' + month + '-' + year;
+    };
+
+    ActivityDialog.prototype.s = function(data) {
+      this.actionLogs = data.data;
+      this.loadedActivity = true;
+      this.refresh();
+      return console.log(data);
+    };
+
+    ActivityDialog.prototype.e = function(data) {
+      return console.log(data);
     };
 
     return ActivityDialog;

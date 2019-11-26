@@ -24,6 +24,10 @@
       return this.clickEvent = null;
     };
 
+    AbstractDialog.prototype.refresh = function() {
+      return this.container.html(this._templateHTML());
+    };
+
     AbstractDialog.prototype.destroy = function() {
       return this.container.html('');
     };

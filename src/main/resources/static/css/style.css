@@ -10355,6 +10355,17 @@ label.left-label {
   background-size: 30px;
 }
 
+.loader-icon {
+  position: relative;
+  display: block;
+  width: 60px;
+  height: 60px;
+  background: url(../images/loading.gif);
+  background-repeat: no-repeat;
+  background-size: 60px;
+  margin: auto;
+  margin-top: 3rem;
+}
 
 body {
 	position: relative;

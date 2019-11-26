@@ -3,14 +3,9 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
 
-	<script>
-		window.isAdmin = [[${isAdmin}]]
-		window.loggedUserId = [[${id}]]
-	</script>
-	
 	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
+	<script type="text/javascript" th:src="@{/pages/userInfo.js}"></script>
 
 	<title class="js--page--title">Homepage</title>
 </head>
