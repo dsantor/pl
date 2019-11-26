@@ -1,10 +1,13 @@
 package com.dakiplast.controllers;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +26,7 @@ import com.dakiplast.services.UserActivityLogService;
 import com.dakiplast.services.UserService;
 import com.dakiplast.services.impl.SessionService;
 import com.dakiplast.utils.Validation;
+import com.google.gson.Gson;
 
 @Controller
 @RequestMapping("/api/user")
@@ -121,4 +125,6 @@ public class UserController {
 		}
 		return new CustomResponse(null, true, "Privilege error!");
 	}
+	
+
 }

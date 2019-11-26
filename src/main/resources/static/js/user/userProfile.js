@@ -2,16 +2,10 @@
 (function() {
   this.UserProfile = (function() {
     function UserProfile() {
-      UserService.getUser(window.loggedUserId, null, this, this._getUserSuccess, null);
       this.container = $('.js--page--container');
       this.container.html(this._html());
       this.editProfilePage = new EditProfileDialog();
       this.activityDialog = new ActivityDialog();
-      this.clickEvent = this._clickEventHandler.bind(this);
-      this.container.on('click', this.clickEvent);
-      UserActionLogService.getUserActivityLogForUser(window.loggedUserId, null, this, this.s, this.e);
-      this.closest = ComponentsUtils.closest;
-      this.loggedUser = null;
       this.firstname = this.container.find(".js--firstname");
       this.lastname = this.container.find(".js--lastname");
       this.phone = this.container.find(".js--phone");
@@ -19,6 +13,10 @@
       this.street = this.container.find(".js--street");
       this.city = this.container.find(".js--city");
       this.buildNumber = this.container.find(".js--buildNumber");
+      this.loggedUser = window.loggerUserInfo;
+      this._renderUserInfo(this.loggedUser);
+      this.clickEvent = this._clickEventHandler.bind(this);
+      this.container.on('click', this.clickEvent);
     }
 
     UserProfile.prototype.getPageTitle = function() {
@@ -29,7 +27,6 @@
       this.container.off('click', this.clickEvent);
       this.clickEvent = null;
       this.loggedUser = null;
-      this.closest = null;
       this.editProfilePage.destroy();
       this.editProfilePage = null;
       return this.container.html('');
@@ -38,26 +35,16 @@
     UserProfile.prototype._clickEventHandler = function(event) {
       var target;
       target = $(event.target);
-      if (this.closest(target, '.js--edit--profile')) {
+      if (closest(target, '.js--edit--profile')) {
         this.editProfilePage.show(this, this.loggedUser);
         return;
       }
-      if (this.closest(target, '.js--activity')) {
-        this.activityDialog.show(this.data);
+      if (closest(target, '.js--activity')) {
+        this.activityDialog.show(this.loggedUser.id);
       }
     };
 
-    UserProfile.prototype.s = function(data) {
-      this.data = data.data;
-      return console.log(data);
-    };
-
-    UserProfile.prototype.e = function(data) {
-      return console.log(data);
-    };
-
-    UserProfile.prototype._getUserSuccess = function(user) {
-      window.loggedUser = user;
+    UserProfile.prototype._renderUserInfo = function(user) {
       this.loggedUser = user;
       this.firstname.text(user.firstName);
       this.lastname.text(user.lastName);
@@ -69,8 +56,14 @@
     };
 
     UserProfile.prototype.editProfileDialogSuccess = function(user) {
-      this.loggedUser = user;
-      return this._getUserSuccess(this.loggedUser);
+      this.loggedUser.firstName = user.firstName;
+      this.loggedUser.lastName = user.lastName;
+      this.loggedUser.street = user.street;
+      this.loggedUser.buildNumber = user.buildNumber;
+      this.loggedUser.city = user.city;
+      this.loggedUser.phoneNumber = user.phoneNumber;
+      window.loggedUserInfo = this.loggedUser;
+      return this._renderUserInfo(this.loggedUser);
     };
 
     UserProfile.prototype._html = function() {

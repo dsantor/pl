@@ -25,12 +25,6 @@ public class ClientController {
 	@Autowired
 	private ClientService clientService;
 	
-	@GetMapping("/create")
-	public String create(Model model) {
-		model.addAttribute("client", new Client());
-		return "createClient.html";
-	}
-	
 	@PostMapping("/save")
 	public @ResponseBody CustomResponse save(@RequestBody ClientRequest clientRequest, Model model) {
 		

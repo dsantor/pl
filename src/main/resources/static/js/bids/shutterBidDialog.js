@@ -6,12 +6,42 @@
   this.ShutterBidDialog = (function(superClass) {
     extend(ShutterBidDialog, superClass);
 
+    ShutterBidDialog.BID_TYPE = 'SHUTTER';
+
     function ShutterBidDialog() {
       ShutterBidDialog.__super__.constructor.call(this);
     }
 
-    ShutterBidDialog.prototype.show = function() {
-      return ShutterBidDialog.__super__.show.call(this);
+    ShutterBidDialog.prototype.show = function(parentPage, updateItem) {
+      this.parentPage = parentPage;
+      if (updateItem == null) {
+        updateItem = null;
+      }
+      ShutterBidDialog.__super__.show.call(this);
+      this.sort = this.container.find('.js--sort');
+      this.box = this.container.find('.js--box');
+      this.boxType = this.container.find('.js--box--type');
+      this.openSide = this.container.find('.js--open--side');
+      this.count = this.container.find('.js--count');
+      this.width = this.container.find('.js--width');
+      this.height = this.container.find('.js--height');
+      this.id = null;
+      this.additionBoxOptions = this.container.find('.js--box--type--option');
+      this.additionBoxActive = false;
+      if (updateItem) {
+        this.sort.val(updateItem.sort || '---');
+        this.box.val(updateItem.box || '---');
+        this.boxType.val(updateItem.boxType || '---');
+        this.openSide.val(updateItem.openSide || '---');
+        this.count.val(updateItem.count || '');
+        this.width.val(updateItem.width || '');
+        this.height.val(updateItem.height || '');
+        this.id = updateItem.id;
+        if (updateItem.boxType) {
+          this.additionBoxOptions.removeClass('hide');
+          return this.additionBoxActive = true;
+        }
+      }
     };
 
     ShutterBidDialog.prototype.hide = function() {
@@ -19,24 +49,108 @@
     };
 
     ShutterBidDialog.prototype.destroy = function() {
+      this.parentPage = null;
+      this.additionBoxOptions = null;
+      this.additionBoxActive = null;
+      this.sort = null;
+      this.box = null;
+      this.boxType = null;
+      this.openSide = null;
+      this.count = null;
+      this.width = null;
+      this.height = null;
       return ShutterBidDialog.__super__.destroy.call(this);
     };
 
-    ShutterBidDialog.prototype.save = function() {
-      this._collectDataFromForm();
-      return ShutterBidDialog.__super__.save.call(this);
+    ShutterBidDialog.prototype.positiveAction = function() {
+      var formData;
+      if (!this._validateForm()) {
+        return;
+      }
+      formData = this._collectDataFromForm();
+      this.parentPage.bidDialogResult(formData);
+      return this.hide();
     };
 
-    ShutterBidDialog.prototype.cancel = function() {
-      return ShutterBidDialog.__super__.cancel.call(this);
+    ShutterBidDialog.prototype.negativeAction = function() {
+      return ShutterBidDialog.__super__.negativeAction.call(this);
+    };
+
+    ShutterBidDialog.prototype._pageClientEventHandler = function(event) {
+      var target;
+      target = $(event.target);
+      if (closest(target, '.js--box')) {
+        return this._checkBoxTypeOptions(target);
+      }
     };
 
     ShutterBidDialog.prototype._collectDataFromForm = function() {
-      return this.doorType = $('.js--door--type');
+      var boxType;
+      if (this.box.val() !== 'Spoljasnja') {
+        boxType = null;
+      } else {
+        boxType = this._valueOf(this.boxType.val());
+      }
+      return {
+        bidType: ShutterBidDialog.BID_TYPE,
+        id: this.id,
+        sort: this._valueOf(this.sort.val()),
+        box: this._valueOf(this.box.val()),
+        boxType: boxType,
+        openSide: this._valueOf(this.openSide.val()),
+        count: this._valueOf(this.count.val()),
+        width: this._valueOf(this.width.val()),
+        height: this._valueOf(this.height.val())
+      };
+    };
+
+    ShutterBidDialog.prototype._valueOf = function(value) {
+      if (!value || value === '---') {
+        return null;
+      }
+      return value.trim();
+    };
+
+    ShutterBidDialog.prototype._validateInput = function(input) {
+      var valid;
+      valid = true;
+      if (this._valueOf(input.val())) {
+        input.removeClass(ComponentsUtils.CSS_INVALID_INPUT);
+      } else {
+        valid = false;
+        input.addClass(ComponentsUtils.CSS_INVALID_INPUT);
+      }
+      return valid;
+    };
+
+    ShutterBidDialog.prototype._validateForm = function() {
+      var valid, validInput;
+      valid = true;
+      validInput = this._validateInput(this.sort);
+      valid &= validInput;
+      validInput = this._validateInput(this.box);
+      valid &= validInput;
+      if (this.additionBoxActive) {
+        validInput = this._validateInput(this.boxType);
+        valid &= validInput;
+      }
+      validInput = this._validateInput(this.openSide);
+      valid &= validInput;
+      return valid;
+    };
+
+    ShutterBidDialog.prototype._checkBoxTypeOptions = function(element) {
+      var option;
+      option = element[0].options;
+      if (option[option.selectedIndex].value === 'Spoljasnja') {
+        return this.additionBoxOptions.removeClass('hide');
+      } else {
+        return this.additionBoxOptions.addClass('hide');
+      }
     };
 
     ShutterBidDialog.prototype._customHTML = function() {
-      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta roletne</label> <select> <option selected>---</option> <option>Kais</option> <option>Kurbla</option> <option>Elektronski pogon</option> </select> </div> <div class='form-group'> <label>Vrsta kutije</label> <select id='k'> <option value='0'>---</option> <option value='1'>Unutrasnja</option> <option value='2'>Spoljasnja</option> </select> </div> <div id='d' class='form-group hide'> <label>Tip kutije</label> <select> <option>---</option> <option>RONDO poluzaobljena</option> <option>ALU livena</option> <option>ALU zastorom</option> </select> </div> <div class='form-group'> <label>Strana otvora</label> <select> <option selected>---</option> <option>Levi otvor</option> <option>Desni otvor</option> </select> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Sirina</label> <input type='number' class='form-control' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Visina</label> <input type='number' class='form-control' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Unutrasnja sirina</label> <input type='number' class='form-control' placeholder='cm'> </div> </div> </div> </div> </div>";
+      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta roletne*</label> <select class='js--sort'> <option selected>---</option> <option>Kais</option> <option>Kurbla</option> <option>Elektronski pogon</option> </select> </div> <div class='form-group'> <label>Vrsta kutije*</label> <select class='js--box'> <option value='0'>---</option> <option value='Unutrasnja'>Unutrasnja</option> <option value='Spoljasnja'>Spoljasnja</option> </select> </div> <div class='form-group js--box--type--option hide'> <label>Tip kutije*</label> <select class='js--box--type'> <option>---</option> <option>RONDO poluzaobljena</option> <option>ALU livena</option> <option>ALU zastorom</option> </select> </div> <div class='form-group'> <label>Strana otvora*</label> <select class='js--open--side'> <option selected>---</option> <option>Levi otvor</option> <option>Desni otvor</option> </select> </div> <div class='form-group'> <label>Kolicina*</label> <input type='number' min='1' class='form-control js--count' value='1'> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Sirina</label> <input type='number' class='form-control js--width' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Visina</label> <input type='number' class='form-control js--height' placeholder='cm'> </div> </div> </div> </div> </div>";
     };
 
     return ShutterBidDialog;

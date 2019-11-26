@@ -25,6 +25,10 @@ class @ClientProfilePage
         if closest(target, '.js--create--bids')
             window.location.hash = 'bids/'+@clientId
             return
+        
+        if closest(target, '.js--back--button')
+            window.location.hash = 'clients'
+            return
             
     _getClientIdFromURL: () ->
         hash = window.location.hash
@@ -39,6 +43,7 @@ class @ClientProfilePage
     _templateHTML: (client) ->
         return "<div class='container '>
                 <nav class='nav header justify-content-end pt-3'>
+                    <span class='nav-link span-a back-button js--back--button'>Nazad</span>
                     <span class='nav-link span-a js--change--color'>Promeni oznaku</span>
                     <span class='nav-link span-a js--create--bids'>Kreiraj porudzbinu</span>
                 </nav>

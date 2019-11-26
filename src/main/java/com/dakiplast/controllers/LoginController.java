@@ -23,9 +23,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dakiplast.entities.User;
+import com.dakiplast.entities.dto.UserDto;
+import com.dakiplast.entities.interfaces.IUser;
 import com.dakiplast.enums.RolesEnum;
 import com.dakiplast.services.UserService;
 import com.dakiplast.services.impl.SessionService;
+import com.google.gson.Gson;
 
 @Controller
 public class LoginController {
@@ -111,5 +114,19 @@ public class LoginController {
 		RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 		auth.setAuthenticated(false);
 		redirectStrategy.sendRedirect(request, response, "/login?timeout");
+	}
+	
+	
+	@GetMapping("/pages/userInfo.js")
+	public void js (HttpServletRequest request, HttpServletResponse response) throws IOException {
+		Long loggedUserId = SessionService.getLoggedUserId(request);
+		IUser user = userService.getById(loggedUserId);
+		
+		UserDto userDto = new UserDto();
+		userDto.mapToUserDto(user);
+		Gson gson = new Gson();
+		
+		response.setHeader( "Content-Type", "text/javascript;charset=UTF-8" );
+		response.getWriter().print("window.loggerUserInfo="+gson.toJson(userDto)+";\n");
 	}
 }

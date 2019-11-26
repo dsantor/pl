@@ -1,27 +1,103 @@
 class @DoorBidDialog extends AbstractDialog
 
+    @BID_TYPE = 'DOOR'
+
     constructor: () ->
         super()
 
-    show: () ->
+    _pageClientEventHandler: (event) ->
+        super()
+        target = $(event.target)
+        
+        if closest(target, '.select--input')
+            @_validateInput(target)
+
+    show: (@parentPage, updateItem = null) ->
         super()
 
+        @sort       = @container.find('.js--sort')
+        @type       = @container.find('.js--type')
+        @openSide   = @container.find('.js--open--side')
+        @glass      = @container.find('.js--glass')
+        @width      = @container.find('.js--width')
+        @height     = @container.find('.js--height')
+        @innerWidth = @container.find('.js--inner-width')
+        @count      = @container.find('.js--count')
+        @id         = null
+
+        if updateItem
+            @sort.val(updateItem.sort or '---')
+            @type.val(updateItem.type or '---')
+            @openSide.val(updateItem.openSide or '---')
+            @glass.val(updateItem.glass or '---')
+            @width.val(updateItem.width or '')
+            @height.val(updateItem.height or '')
+            @innerWidth.val(updateItem.innerWidth or '')
+            @count.val(updateItem.count or '')
+            @id = updateItem.id
     hide: () ->
         super()
 
     destroy: () ->
+        @parentPage = null
         super()
 
-    save: () ->
-        @_collectDataFromForm()
-        super()
+    positiveAction: () ->
+        if not @_validateForm()
+            return
+        formData = @_collectDataFromForm()
+        @parentPage.bidDialogResult(formData)
+        @hide()
 
-    cancel: () ->
+    negativeAction: () ->
         super()
-
 
     _collectDataFromForm: () ->
-        @doorType = $('.js--door--type')
+
+        return {
+            bidType    : DoorBidDialog.BID_TYPE
+            id         : @id
+            sort       : @_valueOf(@sort.val())
+            type       : @_valueOf(@type.val())
+            openSide   : @_valueOf(@openSide.val())
+            glass      : @_valueOf(@glass.val())
+            width      : @_valueOf(@width.val())
+            height     : @_valueOf(@height.val())
+            innerWidth : @_valueOf(@innerWidth.val())
+            count      : @_valueOf(@count.val())
+        }
+
+
+    _valueOf: (value) ->
+        if not value or value is '---'
+            return null
+        return value.trim()
+
+
+    _validateInput: (input) ->
+        valid = true
+        if @_valueOf(input.val())
+            input.removeClass(ComponentsUtils.CSS_INVALID_INPUT)
+        else
+            valid = false
+            input.addClass(ComponentsUtils.CSS_INVALID_INPUT)
+        return valid
+
+    _validateForm: () ->
+        valid = true
+        validInput = @_validateInput(@sort)
+        valid &= validInput
+        
+        validInput = @_validateInput(@type)
+        valid &= validInput
+        
+        validInput = @_validateInput(@openSide)
+        valid &= validInput
+
+        validInput = @_validateInput(@glass)
+        valid &= validInput
+
+        return valid
 
     _customHTML: () ->
         return "<div class='col-7 m-auto p-5 flex'>
@@ -29,8 +105,8 @@ class @DoorBidDialog extends AbstractDialog
                             <h5>Opste</h5>     
                             <br>
                             <div class='form-group'>
-                                <label>Vrsta vrata</label>
-                                <select class='js--door--type'>
+                                <label>Vrsta vrata*</label>
+                                <select class='select--input js--sort'>
                                     <option selected>---</option>
                                     <option>Ulazna</option>
                                     <option>Sobna</option>
@@ -43,8 +119,8 @@ class @DoorBidDialog extends AbstractDialog
                             </div>
                             
                             <div class='form-group'>
-                                <label>Tip vrata</label>
-                                <select>
+                                <label>Tip vrata*</label>
+                                <select class='select--input js--type'>
                                     <option selected>---</option>
                                     <option>Sa staklom</option>
                                     <option>Pun panel</option>
@@ -53,8 +129,8 @@ class @DoorBidDialog extends AbstractDialog
                                 </select>
                             </div>                    
                             <div class='form-group'>
-                                    <label>Strana otvora</label>
-                                    <select>
+                                    <label>Strana otvora*</label>
+                                    <select class='select--input js--open--side'>
                                         <option selected>---</option>
                                         <option>Levi otvor</option>
                                         <option>Desni otvor</option>
@@ -62,8 +138,8 @@ class @DoorBidDialog extends AbstractDialog
                             </div>
 
                             <div class='form-group'>
-                                <label>Staklo</label>
-                                <select>
+                                <label>Staklo*</label>
+                                <select class='select--input js--glass'>
                                     <option selected>---</option>
                                     <option>Providno</option>
                                     <option>Griz</option>
@@ -72,21 +148,26 @@ class @DoorBidDialog extends AbstractDialog
                                 </select>
                             </div>
 
+                             <div class='form-group'>
+                                <label>Kolicina*</label>
+                                <input type='number' min='1' class='form-control js--count' value='1'>
+                            </div>
+
                             <div class='form-group'>
                                 <br> <hr>
                                 <h5>Dimenzije</h5>     
                                 <br>
                                 <div class='form-group form-inline'>
-                                    <label class='mr-2 wh-10 left-label'>Sirina</label>
-                                    <input type='number' class='form-control' placeholder='cm'>
+                                    <label class='mr-2 wh-10 left-label'>Sirina*</label>
+                                    <input type='number' min='0' class='form-control js--width' placeholder='cm'>
                                 </div>
                                 <div class='form-group form-inline'>
-                                    <label class='mr-2 wh-10 left-label'>Visina</label>
-                                    <input type='number' class='form-control' placeholder='cm'>
+                                    <label class='mr-2 wh-10 left-label'>Visina*</label>
+                                    <input type='number' min='0' class='form-control js--height' placeholder='cm'>
                                 </div>
                                 <div class='form-group form-inline'>
-                                    <label class='mr-2 wh-10 left-label'>Unutrasnja sirina</label>
-                                    <input type='number' class='form-control' placeholder='cm'>
+                                    <label class='mr-2 wh-10 left-label'>Unutrasnja sirina*</label>
+                                    <input type='number' min='0' class='form-control js--inner-width' placeholder='cm'>
                                 </div>
                             </div>
                     </div>

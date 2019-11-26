@@ -3,16 +3,19 @@
   this.BidsPage = (function() {
     function BidsPage(clientId) {
       this.clientId = clientId;
+      this.bidCurrentId = 1;
       this.container = $('.js--page--container');
-      this.container.html(this._html());
+      this.choseBidActive = true;
+      this.allowedSaveBidsButton = false;
+      this._renderChoseBidHTML();
       this.clickEvent = this._clickEventHandler.bind(this);
       this.container.on('click', this.clickEvent);
       this.doorBidDialog = new DoorBidDialog();
+      this.thresholdBidDialog = new ThresholdBidDialog();
       this.windowBidDialog = new WindowBidDialog();
       this.shutterBidDialog = new ShutterBidDialog();
-      this.thresholdBidDialog = new ThresholdBidDialog();
       this.mosquitoRepellerBidDialog = new MosquitoRepellerBidDialog();
-      this.bidsResultPage = new BidsResultPage();
+      this.cartList = {};
     }
 
     BidsPage.prototype.destroy = function() {
@@ -26,61 +29,163 @@
       this.thresholdBidDialog = null;
       this.mosquitoRepellerBidDialog.destroy();
       this.mosquitoRepellerBidDialog = null;
-      this.bidsResultPage.destroy();
-      this.bidsResultPage = null;
       this.container.off('click', this.clickEvent);
       this.clickEvent = null;
       this.container.html('');
       return this.clientId = null;
     };
 
-    BidsPage.prototype.show = function() {};
-
     BidsPage.prototype.getPageTitle = function() {
       return "Porudzbine";
     };
 
-    BidsPage.prototype._html = function() {
-      var createClientButton;
-      createClientButton = '';
-      if (this.clientId) {
-        createClientButton = 'hide';
+    BidsPage.prototype._renderChoseBidHTML = function() {
+      var bodyHTML;
+      this.choseBidActive = true;
+      bodyHTML = "<div class='container'> " + (this._getNavHTML()) + " <div class='col-7 m-auto w-100 pt-3 flex flex-column'> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--door'> <img class='item-order pointer' draggable=false src='/images/door.png'> </div> <label>Vrata</label> </div> <div class='item-order text-center'> <div class='js--create--threshold'> <img class='item-order pointer' draggable=false src='/images/threshold.png'> </div> <label>Prag</label> </div> <div class='item-order text-center'> <div class='js--create--mosquito--repeller'> <img class='item-order pointer' draggable=false src='/images/mosquitoRepeller.png'> </div> <label>Komarnik</label> </div> </div> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--window'> <img class='item-order pointer' draggable=false src='/images/window.png'> </div> <label>Prozor</label> </div> <div class='item-order text-center'> <div class='js--create--shutter'> <img class='item-order pointer' draggable=false src='/images/shutter.png'> </div> <label>Roletne</label> </div> </div> </div> </div>";
+      return this.container.html(bodyHTML);
+    };
+
+    BidsPage.prototype._getNavHTML = function() {
+      var choseBidCss, overviewCss, saveBidsCss;
+      choseBidCss = '';
+      overviewCss = 'hide';
+      if (this.choseBidActive) {
+        choseBidCss = 'hide';
+        overviewCss = '';
       }
-      return "<div class='container '> <nav class='nav header justify-content-end pt-3'> <span class='nav-link span-a js--bids-overview'>Pregled porudzbine</span> <span class='nav-link span-a " + createClientButton + " js--chose--client'>Unesi klijenta</span> <span class='nav-link span-a " + createClientButton + " js--save--bids'>Poruči</span> </nav> <div class='col-7 m-auto w-100 pt-3 flex flex-column'> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--door'> <img class='item-order pointer' src='/images/door.png'> </div> <label>Vrata</label> </div> <div class='item-order text-center'> <div class='js--create--threshold'> <img class='item-order pointer' src='/images/threshold.png'> </div> <label>Prag</label> </div> <div class='item-order text-center'> <div class='js--create--mosquito--repeller'> <img class='item-order pointer' src='/images/mosquitoRepeller.png'> </div> <label>Komarnik</label> </div> </div> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--window'> <img class='item-order pointer' src='/images/window.png'> </div> <label>Prozor</label> </div> <div class='item-order text-center'> <div class='js--create--shutter'> <img class='item-order pointer' src='/images/shutter.png'> </div> <label>Roletne</label> </div> </div> </div> </div>";
+      saveBidsCss = 'disabled';
+      if (this.allowedSaveBidsButton) {
+        saveBidsCss = '';
+      }
+      return "<nav class='nav header justify-content-end pt-3'> <span class='nav-link span-a js--chose--bids " + choseBidCss + "'>Odaberi proizvod</span> <span class='nav-link span-a js--bids-overview " + overviewCss + "'>Pregled porudzbine</span> <span class='nav-link span-a " + (this._createClientButtonClass()) + " js--chose--client'>Unesi klijenta</span> <span class='nav-link span-a " + saveBidsCss + " js--save--bids'>Poruči</span> </nav>";
+    };
+
+    BidsPage.prototype._renderOverviewHTML = function(innerHTML) {
+      var bodyHTML, navHTML;
+      navHTML = this._getNavHTML();
+      bodyHTML = "<div class='container'> " + navHTML + " <div class=' pt-3 flex flex-column'> " + innerHTML + " </div> </div>";
+      return this.container.html(bodyHTML);
     };
 
     BidsPage.prototype._clickEventHandler = function(event) {
       var target;
       target = $(event.target);
       if (closest(target, ".js--create--door")) {
-        this.doorBidDialog.show();
+        this.doorBidDialog.show(this);
         return;
       }
       if (closest(target, ".js--create--threshold")) {
-        this.thresholdBidDialog.show();
+        this.thresholdBidDialog.show(this);
         return;
       }
       if (closest(target, ".js--create--mosquito--repeller")) {
-        this.mosquitoRepellerBidDialog.show();
+        this.mosquitoRepellerBidDialog.show(this);
         return;
       }
       if (closest(target, ".js--create--window")) {
-        this.windowBidDialog.show();
+        this.windowBidDialog.show(this);
         return;
       }
       if (closest(target, ".js--create--shutter")) {
-        this.shutterBidDialog.show();
+        this.shutterBidDialog.show(this);
         return;
       }
       if (closest(target, '.js--bids-overview')) {
-        this.bidsResultPage.show();
+        this._showBids();
+        return;
+      }
+      if (closest(target, '.js--chose--bids')) {
+        this._renderChoseBidHTML();
         return;
       }
       if (closest(target, '.js--chose--client')) {
         return;
       }
       if (closest(target, '.js--save--bids')) {
+        return;
+      }
+      if (closest(target, '.js--remove--bid')) {
+        this._removeBid(target);
+        return;
+      }
+      if (closest(target, '.js--edit--bid')) {
+        this._editBid(target);
+      }
+    };
 
+    BidsPage.prototype._editBid = function(element) {
+      var bidId, bidRow, bidType, data, i, item, len, ref;
+      bidId = Number(element.attr('data-bid-id'));
+      bidRow = $(".js--bid--row[data-bid-id='" + bidId + "']");
+      bidType = bidRow.attr('data-bid-type');
+      data = null;
+      ref = this.cartList[bidType];
+      for (i = 0, len = ref.length; i < len; i++) {
+        item = ref[i];
+        if (item.id === bidId) {
+          data = item;
+          break;
+        }
+      }
+      return this._openEditDialog(bidType, data);
+    };
+
+    BidsPage.prototype._openEditDialog = function(bidType, data) {
+      switch (bidType) {
+        case DoorBidDialog.BID_TYPE:
+          this.doorBidDialog.show(this, data);
+          break;
+        case ThresholdBidDialog.BID_TYPE:
+          this.thresholdBidDialog.show(this, data);
+          break;
+        case MosquitoRepellerBidDialog.BID_TYPE:
+          this.mosquitoBidDialog.show(this, data);
+          break;
+        case WindowBidDialog.BID_TYPE:
+          this.windowBidDialog.show(this, data);
+          break;
+        case ShutterBidDialog.BID_TYPE:
+          this.shutterBidDialog.show(this, data);
+          break;
+        default:
+          return console.log('Dialog is not supported');
+      }
+    };
+
+    BidsPage.prototype._removeBid = function(target) {
+      var bid, bidId, bidRow, bidType, i, index, len, ref;
+      bidId = Number(target.attr('data-bid-id'));
+      bidRow = $(".js--bid--row[data-bid-id='" + bidId + "']");
+      bidType = bidRow.attr('data-bid-type');
+      bidRow.remove();
+      ref = this.cartList[bidType];
+      for (index = i = 0, len = ref.length; i < len; index = ++i) {
+        bid = ref[index];
+        if (bid.id === bidId) {
+          this.cartList[bidType].splice(index, 1);
+          break;
+        }
+      }
+      return this._updateResultSections();
+    };
+
+    BidsPage.prototype._updateResultSections = function() {
+      var i, key, keyLowecase, keys, len, sectionName;
+      keys = Object.keys(this.cartList);
+      for (i = 0, len = keys.length; i < len; i++) {
+        key = keys[i];
+        if (this.cartList[key].length === 0) {
+          keyLowecase = key.toLowerCase();
+          sectionName = ".js--section--" + keyLowecase;
+          $(sectionName).remove();
+          delete this.cartList[key];
+        }
+      }
+      keys = Object.keys(this.cartList);
+      if (keys.length === 0) {
+        this.allowedSaveBidsButton = false;
+        return this._renderOverviewHTML(BidSectionsHTML.emptyState());
       }
     };
 
@@ -88,6 +193,82 @@
       var hash;
       hash = window.location.hash;
       return hash.substring(hash.indexOf('/'));
+    };
+
+    BidsPage.prototype.bidDialogResult = function(data) {
+      this.allowedSaveBidsButton = true;
+      $('.js--save--bids').removeClass('disabled');
+      if (this.cartList[data.bidType] === void 0) {
+        this.cartList[data.bidType] = [];
+      }
+      if (data.id === null) {
+        return this._addItemToCartList(data);
+      } else {
+        return this._updateItemFromCartList(data);
+      }
+    };
+
+    BidsPage.prototype._addItemToCartList = function(data) {
+      data.id = this.bidCurrentId++;
+      return this.cartList[data.bidType].push(data);
+    };
+
+    BidsPage.prototype._updateItemFromCartList = function(data) {
+      var i, index, item, len, ref;
+      ref = this.cartList[data.bidType];
+      for (index = i = 0, len = ref.length; i < len; index = ++i) {
+        item = ref[index];
+        if (item.id === data.id) {
+          this.cartList[data.bidType][index] = data;
+          break;
+        }
+      }
+      return this._showBids();
+    };
+
+    BidsPage.prototype._showBids = function() {
+      var html, i, key, keys, len;
+      keys = Object.keys(this.cartList);
+      this.choseBidActive = false;
+      if (keys.length === 0) {
+        this.allowedSaveBidsButton = false;
+        this._renderOverviewHTML(BidSectionsHTML.emptyState());
+        this.save;
+        return;
+      }
+      html = '';
+      for (i = 0, len = keys.length; i < len; i++) {
+        key = keys[i];
+        if (this.cartList[key].length > 0) {
+          html += this._renderOverviewBidSection(key);
+        }
+      }
+      return this._renderOverviewHTML(html);
+    };
+
+    BidsPage.prototype._renderOverviewBidSection = function(bidType) {
+      switch (bidType) {
+        case DoorBidDialog.BID_TYPE:
+          return BidSectionsHTML.DoorSectionHTML(this.cartList[bidType]);
+        case ThresholdBidDialog.BID_TYPE:
+          return BidSectionsHTML.thresholdSectionHTML(this.cartList[bidType]);
+        case MosquitoRepellerBidDialog.BID_TYPE:
+          return BidSectionsHTML.mosquitoRepellerSectionHTML(this.cartList[bidType]);
+        case WindowBidDialog.BID_TYPE:
+          return BidSectionsHTML.windowSectionHTML(this.cartList[bidType]);
+        case ShutterBidDialog.BID_TYPE:
+          return BidSectionsHTML.shutterSectionHTML(this.cartList[bidType]);
+        default:
+          return '';
+      }
+    };
+
+    BidsPage.prototype._createClientButtonClass = function() {
+      if (this.clientId) {
+        return 'disabled';
+      } else {
+        return '';
+      }
     };
 
     return BidsPage;

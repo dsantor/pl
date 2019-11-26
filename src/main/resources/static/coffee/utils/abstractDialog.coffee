@@ -27,6 +27,8 @@ class @AbstractDialog
         @container.off 'click', @clickEvent
         @clickEvent = null
 
+    refresh: () ->
+        @container.html(@_templateHTML())
     destroy: () ->
         @container.html('')
 
