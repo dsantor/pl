@@ -22,7 +22,6 @@ public class UserDto {
 		this.street = user.getStreet();
 		this.city = user.getCity();
 		this.buildNumber = user.getBuildNumber();
-		this.email = user.getBuildNumber();
 		this.email = user.getEmail();
 		this.phoneNumber = user.getPhoneNumber();
 		this.isAdmin = RolesEnum.ROLE_ADMIN.equals(user.getRole());

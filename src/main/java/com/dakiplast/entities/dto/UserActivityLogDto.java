@@ -8,22 +8,22 @@ import com.dakiplast.enums.UserActivityLogType;
 
 public class UserActivityLogDto {
 
-	private IUser actionUser;
-	private IUser user;
+	private UserDto actionUser;
+	private UserDto user;
 	private IClient client;
 	private UserActivityLogType type; 
 	private Calendar time;
 	
-	public IUser getActionUser() {
+	public UserDto getActionUser() {
 		return actionUser;
 	}
-	public void setActionUser(IUser actionUser) {
+	public void setActionUser(UserDto actionUser) {
 		this.actionUser = actionUser;
 	}
-	public IUser getUser() {
+	public UserDto getUser() {
 		return user;
 	}
-	public void setUser(IUser user) {
+	public void setUser(UserDto user) {
 		this.user = user;
 	}
 	public IClient getClient() {

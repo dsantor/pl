@@ -25,6 +25,9 @@ class @ActivityDialog extends AbstractDialog
                         <span class='loader-icon'></span>
                     </div>"
 
+        if @actionLogs.length is 0
+            return @_getEmptyState()
+
         actionLogs = @_prettyPrint(@actionLogs)
         tableHtml = "<div>
                         <table class='table mb-0'>
@@ -48,6 +51,10 @@ class @ActivityDialog extends AbstractDialog
         
         return tableHtml
 
+    _getEmptyState: () ->
+        return "<div class'container js--page--container'>
+                    <div class='col-5 m-auto h-75 pt-5 text-center'>Nema zabeleženih aktivnosti</div>
+                </div>"
 
     _prettyPrint:(actionLogs) ->
         item = {}
@@ -100,7 +107,6 @@ class @ActivityDialog extends AbstractDialog
         @actionLogs = data.data
         @loadedActivity = true
         @refresh()
-        console.log data
 
     e: (data) ->
         console.log data

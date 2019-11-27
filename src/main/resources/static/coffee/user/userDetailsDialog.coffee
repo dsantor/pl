@@ -10,6 +10,7 @@ class @UserDetailsDialog extends AbstractDialog
     show: (@userId) ->
         super()
         UserService.getUser(@userId, null, this, @_getUserSuccess, null)
+        
         # Inputs
         @firstName   = @container.find('.js--first--name')
         @lastName    = @container.find('.js--last--name')
@@ -28,7 +29,6 @@ class @UserDetailsDialog extends AbstractDialog
         @city           = null
         @phoneNumber    = null
         @email          = null
-        @container.html('')
         @userId = null
         @user = null
 

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dakiplast.entities.dto.UserActivityLogDto;
+import com.dakiplast.entities.dto.UserDto;
 import com.dakiplast.entities.interfaces.IClient;
 import com.dakiplast.entities.interfaces.IUser;
 import com.dakiplast.entities.interfaces.IUserActivityLog;
@@ -65,7 +66,11 @@ public class UserActivityLogServiceImpl implements UserActivityLogService {
 		Long userId = actionLog.getUserId();
 		if (userId != null) {
 			IUser user = userService.getById(userId);
-			actionLogDto.setUser(user);
+
+			UserDto userDto = new UserDto();
+			userDto.mapToUserDto(user);
+			
+			actionLogDto.setUser(userDto);
 		}
 		
 		Long clientId = actionLog.getUserId();
@@ -74,14 +79,13 @@ public class UserActivityLogServiceImpl implements UserActivityLogService {
 			actionLogDto.setClient(client);
 		}
 		
-	
-		
-		actionLogDto.setActionUser(actionUser);
-		
+		UserDto actionUserDto = new UserDto();
+		actionUserDto.mapToUserDto(actionUser);
+		actionLogDto.setActionUser(actionUserDto);
 		
 		actionLogDto.setType(actionLog.getType());
 		actionLogDto.setTime(actionLog.getTime());
-		
+
 		return actionLogDto;
 	}
 }

@@ -35,6 +35,9 @@
       if (!this.loadedActivity) {
         return "<div> <span class='loader-icon'></span> </div>";
       }
+      if (this.actionLogs.length === 0) {
+        return this._getEmptyState();
+      }
       actionLogs = this._prettyPrint(this.actionLogs);
       tableHtml = "<div> <table class='table mb-0'> <tr> <th class='table-text w-20'>Osoba</th> <th class='table-text w-20'>Akcija</th> <th class='table-text w-20'>Vreme</th> </tr> </table> <table class='table table-striped'>";
       rowHtml = "";
@@ -45,6 +48,10 @@
       tableHtml += rowHtml;
       tableHtml += "</table></div>";
       return tableHtml;
+    };
+
+    ActivityDialog.prototype._getEmptyState = function() {
+      return "<div class'container js--page--container'> <div class='col-5 m-auto h-75 pt-5 text-center'>Nema zabeleženih aktivnosti</div> </div>";
     };
 
     ActivityDialog.prototype._prettyPrint = function(actionLogs) {
@@ -100,8 +107,7 @@
     ActivityDialog.prototype.s = function(data) {
       this.actionLogs = data.data;
       this.loadedActivity = true;
-      this.refresh();
-      return console.log(data);
+      return this.refresh();
     };
 
     ActivityDialog.prototype.e = function(data) {
