@@ -12,9 +12,6 @@ class @AbstractDialog
 
         @container = $('.js--side--dialog--container')
 
-
-
-
     show: () ->
         @clickEvent = @_clickEventHandler.bind(this)
         @container.on 'click', @clickEvent
@@ -29,8 +26,11 @@ class @AbstractDialog
 
     refresh: () ->
         @container.html(@_templateHTML())
+
     destroy: () ->
+        @hide()
         @container.html('')
+        @container = null
 
 
     positiveButtonVisibility: (visible = true) ->

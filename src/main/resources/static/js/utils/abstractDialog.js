@@ -29,7 +29,9 @@
     };
 
     AbstractDialog.prototype.destroy = function() {
-      return this.container.html('');
+      this.hide();
+      this.container.html('');
+      return this.container = null;
     };
 
     AbstractDialog.prototype.positiveButtonVisibility = function(visible) {
