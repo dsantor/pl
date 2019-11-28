@@ -66,33 +66,11 @@
         if (actionLog.client) {
           item.person = actionLog.client.firstName + ' ' + actionLog.client.lastName;
         }
-        item.action = this._getTypeOfAction(actionLog.type);
+        item.action = actionLog.type;
         item.time = this._getTime(actionLog.time);
         items.push(item);
       }
       return items;
-    };
-
-    ActivityDialog.prototype._getTypeOfAction = function(type) {
-      var action;
-      action = '';
-      switch (type) {
-        case 'CREATED_USER':
-          action = 'Kreiran korisnik';
-          break;
-        case 'CREATED_CLIENT':
-          action = 'Kreiran klijent';
-          break;
-        case 'CREATED_BID':
-          action = 'Kreirana porudzbina';
-          break;
-        case 'RESET_PASSWORD':
-          action = 'Restartovana sifra';
-          break;
-        default:
-          action = '/';
-      }
-      return action;
     };
 
     ActivityDialog.prototype._getTime = function(time) {

@@ -150,6 +150,7 @@ public class UserController {
 		}
 		
 		if (resetPassword) {
+			userActivityLogService.setDefaultPassword(loggedUserId, userId);
 			return new BaseResponse(null, false, "Uspešno restartovana šifra");
 		}
 		return new BaseResponse(null, true, "Šifra nije uspesno restartovana");
@@ -170,6 +171,12 @@ public class UserController {
 		if (blocked) {
 			IUser blockedUser = userService.getById(userId);
 			String blockText = blockedUser.isActive() ? "odblokiran" : "blokiran";
+			
+			if (blockedUser.isActive()) {
+				userActivityLogService.unblockUser(loggedUserId, userId);
+			} else {
+				userActivityLogService.blockUser(loggedUserId, userId);
+			}
 			return new BaseResponse(null, false, "Uspešno " + blockText + " korisnik");
 		}
 		return new BaseResponse(null, true, "Akcija nije uspešno izvršena");

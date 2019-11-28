@@ -15,4 +15,10 @@ public interface UserActivityLogService {
 	public List<IUserActivityLog> getAllActivitiesExcludingUser(Long actionUserId);
 	
 	public List<UserActivityLogDto> getFullLoadedActivitiesForUser(Long actionUserId);
+
+	public void setDefaultPassword(Long loggedUserId, Long userId);
+
+	public void unblockUser(Long loggedUserId, Long userId);
+
+	public void blockUser(Long loggedUserId, Long userId);
 }

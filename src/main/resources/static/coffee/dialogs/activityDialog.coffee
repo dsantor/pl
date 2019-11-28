@@ -67,31 +67,12 @@ class @ActivityDialog extends AbstractDialog
             if actionLog.client
                 item.person = actionLog.client.firstName + ' ' + actionLog.client.lastName
             
-            item.action = @_getTypeOfAction(actionLog.type)
+            item.action = actionLog.type
             item.time = @_getTime(actionLog.time)
 
             items.push(item)
         
         return items
-
-    _getTypeOfAction: (type) ->
-        action = ''
-        switch type
-            when 'CREATED_USER'
-                action = 'Kreiran korisnik'
-                break
-            when 'CREATED_CLIENT'
-                action = 'Kreiran klijent'
-                break
-            when 'CREATED_BID'
-                action = 'Kreirana porudzbina'
-                break
-            when 'RESET_PASSWORD'
-                action = 'Restartovana sifra'
-            else 
-                action = '/'
-        
-        return action
         
     _getTime: (time) ->
         date = new Date(time)

@@ -83,9 +83,24 @@ public class UserActivityLogServiceImpl implements UserActivityLogService {
 		actionUserDto.mapToUserDto(actionUser);
 		actionLogDto.setActionUser(actionUserDto);
 		
-		actionLogDto.setType(actionLog.getType());
+		actionLogDto.setType(actionLog.getType().getValue());
 		actionLogDto.setTime(actionLog.getTime());
 
 		return actionLogDto;
 	}
+	@Override
+	public void setDefaultPassword(Long loggedUserId, Long userId) {
+		userActivityLogRepository.createUserActivityLog(loggedUserId, userId, null, UserActivityLogType.RESET_PASSWORD);
+	}
+	@Override
+	public void unblockUser(Long loggedUserId, Long userId) {
+		userActivityLogRepository.createUserActivityLog(loggedUserId, userId, null, UserActivityLogType.UNBLOCK_USER);
+	}
+	@Override
+	public void blockUser(Long loggedUserId, Long userId) {
+		userActivityLogRepository.createUserActivityLog(loggedUserId, userId, null, UserActivityLogType.BLOCK_USER);
+	}
+	
+	
+	
 }

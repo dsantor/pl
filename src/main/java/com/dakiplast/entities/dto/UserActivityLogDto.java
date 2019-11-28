@@ -10,7 +10,7 @@ public class UserActivityLogDto {
 	private UserDto actionUser;
 	private UserDto user;
 	private IClient client;
-	private UserActivityLogType type; 
+	private String type; 
 	private Calendar time;
 	
 	public UserDto getActionUser() {
@@ -31,10 +31,10 @@ public class UserActivityLogDto {
 	public void setClient(IClient client) {
 		this.client = client;
 	}
-	public UserActivityLogType getType() {
+	public String getType() {
 		return type;
 	}
-	public void setType(UserActivityLogType type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 	public Calendar getTime() {
