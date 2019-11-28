@@ -66,7 +66,7 @@
 
     MainNavigation.prototype._restrictPage = function() {
       var onlyAdmin;
-      if (!window.isAdmin) {
+      if (!window.loggedUserInfo.isAdmin) {
         onlyAdmin = $('.js--admin--only');
         return onlyAdmin.remove();
       }

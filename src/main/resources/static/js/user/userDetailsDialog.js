@@ -10,21 +10,28 @@
       UserDetailsDialog.__super__.constructor.call(this);
       this.negativeButtonVisibility(false);
       this.positiveButtonText("Zatvori");
-      this.userId = null;
       this.user = null;
     }
 
-    UserDetailsDialog.prototype.show = function(userId) {
-      this.userId = userId;
+    UserDetailsDialog.prototype.show = function(user) {
+      this.user = user;
       UserDetailsDialog.__super__.show.call(this);
-      UserService.getUser(this.userId, null, this, this._getUserSuccess, null);
-      this.firstName = this.container.find('.js--first--name');
-      this.lastName = this.container.find('.js--last--name');
-      this.street = this.container.find('.js--street');
-      this.buildNumber = this.container.find('.js--build--number');
-      this.city = this.container.find('.js--city');
-      this.phoneNumber = this.container.find('.js--phone--number');
-      return this.email = this.container.find('.js--email');
+      if (this.user !== null) {
+        this.firstName = this.container.find('.js--first--name');
+        this.lastName = this.container.find('.js--last--name');
+        this.street = this.container.find('.js--street');
+        this.buildNumber = this.container.find('.js--build--number');
+        this.city = this.container.find('.js--city');
+        this.phoneNumber = this.container.find('.js--phone--number');
+        this.email = this.container.find('.js--email');
+        this.firstName.text(this.user.firstName);
+        this.lastName.text(this.user.lastName);
+        this.phoneNumber.text(this.user.phoneNumber);
+        this.email.text(this.user.email);
+        this.street.text(this.user.street);
+        this.city.text(this.user.city);
+        return this.buildNumber.text(this.user.buildNumber);
+      }
     };
 
     UserDetailsDialog.prototype.destroy = function() {
@@ -36,26 +43,62 @@
       this.city = null;
       this.phoneNumber = null;
       this.email = null;
-      this.userId = null;
       return this.user = null;
     };
 
-    UserDetailsDialog.prototype._getUserSuccess = function(user) {
-      this.firstName.text(user.firstName);
-      this.lastName.text(user.lastName);
-      this.phoneNumber.text(user.phoneNumber);
-      this.email.text(user.email);
-      this.street.text(user.street);
-      this.city.text(user.city);
-      return this.buildNumber.text(user.buildNumber);
-    };
-
     UserDetailsDialog.prototype._customHTML = function() {
-      return ComponentsUtils.userDetailsHTML();
+      var html, innerHTML;
+      if (this.user) {
+        innerHTML = this._toggleBlockUserText();
+        html = "<nav class='nav justify-content-start header pt-3'> <span class='nav-link span-a js--reset--password'>Restartuj šifru</span> <span class='nav-link span-a js--block--user'>" + innerHTML + "</span> <span class='nav-link span-a js--user--activity'>Aktivnosti</span> </nav>";
+        html += ComponentsUtils.userDetailsHTML();
+        return html;
+      } else {
+        return ComponentsUtils.emptyState('Korisnik nije pronadjen :(');
+      }
     };
 
     UserDetailsDialog.prototype.positiveAction = function() {
       return this.hide();
+    };
+
+    UserDetailsDialog.prototype._pageClientEventHandler = function(event) {
+      var target;
+      target = $(event.target);
+      if (closest(target, '.js--reset--password')) {
+        this._resetPassword();
+        return;
+      }
+      if (closest(target, '.js--block--user')) {
+        return this._toggleBlockUser();
+      }
+    };
+
+    UserDetailsDialog.prototype._resetPassword = function() {
+      return UserService.defaultPassword(this.user.id, null, this, this._globalSuccessMessage, this._globalErrorMessage);
+    };
+
+    UserDetailsDialog.prototype._globalSuccessMessage = function(response) {
+      return FloatingMessage.success(response.message);
+    };
+
+    UserDetailsDialog.prototype._globalErrorMessage = function(response) {
+      return FloatingMessage.error(response.message);
+    };
+
+    UserDetailsDialog.prototype._toggleBlockUserText = function() {
+      var text;
+      text = 'Odblokiraj';
+      if (this.user.active) {
+        text = 'Blokiraj';
+      }
+      return text;
+    };
+
+    UserDetailsDialog.prototype._toggleBlockUser = function() {
+      this.user.active = !this.user.active;
+      $(".js--block--user").html(this._toggleBlockUserText());
+      return UserService.toggleBlockUser(this.user.id, null, this, this._globalSuccessMessage, this._globalErrorMessage);
     };
 
     return UserDetailsDialog;

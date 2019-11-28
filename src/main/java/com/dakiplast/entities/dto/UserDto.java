@@ -13,18 +13,20 @@ public class UserDto {
 	private String buildNumber;
 	private String email;
 	private String phoneNumber;
+	private boolean isActive;
 	private boolean isAdmin;
 	
 	public void mapToUserDto(IUser user) {
 		this.id = user.getId();
-		this.firstName = user.getFirstName();
-		this.lastName = user.getLastName();
-		this.street = user.getStreet();
-		this.city = user.getCity();
+		this.firstName	 = user.getFirstName();
+		this.lastName	 = user.getLastName();
+		this.street 	 = user.getStreet();
+		this.city 		 = user.getCity();
 		this.buildNumber = user.getBuildNumber();
-		this.email = user.getEmail();
+		this.email 		 = user.getEmail();
 		this.phoneNumber = user.getPhoneNumber();
-		this.isAdmin = RolesEnum.ROLE_ADMIN.equals(user.getRole());
+		this.isActive    = user.isActive();
+		this.isAdmin	 = RolesEnum.ROLE_ADMIN.equals(user.getRole());
 	}
 
 	public Long getId() {
@@ -75,10 +77,19 @@ public class UserDto {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+	
 	public boolean isAdmin() {
 		return isAdmin;
 	}
 	public void setAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
+	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 }

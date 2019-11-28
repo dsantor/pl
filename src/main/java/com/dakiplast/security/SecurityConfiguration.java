@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -61,7 +60,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		String[] publicRoutes = new String[] { "/","/error"}; // "/login" , "/homepage", 
 
-		String[] userRoutes = new String[] {"/user/**"};
+		String[] userRoutes = new String[] { "/api", "/pages/secure/**", "/api/**", "/user/**", "/secure/**"};
 
 		String[] adminRoutes = new String[] { "/api", "/pages/secure/**", "/api/**", "/user/**", "/secure/**"}; //, "/login" , "/homepage", "/error", "/api/**", "/secure/**"
 
@@ -76,8 +75,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		 .authorizeRequests()
 //		 .antMatchers("/**").hasRole("ANONYMOUS")
 		 .antMatchers(publicRoutes).permitAll()
-		 .antMatchers(userRoutes).hasRole("USER")//.access("hasRole('USER')")
-		 .antMatchers(adminRoutes).hasRole("ADMIN") //.access("hasRole('ADMIN')")
+		 .antMatchers(userRoutes).hasAnyRole("USER", "ADMIN")//.access("hasRole('USER')")
+//		 .antMatchers(adminRoutes).hasRole("ADMIN") //.access("hasRole('ADMIN')")
 		 .anyRequest()
 		 .authenticated()
 		 .and()

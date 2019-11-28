@@ -127,7 +127,7 @@ class @CreateUserDialog extends AbstractDialog
             city        : city
             phoneNumber : phoneNumber
             email       : email
-            password    : password
+            password    : ''
         }
 
         UserService.save(data, null, this, @_saveUserSuccess, @_saveUserError)

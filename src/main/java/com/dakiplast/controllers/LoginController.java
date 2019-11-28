@@ -2,16 +2,10 @@ package com.dakiplast.controllers;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.server.ServletServerHttpRequest;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -19,10 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.dakiplast.entities.User;
 import com.dakiplast.entities.dto.UserDto;
 import com.dakiplast.entities.interfaces.IUser;
 import com.dakiplast.enums.RolesEnum;
@@ -51,33 +43,19 @@ public class LoginController {
 			return "redirect:/pages/secure";
 		}
 		
-//		Long id = SessionService.getLoggedUserId(request);
-//		if (id == null) {
-//			response.sendError( HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized" );
-//		}
 		if (error != null || logout != null || expired != null || invalid != null || autherror != null ) {
-//			response.sendError( HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized" );
-//			request.getSession(true).invalidate();
-//			response.sendRedirect("/login?error");
 			request.setAttribute("error", true);
 			return "login.html";
-//			return null;
 		} 
 		
-//		request.getSession().invalidate();
-//		authentication.setAuthenticated(false);
-		//model.addAttribute("localhost:8080", "host");
-//		return "login.html";
-//		return "redirect:/logout";
 		return "login.html"; 
-//		return "errorPage.html";
 	}
 	
 	@GetMapping("/pages/secure")
 	public String homepage(Model model, Authentication authentication, HttpServletRequest request) {
 		
 		if (authentication != null && authentication.isAuthenticated()) {
-			User user = userService.getByEmail(authentication.getName());
+			IUser user = userService.getByEmail(authentication.getName());
 			
 			if (user != null){
 				
@@ -103,10 +81,6 @@ public class LoginController {
 		
 		return "redirect:/login?error";
 	}
-//	@GetMapping("/logout")
-//	public String logout() {
-//		return "login.html";
-//	}
 	
 	@GetMapping("/logout")
 	public void ss(HttpServletRequest request, HttpServletResponse response, Authentication auth) throws IOException {
@@ -127,6 +101,6 @@ public class LoginController {
 		Gson gson = new Gson();
 		
 		response.setHeader( "Content-Type", "text/javascript;charset=UTF-8" );
-		response.getWriter().print("window.loggerUserInfo="+gson.toJson(userDto)+";\n");
+		response.getWriter().print("window.loggedUserInfo="+gson.toJson(userDto)+";\n");
 	}
 }

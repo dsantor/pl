@@ -18,6 +18,7 @@ import com.dakiplast.repository.UserActivityLogRepository;
 
 @Repository
 @Transactional
+@SuppressWarnings("unchecked")
 public class UserActivityLogRepositoryImpl implements UserActivityLogRepository {
 
 	@Autowired

@@ -3,12 +3,10 @@ package com.dakiplast.services.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.dakiplast.entities.User;
 import com.dakiplast.entities.interfaces.IUser;
-import com.dakiplast.enums.RolesEnum;
 import com.dakiplast.repository.UserRepository;
 import com.dakiplast.requests.UserRequest;
 import com.dakiplast.services.UserService;
@@ -18,12 +16,10 @@ import com.dakiplast.utils.Validation;
 public class UserServiceImpl implements UserService {
 	
 	private UserRepository userRepository;
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
-		this.userRepository 	   = userRepository;
-		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+	public UserServiceImpl(UserRepository userRepository) {
+		this.userRepository = userRepository;
 	}
 	
 	@Override
@@ -33,26 +29,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User create(Long createdById, String firstName, String lastName, String email, String phoneNumber, String city, String street, String buildNumber, String password) {
-		// TODO: Add validation
-		User entity = new User();
-		
-		entity.setFirstName(firstName);
-		entity.setLastName(lastName);
-		entity.setEmail(email);
-		entity.setPhoneNumber(phoneNumber);
-		entity.setCity(city);
-		entity.setStreet(street);
-		entity.setBuildNumber(buildNumber);
-		entity.setActive(true);
-		entity.setDeleted(false);
-		entity.setCreatedBy(createdById);
-		entity.setPassword(bCryptPasswordEncoder.encode(password));
-		entity.setRole(RolesEnum.ROLE_USER);
-		
-		userRepository.save(entity);
-		
-		return entity;
+	public IUser create(Long createdById, String firstName, String lastName, String email, String phoneNumber, String city, String street, String buildNumber) {
+		return userRepository.save(createdById, firstName, lastName, email, phoneNumber, city, street, buildNumber);
 	}
 
 	@Override
@@ -94,13 +72,23 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User getByEmail(String username) {
+	public IUser getByEmail(String username) {
 		return userRepository.findByEmail(username);
 	}
 
 	@Override
 	public List<User> getUsersExcludeUser(Long userId) {
 		return userRepository.findAllExcludeUser(userId);
+	}
+
+	@Override
+	public boolean setDefaultPassword(Long userId) {
+		return userRepository.setDefaultPassword(userId);
+	}
+
+	@Override
+	public boolean toggleBlockUser(Long userId) {
+		return userRepository.toggleBlockUser(userId);
 	}
 	
 }

@@ -60,7 +60,7 @@ class @MainNavigation
         
     
     _restrictPage: () ->
-        if not window.isAdmin
+        if not window.loggedUserInfo.isAdmin
             onlyAdmin = $('.js--admin--only')
             onlyAdmin.remove()
 

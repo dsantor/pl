@@ -86,7 +86,7 @@
         city: city,
         phoneNumber: phoneNumber,
         email: email,
-        password: password
+        password: ''
       };
       UserService.save(data, null, this, this._saveUserSuccess, this._saveUserError);
       return this.hide();

@@ -17,23 +17,23 @@
       return 'Users';
     };
 
-    UserPage.prototype._getUsersSuccess = function(data) {
-      if (data === null || data.length === 0) {
+    UserPage.prototype._getUsersSuccess = function(response) {
+      this.users = response.data;
+      if (this.users === null || this.users.length === 0) {
         return this._renderEmptyState();
       } else {
-        this.users = data;
-        return this._renderUsers(data);
+        return this._renderUsers(this.users);
       }
     };
 
-    UserPage.prototype._getUsersError = function(error) {
-      return console.log(error);
+    UserPage.prototype._getUsersError = function(response) {
+      return console.log(response.message);
     };
 
     UserPage.prototype._renderUsers = function(users) {
       var adminOptionsHtml, firstName, i, lastName, len, phoneNumber, rowHtml, tableHtml, u;
       adminOptionsHtml = "";
-      if (window.isAdmin) {
+      if (window.loggedUserInfo.isAdmin) {
         adminOptionsHtml = "<nav class='nav justify-content-end pt-3'> <span class='nav-link span-a js--create--user'>Dodaj korisnika</span> </nav> <th class='table-text w-10'>Profil</th>";
       }
       tableHtml = "<div> <table class='table mb-0'> <tr> " + adminOptionsHtml + " <th class='table-text w-20'>Ime</th> <th class='table-text w-20'>Prezime</th> <th class='table-text w-20'>Telefon</th> <th class='table-text w-30'>Email</th> </tr> </table> <table class='table table-striped'>";
@@ -43,7 +43,7 @@
         firstName = u.firstName || '/';
         lastName = u.lastName || '/';
         phoneNumber = u.phoneNumber || '/';
-        if (window.isAdmin) {
+        if (window.loggedUserInfo.isAdmin) {
           adminOptionsHtml = "<td class='table-text w-10'><span class='profile-icon js--show--user' data-user-id=" + u.id + "></span></td>";
         }
         rowHtml = "<tr class='js--user--row' data-user-id=" + u.id + "> " + adminOptionsHtml + " <td class='table-text w-20'>" + firstName + "</td> <td class='table-text w-20'>" + lastName + "</td> <td class='table-text w-20'>" + phoneNumber + "</td> <td class='table-text w-30'>" + u.email + "</td> </tr>";
@@ -57,6 +57,11 @@
       var html;
       html = "<div class='col-5 m-auto h-75 pt-5 text-center'>Nema registrovanih korisnika :(</div> <div class='pt-3'><input type='button' class='btn btn-primary d-block js--create--user' value='Dodaj korisnika'/> </div>";
       return this.container.html(html);
+    };
+
+    UserPage.prototype._showUserInfo = function(id) {
+      var user;
+      return user = this._getUserById(id);
     };
 
     UserPage.prototype.show = function() {};
@@ -76,14 +81,14 @@
 
     UserPage.prototype._renderSubmenuActions = function() {
       var html;
-      if (window.isAdmin) {
+      if (window.loggedUserInfo.isAdmin) {
         html = "<nav class='nav justify-content-end pt-5 pb-3'> <a href='#create-user' class='nav-item nav-link active'>Dodaj korisnika</a> </nav>";
         return this.container.append(html);
       }
     };
 
     UserPage.prototype._clickEventHandler = function(e) {
-      var element, targetElement;
+      var element, targetElement, user;
       targetElement = $(e.target);
       element = targetElement.closest('.js--create--user');
       if (element.length > 0) {
@@ -92,7 +97,8 @@
       }
       element = targetElement.closest('.js--show--user');
       if (element.length > 0) {
-        this.userDetailsDialog.show(element.attr('data-user-id'));
+        user = this._getUserById(element.attr('data-user-id'));
+        this.userDetailsDialog.show(user);
         return;
       }
       element = targetElement.closest('.js--remove--user');
@@ -132,6 +138,19 @@
     UserPage.prototype._createdNewUser = function(event, user) {
       this.users.push(user);
       return this._renderUsers(this.users);
+    };
+
+    UserPage.prototype._getUserById = function(id) {
+      var i, len, ref, user;
+      id = +id;
+      ref = this.users;
+      for (i = 0, len = ref.length; i < len; i++) {
+        user = ref[i];
+        if (user.id === id) {
+          return user;
+        }
+      }
+      return null;
     };
 
     return UserPage;

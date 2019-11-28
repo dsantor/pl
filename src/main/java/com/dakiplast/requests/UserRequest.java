@@ -10,7 +10,6 @@ public class UserRequest {
 	private String email;
 	private String phoneNumber;	
 	private String password;
-	private	boolean active;
 	
 	public String getFirstName() {
 		return firstName;
@@ -59,11 +58,5 @@ public class UserRequest {
 	}
 	public void setPassword(String password) {
 		this.password = password;
-	}
-	public boolean isActive() {
-		return active;
-	}
-	public void setActive(boolean active) {
-		this.active = active;
 	}
 }

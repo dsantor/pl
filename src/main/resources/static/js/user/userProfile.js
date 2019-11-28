@@ -13,7 +13,7 @@
       this.street = this.container.find(".js--street");
       this.city = this.container.find(".js--city");
       this.buildNumber = this.container.find(".js--buildNumber");
-      this.loggedUser = window.loggerUserInfo;
+      this.loggedUser = window.loggedUserInfo;
       this._renderUserInfo(this.loggedUser);
       this.clickEvent = this._clickEventHandler.bind(this);
       this.container.on('click', this.clickEvent);

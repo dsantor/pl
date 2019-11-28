@@ -13,26 +13,26 @@ class @UserPage #extends @AbstractPage
         EventUtils.bindCreatedNewUser(@createdNewUser)
 
         @users = []
-
+    
         @userDetailsDialog = new UserDetailsDialog()
         @crateUserDialog = new CreateUserDialog()
 
     getPageTitle: () ->
         return 'Users'
 
-    _getUsersSuccess: (data) ->
-        if data is null or data.length is 0
+    _getUsersSuccess: (response) ->
+        @users = response.data
+        if @users is null or @users.length is 0
             @_renderEmptyState()
         else
-            @users = data
-            @_renderUsers(data)
+            @_renderUsers(@users)
 
-    _getUsersError: (error) ->
-        console.log error
+    _getUsersError: (response) ->
+        console.log response.message
 
     _renderUsers: (users) ->
         adminOptionsHtml = ""
-        if window.isAdmin
+        if window.loggedUserInfo.isAdmin
             #@_renderSubmenuActions()
             
             adminOptionsHtml = "<nav class='nav justify-content-end pt-3'>
@@ -58,7 +58,7 @@ class @UserPage #extends @AbstractPage
             lastName    = u.lastName or '/'
             phoneNumber = u.phoneNumber or '/'
 
-            if window.isAdmin
+            if window.loggedUserInfo.isAdmin
                 adminOptionsHtml = "<td class='table-text w-10'><span class='profile-icon js--show--user' data-user-id=#{u.id}></span></td>"
             rowHtml = "<tr class='js--user--row' data-user-id=#{u.id}>
                         #{ adminOptionsHtml }
@@ -80,6 +80,8 @@ class @UserPage #extends @AbstractPage
 		</div>"
         @container.html(html)
 
+    _showUserInfo: (id) ->
+        user = @_getUserById(id)
     show: () ->	
 
     destroy: () ->
@@ -100,7 +102,7 @@ class @UserPage #extends @AbstractPage
 
 
     _renderSubmenuActions: () ->
-        if window.isAdmin
+        if window.loggedUserInfo.isAdmin
             html = "<nav class='nav justify-content-end pt-5 pb-3'>
                         <a href='#create-user' class='nav-item nav-link active'>Dodaj korisnika</a>
                     </nav>"
@@ -118,7 +120,8 @@ class @UserPage #extends @AbstractPage
         
         element = targetElement.closest('.js--show--user')
         if element.length > 0 
-            @userDetailsDialog.show(element.attr('data-user-id'))
+            user = @_getUserById(element.attr('data-user-id'))
+            @userDetailsDialog.show(user)
             return
         # Move to edit dialog
         element = targetElement.closest('.js--remove--user')
@@ -152,3 +155,10 @@ class @UserPage #extends @AbstractPage
     _createdNewUser: (event, user) ->
         @users.push(user)
         @_renderUsers(@users)
+
+    _getUserById: (id) ->
+        id = +id
+        for user in @users
+            if user.id is id
+                return user
+        return null

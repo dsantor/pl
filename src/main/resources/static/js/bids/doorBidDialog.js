@@ -12,15 +12,6 @@
       DoorBidDialog.__super__.constructor.call(this);
     }
 
-    DoorBidDialog.prototype._pageClientEventHandler = function(event) {
-      var target;
-      DoorBidDialog.__super__._pageClientEventHandler.call(this);
-      target = $(event.target);
-      if (closest(target, '.select--input')) {
-        return this._validateInput(target);
-      }
-    };
-
     DoorBidDialog.prototype.show = function(parentPage, updateItem) {
       this.parentPage = parentPage;
       if (updateItem == null) {

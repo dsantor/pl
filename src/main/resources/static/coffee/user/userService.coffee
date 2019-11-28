@@ -20,8 +20,14 @@ class @UserService
         url = '../api/user/save'
         AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError)
     
-
     @remove: (userId, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
         url = '../api/user/remove/' + userId
         AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)
 
+    @defaultPassword: (userId, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
+        url = '../api/user/defaultPassword/' + userId
+        AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)
+
+    @toggleBlockUser: (userId, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
+        url = '../api/user/toggleBlockUser/' + userId
+        AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)

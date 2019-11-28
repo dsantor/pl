@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.dakiplast.entities.Client;
 import com.dakiplast.entities.interfaces.IClient;
 import com.dakiplast.requests.ClientRequest;
-import com.dakiplast.responses.CustomResponse;
+import com.dakiplast.responses.BaseResponse;
 import com.dakiplast.services.ClientService;
 
 @Controller
@@ -26,22 +25,22 @@ public class ClientController {
 	private ClientService clientService;
 	
 	@PostMapping("/save")
-	public @ResponseBody CustomResponse save(@RequestBody ClientRequest clientRequest, Model model) {
+	public @ResponseBody BaseResponse save(@RequestBody ClientRequest clientRequest, Model model) {
 		
 		IClient client = clientService.create(clientRequest);
-		return new CustomResponse(client, false, null);
+		return new BaseResponse(client, false, null);
 	}
 	
 	
 	@GetMapping("/all")
-	public @ResponseBody CustomResponse all() {
+	public @ResponseBody BaseResponse all() {
 		List<IClient> clients = clientService.getAll();
-		return new CustomResponse(clients, false, null);
+		return new BaseResponse(clients, false, null);
 	}
 	
 	@GetMapping("/id/{clientId}")
-	public @ResponseBody CustomResponse getClient(@PathVariable ("clientId") Long clientId) {
+	public @ResponseBody BaseResponse getClient(@PathVariable ("clientId") Long clientId) {
 		IClient client = clientService.getClientById(clientId);
-		return new CustomResponse(client, false, null);
+		return new BaseResponse(client, false, null);
 	}
 }

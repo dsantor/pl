@@ -10,7 +10,7 @@ public interface UserService {
 	
 	public IUser getById(Long id);
 	
-	public User create(Long createdById, String firstName, String lastName, String email, String phoneNumber, String city, String street, String buildNumber, String password);
+	public IUser create(Long createdById, String firstName, String lastName, String email, String phoneNumber, String city, String street, String buildNumber);
 	
 	public boolean update(Long userId, UserRequest entity);
 	
@@ -18,7 +18,11 @@ public interface UserService {
 	
 	public List<User> getUsers();
 	
-	public User getByEmail(String username);
+	public IUser getByEmail(String username);
 
 	public List<User> getUsersExcludeUser(Long userId);
+
+	public boolean setDefaultPassword(Long userId);
+
+	public boolean toggleBlockUser(Long userId);
 }

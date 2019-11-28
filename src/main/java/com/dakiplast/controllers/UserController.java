@@ -1,13 +1,11 @@
 package com.dakiplast.controllers;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,16 +15,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dakiplast.entities.User;
+import com.dakiplast.entities.dto.UserDto;
 import com.dakiplast.entities.interfaces.IUser;
 import com.dakiplast.enums.RolesEnum;
 import com.dakiplast.enums.UserActivityLogType;
 import com.dakiplast.requests.UserRequest;
-import com.dakiplast.responses.CustomResponse;
+import com.dakiplast.responses.BaseResponse;
 import com.dakiplast.services.UserActivityLogService;
 import com.dakiplast.services.UserService;
 import com.dakiplast.services.impl.SessionService;
 import com.dakiplast.utils.Validation;
-import com.google.gson.Gson;
 
 @Controller
 @RequestMapping("/api/user")
@@ -38,44 +36,58 @@ public class UserController {
 	private UserActivityLogService userActivityLogService; 
 	
 	@GetMapping("/{id}")
-	public @ResponseBody IUser getUser(@PathVariable ("id") Long id) {
+	public @ResponseBody BaseResponse getUser(@PathVariable ("id") Long id) {
 		
 		IUser user = userService.getById(id);
+		if (user != null) {
+			UserDto userDto = new UserDto();
+			userDto.mapToUserDto(user);
+			
+			return new BaseResponse(userDto, false, null);
+		}
 		
-		return user;
+		return new BaseResponse(null, true, "Korisnik ne postoji");
 		
 	}
 	
 	@GetMapping("/all")
-	public @ResponseBody List<User> getUsers(HttpServletRequest request) {
+	public @ResponseBody BaseResponse getUsers(HttpServletRequest request) {
 		Long userId = SessionService.getLoggedUserId(request);
 		List<User> users = userService.getUsersExcludeUser(userId);
-		return users;
+		
+		List<UserDto> response = new ArrayList<UserDto>();
+		UserDto userDto;
+		for (User user: users) {
+			userDto = new UserDto();
+			userDto.mapToUserDto(user);
+			response.add(userDto);
+		}
+		return new BaseResponse(response, false, null);
 	}
 	
 	
 	@PostMapping("/update")
-	public @ResponseBody CustomResponse update(@RequestBody UserRequest user, HttpServletRequest request) {
+	public @ResponseBody BaseResponse update(@RequestBody UserRequest user, HttpServletRequest request) {
 		
 		Long userId = SessionService.getLoggedUserId(request);
 		
 		try {
 			boolean updated = userService.update(userId, user);
-			return new CustomResponse(updated, false, "Uspesno sacuvane izmene.");
+			return new BaseResponse(updated, false, "Uspešno sačuvane izmene.");
 
 		}catch (Exception e) {
-			return new CustomResponse(false, true, e.getMessage());
+			return new BaseResponse(false, true, e.getMessage());
 		}
 	}
 	
 	@PostMapping("/save")
-	public @ResponseBody CustomResponse save(@RequestBody UserRequest user, HttpServletRequest request) {
+	public @ResponseBody BaseResponse save(@RequestBody UserRequest user, HttpServletRequest request) {
 		
 		Long loggedUserId = SessionService.getLoggedUserId(request);
 		IUser loggedUser = userService.getById(loggedUserId);
 		
 		if (!Validation.isAdmin(loggedUser)) {
-			return new CustomResponse(null, true, "Privilege error!");
+			return new BaseResponse(null, true, "Nemate privilegije za ovu akciju!");
 		}
 		
 		String firstName   = user.getFirstName();
@@ -85,31 +97,30 @@ public class UserController {
 		String city	 	   = user.getCity();
 		String street 	   = user.getStreet();
 		String buildNumber = user.getBuildNumber();
-		String password    = user.getPassword();
 		
 		try {
-			User createdUser = userService.getByEmail(email);
+			IUser createdUser = userService.getByEmail(email);
 			
 			if (createdUser != null) {
-				return new CustomResponse(null, true, "Korisnik sa " + email + " vec postoji.");
+				return new BaseResponse(null, true, "Korisnik sa " + email + " već postoji.");
 			}
 			
-			createdUser = userService.create(loggedUserId, firstName, lastName, email, phoneNumber, city, street, buildNumber, password);
+			createdUser = userService.create(loggedUserId, firstName, lastName, email, phoneNumber, city, street, buildNumber);
 			
 			// Save activity
 			if (createdUser != null) {
 				userActivityLogService.create(loggedUserId, createdUser.getId(), null, UserActivityLogType.CREATED_USER);
 			}
 			
-			return new CustomResponse(createdUser, false, "Uspesno sacuvane izmene.");
+			return new BaseResponse(createdUser, false, "Uspešno sačuvane izmene.");
 
 		}catch (Exception e) {
-			return new CustomResponse(null, true, "Error while creating user!");
+			return new BaseResponse(null, true, "Error tokom kreiranja korisnika!");
 		}
 	}
 
 	@GetMapping("/remove/{userId}")
-	public @ResponseBody CustomResponse remove(@PathVariable ("userId") Long userId, HttpServletRequest request) {
+	public @ResponseBody BaseResponse remove(@PathVariable ("userId") Long userId, HttpServletRequest request) {
 		
 		Long loggedUserId = SessionService.getLoggedUserId(request);
 		IUser user = userService.getById(loggedUserId);
@@ -121,10 +132,46 @@ public class UserController {
 		}
 		
 		if (deleted) {
-			return new CustomResponse(userId, false, null);
+			return new BaseResponse(userId, false, null);
 		}
-		return new CustomResponse(null, true, "Privilege error!");
+		return new BaseResponse(null, true, "Nemate privilegije za ovu akciju!");
 	}
 	
+	@GetMapping("/defaultPassword/{userId}")
+	public @ResponseBody BaseResponse defaultPassword(@PathVariable ("userId") Long userId, HttpServletRequest request) {
+		Long loggedUserId = SessionService.getLoggedUserId(request);
+		IUser user = userService.getById(loggedUserId);
+		
+		boolean resetPassword = false;
+		if (RolesEnum.ROLE_ADMIN.equals(user.getRole())) {
+			resetPassword = userService.setDefaultPassword(userId);			
+		} else {
+			return new BaseResponse(null, true, "Nemate privilegije za ovu akciju!");
+		}
+		
+		if (resetPassword) {
+			return new BaseResponse(null, false, "Uspešno restartovana šifra");
+		}
+		return new BaseResponse(null, true, "Šifra nije uspesno restartovana");
+	}
 
+	@GetMapping("/toggleBlockUser/{userId}")
+	public @ResponseBody BaseResponse toggleBlockUser(@PathVariable ("userId") Long userId, HttpServletRequest request) {
+		Long loggedUserId = SessionService.getLoggedUserId(request);
+		IUser user = userService.getById(loggedUserId);
+		
+		boolean blocked = false;
+		if (RolesEnum.ROLE_ADMIN.equals(user.getRole())) {
+			blocked = userService.toggleBlockUser(userId);			
+		} else {
+			return new BaseResponse(null, true, "Nemate privilegije za ovu akciju!");
+		}
+		
+		if (blocked) {
+			IUser blockedUser = userService.getById(userId);
+			String blockText = blockedUser.isActive() ? "odblokiran" : "blokiran";
+			return new BaseResponse(null, false, "Uspešno " + blockText + " korisnik");
+		}
+		return new BaseResponse(null, true, "Akcija nije uspešno izvršena");
+	}
 }

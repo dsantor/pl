@@ -16,7 +16,7 @@ class @UserProfile
         @city        = @container.find(".js--city")
         @buildNumber = @container.find(".js--buildNumber")
 
-        @loggedUser = window.loggerUserInfo
+        @loggedUser = window.loggedUserInfo
         @_renderUserInfo(@loggedUser)
 
         @clickEvent = @_clickEventHandler.bind(this)

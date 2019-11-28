@@ -5,13 +5,6 @@ class @DoorBidDialog extends AbstractDialog
     constructor: () ->
         super()
 
-    _pageClientEventHandler: (event) ->
-        super()
-        target = $(event.target)
-        
-        if closest(target, '.select--input')
-            @_validateInput(target)
-
     show: (@parentPage, updateItem = null) ->
         super()
 

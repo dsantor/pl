@@ -41,9 +41,8 @@ public class AdminController {
 		String city 	   = userRequest.getCity();
 		String phoneNumber = userRequest.getPhoneNumber();
 		String email 	   = userRequest.getEmail();		
-		String password    = userRequest.getPassword();
 		
-		IUser user = userService.create(null, firstName, lastName, email, phoneNumber, city, street, buildNumber, password);
+		IUser user = userService.create(null, firstName, lastName, email, phoneNumber, city, street, buildNumber);
 		
 		return user;
 	}

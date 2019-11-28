@@ -39,6 +39,18 @@
       return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
     };
 
+    UserService.defaultPassword = function(userId, onTheFlyData, callbackContext, callBackFunction, callbackError) {
+      var url;
+      url = '../api/user/defaultPassword/' + userId;
+      return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
+    };
+
+    UserService.toggleBlockUser = function(userId, onTheFlyData, callbackContext, callBackFunction, callbackError) {
+      var url;
+      url = '../api/user/toggleBlockUser/' + userId;
+      return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
+    };
+
     return UserService;
 
   })();
