@@ -10307,13 +10307,23 @@ label.left-label {
 	background-size: 24px;
 }
 
-.profile-icon {
+.user-icon {
   position: relative;
   display: block;
   width: 24px;
   height: 24px;
   cursor: pointer;
-  background: url(../images/profile.svg);
+  background: url(../images/user.svg);
+  background-repeat: no-repeat;
+  background-size: 24px;
+}
+.blocked-user-icon {
+  position: relative;
+  display: block;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  background: url(../images/blockedUser.svg);
   background-repeat: no-repeat;
   background-size: 24px;
 }

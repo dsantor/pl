@@ -5,8 +5,8 @@ class @UserDetailsDialog extends AbstractDialog
         @negativeButtonVisibility(false)
         @positiveButtonText("Zatvori")
         @user       = null
-
-    show: (@user) ->
+        @updatedUser = false
+    show: (@parentPage, @user) ->
         super()
        
         if @user isnt null
@@ -27,6 +27,11 @@ class @UserDetailsDialog extends AbstractDialog
             @city.text(@user.city)
             @buildNumber.text(@user.buildNumber)
 
+    hide: () ->
+        super()
+        if @updatedUser
+            @parentPage.userDialogClosed()
+
     destroy: () ->
         super()
         @firstName      = null
@@ -37,6 +42,8 @@ class @UserDetailsDialog extends AbstractDialog
         @phoneNumber    = null
         @email          = null
         @user           = null
+        @parentPage     = null
+        @updatedUser    = null
 
     _customHTML: () ->
         if @user
@@ -79,5 +86,6 @@ class @UserDetailsDialog extends AbstractDialog
 
     _toggleBlockUser: () ->
         @user.active = !@user.active
+        @updatedUser = true
         $(".js--block--user").html(@_toggleBlockUserText())
         UserService.toggleBlockUser(@user.id, null, this, @_globalSuccessMessage, @_globalErrorMessage)

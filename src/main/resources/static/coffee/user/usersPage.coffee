@@ -59,7 +59,11 @@ class @UserPage #extends @AbstractPage
             phoneNumber = u.phoneNumber or '/'
 
             if window.loggedUserInfo.isAdmin
-                adminOptionsHtml = "<td class='table-text w-10'><span class='profile-icon js--show--user' data-user-id=#{u.id}></span></td>"
+                if u.active
+                    userIcon = 'user-icon'
+                else
+                    userIcon = 'blocked-user-icon'
+                adminOptionsHtml = "<td class='table-text w-10'><span class='#{userIcon} js--show--user' data-user-id=#{u.id}></span></td>"
             rowHtml = "<tr class='js--user--row' data-user-id=#{u.id}>
                         #{ adminOptionsHtml }
 				        <td class='table-text w-20'>#{firstName}</td>
@@ -121,7 +125,7 @@ class @UserPage #extends @AbstractPage
         element = targetElement.closest('.js--show--user')
         if element.length > 0 
             user = @_getUserById(element.attr('data-user-id'))
-            @userDetailsDialog.show(user)
+            @userDetailsDialog.show(this, user)
             return
         # Move to edit dialog
         element = targetElement.closest('.js--remove--user')
@@ -162,3 +166,6 @@ class @UserPage #extends @AbstractPage
             if user.id is id
                 return user
         return null
+
+    userDialogClosed: () ->
+        @_renderUsers(@users)

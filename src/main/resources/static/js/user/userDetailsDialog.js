@@ -11,9 +11,11 @@
       this.negativeButtonVisibility(false);
       this.positiveButtonText("Zatvori");
       this.user = null;
+      this.updatedUser = false;
     }
 
-    UserDetailsDialog.prototype.show = function(user) {
+    UserDetailsDialog.prototype.show = function(parentPage, user) {
+      this.parentPage = parentPage;
       this.user = user;
       UserDetailsDialog.__super__.show.call(this);
       if (this.user !== null) {
@@ -34,6 +36,13 @@
       }
     };
 
+    UserDetailsDialog.prototype.hide = function() {
+      UserDetailsDialog.__super__.hide.call(this);
+      if (this.updatedUser) {
+        return this.parentPage.userDialogClosed();
+      }
+    };
+
     UserDetailsDialog.prototype.destroy = function() {
       UserDetailsDialog.__super__.destroy.call(this);
       this.firstName = null;
@@ -43,7 +52,9 @@
       this.city = null;
       this.phoneNumber = null;
       this.email = null;
-      return this.user = null;
+      this.user = null;
+      this.parentPage = null;
+      return this.updatedUser = null;
     };
 
     UserDetailsDialog.prototype._customHTML = function() {
@@ -97,6 +108,7 @@
 
     UserDetailsDialog.prototype._toggleBlockUser = function() {
       this.user.active = !this.user.active;
+      this.updatedUser = true;
       $(".js--block--user").html(this._toggleBlockUserText());
       return UserService.toggleBlockUser(this.user.id, null, this, this._globalSuccessMessage, this._globalErrorMessage);
     };

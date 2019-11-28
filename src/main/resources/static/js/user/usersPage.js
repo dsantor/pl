@@ -31,7 +31,7 @@
     };
 
     UserPage.prototype._renderUsers = function(users) {
-      var adminOptionsHtml, firstName, i, lastName, len, phoneNumber, rowHtml, tableHtml, u;
+      var adminOptionsHtml, firstName, i, lastName, len, phoneNumber, rowHtml, tableHtml, u, userIcon;
       adminOptionsHtml = "";
       if (window.loggedUserInfo.isAdmin) {
         adminOptionsHtml = "<nav class='nav justify-content-end pt-3'> <span class='nav-link span-a js--create--user'>Dodaj korisnika</span> </nav> <th class='table-text w-10'>Profil</th>";
@@ -44,7 +44,12 @@
         lastName = u.lastName || '/';
         phoneNumber = u.phoneNumber || '/';
         if (window.loggedUserInfo.isAdmin) {
-          adminOptionsHtml = "<td class='table-text w-10'><span class='profile-icon js--show--user' data-user-id=" + u.id + "></span></td>";
+          if (u.active) {
+            userIcon = 'user-icon';
+          } else {
+            userIcon = 'blocked-user-icon';
+          }
+          adminOptionsHtml = "<td class='table-text w-10'><span class='" + userIcon + " js--show--user' data-user-id=" + u.id + "></span></td>";
         }
         rowHtml = "<tr class='js--user--row' data-user-id=" + u.id + "> " + adminOptionsHtml + " <td class='table-text w-20'>" + firstName + "</td> <td class='table-text w-20'>" + lastName + "</td> <td class='table-text w-20'>" + phoneNumber + "</td> <td class='table-text w-30'>" + u.email + "</td> </tr>";
         tableHtml += rowHtml;
@@ -98,7 +103,7 @@
       element = targetElement.closest('.js--show--user');
       if (element.length > 0) {
         user = this._getUserById(element.attr('data-user-id'));
-        this.userDetailsDialog.show(user);
+        this.userDetailsDialog.show(this, user);
         return;
       }
       element = targetElement.closest('.js--remove--user');
@@ -151,6 +156,10 @@
         }
       }
       return null;
+    };
+
+    UserPage.prototype.userDialogClosed = function() {
+      return this._renderUsers(this.users);
     };
 
     return UserPage;
