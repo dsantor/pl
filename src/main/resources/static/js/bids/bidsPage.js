@@ -249,7 +249,7 @@
     BidsPage.prototype._renderOverviewBidSection = function(bidType) {
       switch (bidType) {
         case DoorBidDialog.BID_TYPE:
-          return BidSectionsHTML.DoorSectionHTML(this.cartList[bidType]);
+          return BidSectionsHTML.doorSectionHTML(this.cartList[bidType]);
         case ThresholdBidDialog.BID_TYPE:
           return BidSectionsHTML.thresholdSectionHTML(this.cartList[bidType]);
         case MosquitoRepellerBidDialog.BID_TYPE:

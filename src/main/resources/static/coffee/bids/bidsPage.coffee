@@ -272,7 +272,7 @@ class @BidsPage
     _renderOverviewBidSection: (bidType) ->
         switch bidType
             when DoorBidDialog.BID_TYPE
-                return BidSectionsHTML.DoorSectionHTML(@cartList[bidType])
+                return BidSectionsHTML.doorSectionHTML(@cartList[bidType])
 
             when ThresholdBidDialog.BID_TYPE
                 return BidSectionsHTML.thresholdSectionHTML(@cartList[bidType])
