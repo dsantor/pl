@@ -18,6 +18,7 @@
         updateItem = null;
       }
       WindowBidDialog.__super__.show.call(this);
+      this.customHTML();
       this.sort = this.container.find('.js--sort');
       this.openSide = this.container.find('.js--open--side');
       this.glass = this.container.find('.js--glass');

@@ -5,12 +5,15 @@
       this.pageAndHash = {
         '#profile': 'profile',
         '#users': 'users',
+        '#user': 'users',
+        '#workers': 'workers',
+        '#workers': '#workers',
+        'worker': 'worker',
         '#clients': "clients",
         "#bids": 'bids',
         '#client': 'clients'
       };
       this.currentPage = null;
-      this.pageFromTab = true;
       this.pageTitle = $('.js--page--title');
       this.navigationBar = $('.js--nav--bar');
       this.container = $('.js--page--container');
@@ -42,7 +45,6 @@
     };
 
     MainNavigation.prototype._openPage = function(hash) {
-      this.pageFromTab = true;
       switch (hash.page) {
         case '#profile':
           this.currentPage = new UserProfile();
@@ -50,15 +52,24 @@
         case '#users':
           this.currentPage = new UserPage();
           break;
+        case '#user':
+          this.currentPage = new UserDetailsDialog(hash.value);
+          break;
+        case '#workers':
+          this.currentPage = new WorkersPage();
+          break;
+        case '#worker':
+          this.currentPage = new WorkerPage(hash.value);
+          break;
         case '#clients':
           this.currentPage = new ClientsPage();
+          break;
+        case '#client':
+          this.currentPage = new ClientProfilePage(hash.value);
           break;
         case '#bids':
           this.currentPage = new BidsPage(hash.value);
           break;
-        case '#client':
-          this.pageFromTab = false;
-          return this.currentPage = new ClientProfilePage(hash.value);
         default:
           this._redirectToErrorPage();
       }

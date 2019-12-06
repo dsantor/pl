@@ -1,32 +1,15 @@
-class @UserDetailsDialog extends AbstractDialog
+class @UserDetailsDialog extends AbstractPage
 
-    constructor: () ->
+    constructor: (userId) ->
         super()
-        @negativeButtonVisibility(false)
-        @positiveButtonText("Zatvori")
-        @user       = null
-        @updatedUser = false
-    show: (@parentPage, @user) ->
-        super()
-       
-        if @user isnt null
-            # Inputs
-            @firstName   = @container.find('.js--first--name')
-            @lastName    = @container.find('.js--last--name')
-            @street      = @container.find('.js--street')
-            @buildNumber = @container.find('.js--build--number')
-            @city        = @container.find('.js--city')
-            @phoneNumber = @container.find('.js--phone--number')
-            @email       = @container.find('.js--email')
+        UserService.getUser(userId, null, this, @show, null)
 
-            @firstName.text(@user.firstName)
-            @lastName.text(@user.lastName)
-            @phoneNumber.text(@user.phoneNumber)
-            @email.text(@user.email)
-            @street.text(@user.street)
-            @city.text(@user.city)
-            @buildNumber.text(@user.buildNumber)
+        @activityDialog = new ActivityDialog()
 
+    show: (respone) ->
+        @user = respone.data
+        @pageHTML()
+        
     hide: () ->
         super()
         if @updatedUser
@@ -48,12 +31,13 @@ class @UserDetailsDialog extends AbstractDialog
     _customHTML: () ->
         if @user
             innerHTML = @_toggleBlockUserText()
-            html = "<nav class='nav justify-content-start header pt-3'>
+            html = "<nav class='nav justify-content-end header pt-3'>
+                        <span class='nav-link span-a back-button js--back--button'>Nazad</span>
                         <span class='nav-link span-a js--reset--password'>Restartuj šifru</span>
                         <span class='nav-link span-a js--block--user'>#{innerHTML}</span>
                         <span class='nav-link span-a js--user--activity'>Aktivnosti</span>
                     </nav>"
-            html += ComponentsUtils.userDetailsHTML()
+            html += ComponentsUtils.userDetailsFilledHTML(@user)
             return html
         else
             ComponentsUtils.emptyState('Korisnik nije pronadjen :(')
@@ -61,15 +45,24 @@ class @UserDetailsDialog extends AbstractDialog
     positiveAction: () ->
         @hide()
 
-    _pageClientEventHandler: (event) ->
+    _clickEventHandler: (event) ->
         target = $(event.target)
 
+        if closest(target, '.js--back--button')
+            window.location.hash = 'users'
+            return
+        
         if closest(target, '.js--reset--password')
             @_resetPassword()
             return
+        
         if closest(target, '.js--block--user')
             @_toggleBlockUser()
-
+        
+        if closest(target, '.js--user--activity')
+            @activityDialog.show(@user.id)
+            return
+            
     _resetPassword: () ->
         UserService.defaultPassword(@user.id, null, this, @_globalSuccessMessage, @_globalErrorMessage)
 

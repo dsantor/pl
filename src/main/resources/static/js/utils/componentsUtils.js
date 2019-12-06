@@ -9,10 +9,6 @@
 
     ComponentsUtils.NEGATIVE_BUTTON = 'js--negative--button';
 
-    ComponentsUtils.TAB_PAGES = ['#profile', '#users', '#clients', '#bids'];
-
-    ComponentsUtils.OTHER_PAGES = ['#client/'];
-
     window.closest = function(target, closestTo) {
       return target.closest(closestTo).length > 0;
     };
@@ -21,11 +17,19 @@
       return "<div class='col-7 h-75 pt-5 flex'> <div class='container w-50'> <div class='profile-image h-336'> </div> </div> <div class='container w-50'> <table class='table table-borderless'> <tr> <td>Ime</td> <td class='js--first--name'></td> </tr> <tr> <td>Prezime</td> <td class='js--last--name'></td> </tr> <tr> <td>Ulica</td> <td class='js--street'></td> </tr> <tr> <td>Broj stana</td> <td class='js--build--number'></td> </tr> <tr> <td>Grad</td> <td class='js--city'></td> </tr> <tr> <td>Telefon</td> <td class='js--phone--number'></td> </tr> <tr> <td>Email</td> <td class='js--email'></td> </tr> </table> </div> </div>";
     };
 
+    ComponentsUtils.userDetailsFilledHTML = function(user) {
+      return "<div class='col-7 h-75 pt-5 flex'> <div class='container w-50'> <div class='profile-image h-336'> </div> </div> <div class='container w-50'> <table class='table table-borderless'> <tr> <td>Ime</td> <td>" + (user.firstName || '/') + "</td> </tr> <tr> <td>Prezime</td> <td>" + (user.lastName || '/') + "</td> </tr> <tr> <td>Ulica</td> <td>" + (user.street || '/') + "</td> </tr> <tr> <td>Broj stana</td> <td>" + (user.buildNumber || '/') + "</td> </tr> <tr> <td>Grad</td> <td>" + (user.city || '/') + "</td> </tr> <tr> <td>Telefon</td> <td>" + (user.phoneNumber || '/') + "</td> </tr> <tr> <td>Email</td> <td>" + (user.email || '/') + "</td> </tr> </table> </div> </div>";
+    };
+
     ComponentsUtils.emptyState = function(message, innerHtml) {
       if (innerHtml == null) {
         innerHtml = '';
       }
       return "<div class='col-5 m-auto h-75 pt-5 text-center'>" + message + "</div> <div class='pt-3'>" + innerHtml + "</div>";
+    };
+
+    ComponentsUtils.loadingPage = function() {
+      return "<div class='js--loading--page'><span class='loader-icon'></span></div>";
     };
 
     return ComponentsUtils;

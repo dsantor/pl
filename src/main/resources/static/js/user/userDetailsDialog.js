@@ -6,34 +6,15 @@
   this.UserDetailsDialog = (function(superClass) {
     extend(UserDetailsDialog, superClass);
 
-    function UserDetailsDialog() {
+    function UserDetailsDialog(userId) {
       UserDetailsDialog.__super__.constructor.call(this);
-      this.negativeButtonVisibility(false);
-      this.positiveButtonText("Zatvori");
-      this.user = null;
-      this.updatedUser = false;
+      UserService.getUser(userId, null, this, this.show, null);
+      this.activityDialog = new ActivityDialog();
     }
 
-    UserDetailsDialog.prototype.show = function(parentPage, user) {
-      this.parentPage = parentPage;
-      this.user = user;
-      UserDetailsDialog.__super__.show.call(this);
-      if (this.user !== null) {
-        this.firstName = this.container.find('.js--first--name');
-        this.lastName = this.container.find('.js--last--name');
-        this.street = this.container.find('.js--street');
-        this.buildNumber = this.container.find('.js--build--number');
-        this.city = this.container.find('.js--city');
-        this.phoneNumber = this.container.find('.js--phone--number');
-        this.email = this.container.find('.js--email');
-        this.firstName.text(this.user.firstName);
-        this.lastName.text(this.user.lastName);
-        this.phoneNumber.text(this.user.phoneNumber);
-        this.email.text(this.user.email);
-        this.street.text(this.user.street);
-        this.city.text(this.user.city);
-        return this.buildNumber.text(this.user.buildNumber);
-      }
+    UserDetailsDialog.prototype.show = function(respone) {
+      this.user = respone.data;
+      return this.pageHTML();
     };
 
     UserDetailsDialog.prototype.hide = function() {
@@ -61,8 +42,8 @@
       var html, innerHTML;
       if (this.user) {
         innerHTML = this._toggleBlockUserText();
-        html = "<nav class='nav justify-content-start header pt-3'> <span class='nav-link span-a js--reset--password'>Restartuj šifru</span> <span class='nav-link span-a js--block--user'>" + innerHTML + "</span> <span class='nav-link span-a js--user--activity'>Aktivnosti</span> </nav>";
-        html += ComponentsUtils.userDetailsHTML();
+        html = "<nav class='nav justify-content-end header pt-3'> <span class='nav-link span-a back-button js--back--button'>Nazad</span> <span class='nav-link span-a js--reset--password'>Restartuj šifru</span> <span class='nav-link span-a js--block--user'>" + innerHTML + "</span> <span class='nav-link span-a js--user--activity'>Aktivnosti</span> </nav>";
+        html += ComponentsUtils.userDetailsFilledHTML(this.user);
         return html;
       } else {
         return ComponentsUtils.emptyState('Korisnik nije pronadjen :(');
@@ -73,15 +54,22 @@
       return this.hide();
     };
 
-    UserDetailsDialog.prototype._pageClientEventHandler = function(event) {
+    UserDetailsDialog.prototype._clickEventHandler = function(event) {
       var target;
       target = $(event.target);
+      if (closest(target, '.js--back--button')) {
+        window.location.hash = 'users';
+        return;
+      }
       if (closest(target, '.js--reset--password')) {
         this._resetPassword();
         return;
       }
       if (closest(target, '.js--block--user')) {
-        return this._toggleBlockUser();
+        this._toggleBlockUser();
+      }
+      if (closest(target, '.js--user--activity')) {
+        this.activityDialog.show(this.user.id);
       }
     };
 
@@ -115,6 +103,6 @@
 
     return UserDetailsDialog;
 
-  })(AbstractDialog);
+  })(AbstractPage);
 
 }).call(this);

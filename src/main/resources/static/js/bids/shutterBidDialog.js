@@ -18,6 +18,7 @@
         updateItem = null;
       }
       ShutterBidDialog.__super__.show.call(this);
+      this.customHTML();
       this.sort = this.container.find('.js--sort');
       this.box = this.container.find('.js--box');
       this.boxType = this.container.find('.js--box--type');

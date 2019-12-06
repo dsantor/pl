@@ -13,6 +13,7 @@
     EditProfileDialog.prototype.show = function(parentController, user) {
       this.parentController = parentController;
       EditProfileDialog.__super__.show.call(this);
+      this.customHTML();
       this.negativeButton = this.container.find("." + ComponentsUtils.NEGATIVE_BUTTON);
       this.positiveButton = this.container.find("." + ComponentsUtils.POSITIVE_BUTTON);
       this.firstName = this.container.find('.js--firstName');

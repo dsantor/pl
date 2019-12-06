@@ -7,6 +7,7 @@ class @WindowBidDialog extends AbstractDialog
 
     show: (@parentPage, updateItem = null) ->
         super()
+        @customHTML()
         @sort     = @container.find('.js--sort')
         @openSide = @container.find('.js--open--side')
         @glass    = @container.find('.js--glass')

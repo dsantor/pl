@@ -14,8 +14,9 @@ class @UserPage #extends @AbstractPage
 
         @users = []
     
-        @userDetailsDialog = new UserDetailsDialog()
+       
         @crateUserDialog = new CreateUserDialog()
+        @activityDialog = new ActivityDialog()
 
     getPageTitle: () ->
         return 'Users'
@@ -91,9 +92,6 @@ class @UserPage #extends @AbstractPage
     destroy: () ->
         @container.off 'click', @clickEvent
         @clickEvent = null
-
-        @userDetailsDialog.destroy()
-        @userDetailsDialog = null
         
         @crateUserDialog.destroy()
         @crateUserDialog  = null
@@ -120,20 +118,18 @@ class @UserPage #extends @AbstractPage
         if element.length > 0
             @crateUserDialog.show()
             return
-        
-        
+            
         element = targetElement.closest('.js--show--user')
         if element.length > 0 
-            user = @_getUserById(element.attr('data-user-id'))
-            @userDetailsDialog.show(this, user)
+            window.location.hash = "user/#{element.attr('data-user-id')}"
+            # user = @_getUserById(element.attr('data-user-id'))
+            # @userDetailsDialog.show(this, user)
             return
-        # Move to edit dialog
+
         element = targetElement.closest('.js--remove--user')
         if element.length > 0 
             @_removeUser(element)
             return
-
-
     
     _removeUser: (element) ->
         userId = element.attr('data-user-id')

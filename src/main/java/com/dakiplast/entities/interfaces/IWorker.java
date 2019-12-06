@@ -1,9 +1,6 @@
 package com.dakiplast.entities.interfaces;
 
-import com.dakiplast.enums.RolesEnum;
-
-public interface IUser {
-	
+public interface IWorker {
 	public Long getId();
 	public String getFirstName();
 	public String getLastName();
@@ -11,10 +8,8 @@ public interface IUser {
 	public String getCity();
 	public String getBuildNumber();
 	public String getEmail();
-	public String getPhoneNumber();
-	public RolesEnum getRole();
-	public boolean isActive();
+	public String getPhoneNumber();	
+	public String getCreatedBy();
+	public Long getCreatedAt();
 	public boolean isDeleted();
-	public Long getCreatedBy();
-	public String getFullName();
 }

@@ -1,10 +1,10 @@
-	class @CreateClientDialog extends AbstractDialog
+	class @CreateWorkerDialog extends AbstractDialog
 
     constructor: () ->
         super()
 
     getPageTitle: () ->
-        return 'Kreiranje klijenta'    
+        return 'Kreiranje radnika'    
 
 
     show: () ->
@@ -18,13 +18,12 @@
         @city         = @container.find('.js--city')
         @phoneNumber  = @container.find('.js--phoneNumber')
         @email        = @container.find('.js--email')
-        @password     = @container.find('.js--password')
 
     hide: () ->
         super()
 
     destroy: () ->
-
+        super()
         @firstName    = null
         @lastName     = null
         @street       = null
@@ -32,7 +31,6 @@
         @city         = null
         @phoneNumber  = null
         @email        = null
-        @password     = null
 
     _customHTML: () ->
         "<div class='col-7 m-auto h-75 pt-5 flex'>
@@ -120,12 +118,12 @@
             email        : email
         }
 
-        ClientService.save(data, null, this, @_saveClientSuccess, @_saveClientError)
+        WorkerService.save(data, null, this, @_saveWorkerSuccess, @_saveWorkerError)
         @hide()
 
-    _saveClientSuccess: (response) ->
+    _saveWorkerSuccess: (response) ->
         FloatingMessage.success("Kreiran klijent #{response.data.firstName}  #{response.data.lastName}" )
-        EventUtils.triggerCreatedNewClient(response.data)
+        EventUtils.triggerCreatedNewWorker(response.data)
 
-    _saveClientError: (response) ->
+    _saveWorkerError: (response) ->
         FloatingMessage.error("Korisnik nije uspesno kreiran, pokusajte ponovo.")

@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,24 +11,21 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import com.dakiplast.entities.interfaces.IUser;
-import com.dakiplast.enums.RolesEnum;
+import com.dakiplast.entities.interfaces.IWorker;
 
 @Entity
-@Table(name = "users")
+@Table(name = "workers")
 @NamedQueries({
-	@NamedQuery( name = "User.findAll", query = "Select u from User u where u.deleted = true"),
-	@NamedQuery( name = "User.findAllExcludeUser", query = "Select u from User u where u.deleted = false and u.id !=: userId"),
-	@NamedQuery( name = "User.findById", query = "Select u from User u where user_id =: user_id"),
-	@NamedQuery( name = "User.findByEmail", query = "Select u from User u where email =: email")
+	@NamedQuery( name = "Worker.findAll", query = "SELECT w FROM Worker w"),
+	@NamedQuery( name = "Worker.findById", query = "SELECT w FROM Worker w WHERE w.id = :id")
 })
-public class User implements Serializable, IUser {
-	
+public class Worker implements Serializable, IWorker {
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "user_id")
+	@Column(name = "id")
 	private Long id;
 	
 	@Column(name = "first_name")
@@ -54,21 +49,14 @@ public class User implements Serializable, IUser {
 	@Column(name = "phone_number")
 	private String phoneNumber;	
 	
-	@Column(name = "password")
-	private String password;
+	@Column(name = "created_by")
+	private String createdBy;
 	
-	@Column(name = "active")
-	private boolean active = true;
+	@Column(name = "created_at")
+	private Long createdAt;
 	
 	@Column(name = "deleted")
 	private boolean deleted = false;
-	
-	@Column(name = "created_by")
-	private Long createdBy;
-	
-	@Column(name = "role")
-	@Enumerated(EnumType.STRING)
-	private RolesEnum role;
 
 	public Long getId() {
 		return id;
@@ -134,27 +122,20 @@ public class User implements Serializable, IUser {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getCreatedBy() {
+		return createdBy;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
-	public boolean isActive() {
-		return active;
+	public Long getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-	public RolesEnum getRole() {
-		return role;
-	}
-
-	public void setRole(RolesEnum role) {
-		this.role = role;
+	public void setCreatedAt(Long createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	public boolean isDeleted() {
@@ -163,18 +144,5 @@ public class User implements Serializable, IUser {
 
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
-	}
-
-	public Long getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(Long createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	@Override
-	public String getFullName() {
-		return this.firstName + ' ' + this.lastName;
 	}
 }

@@ -16,16 +16,14 @@ class @AbstractDialog
         @clickEvent = @_clickEventHandler.bind(this)
         @container.on 'click', @clickEvent
 
-        @container.html(@_templateHTML())
+        @loadingPageHTML()
+        #@container.html(@_templateHTML())
         @container.attr('visibility', true)
 
     hide: () ->
         @container.attr('visibility', false)
         @container.off 'click', @clickEvent
         @clickEvent = null
-
-    refresh: () ->
-        @container.html(@_templateHTML())
 
     destroy: () ->
         @hide()
@@ -57,8 +55,8 @@ class @AbstractDialog
     negativeAction: () ->
         @hide()
 
-    _templateHTML: () ->
-        return "<div style=background-color:white;>
+    _templateHTML: (innerHtml = '') ->
+        html = "<div style=background-color:white;>
                     <div class='form-group form-inline header'>
                         <div>
                             <img src='https://www.dakiplast.rs/wp-content/uploads/2017/05/logo-small-01-300x75.png' style='max-width: 50%;'>
@@ -73,9 +71,20 @@ class @AbstractDialog
                         </div>
                     </div>
                 </div>
-                #{@_customHTML()}"
+                #{innerHtml}"
+        @container.html(html)
 
+    customHTML: () ->
+        @_templateHTML(@_customHTML())
     _customHTML: () ->
+        return ''
+
+    loadingPageHTML: () ->
+        @_templateHTML("<div><span class='loader-icon'></span></div>")
+        
+    emptyStateHTML: () ->
+        @_templateHTML(@_emptyStateHTML())
+    _emptyStateHTML: () ->
         return ''
 
     _pageClientEventHandler: (event) ->

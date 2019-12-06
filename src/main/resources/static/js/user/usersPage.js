@@ -9,8 +9,8 @@
       this.createdNewUser = this._createdNewUser.bind(this);
       EventUtils.bindCreatedNewUser(this.createdNewUser);
       this.users = [];
-      this.userDetailsDialog = new UserDetailsDialog();
       this.crateUserDialog = new CreateUserDialog();
+      this.activityDialog = new ActivityDialog();
     }
 
     UserPage.prototype.getPageTitle = function() {
@@ -74,8 +74,6 @@
     UserPage.prototype.destroy = function() {
       this.container.off('click', this.clickEvent);
       this.clickEvent = null;
-      this.userDetailsDialog.destroy();
-      this.userDetailsDialog = null;
       this.crateUserDialog.destroy();
       this.crateUserDialog = null;
       EventUtils.unbindCreatedNewUser(this.createdNewUser);
@@ -93,7 +91,7 @@
     };
 
     UserPage.prototype._clickEventHandler = function(e) {
-      var element, targetElement, user;
+      var element, targetElement;
       targetElement = $(e.target);
       element = targetElement.closest('.js--create--user');
       if (element.length > 0) {
@@ -102,8 +100,7 @@
       }
       element = targetElement.closest('.js--show--user');
       if (element.length > 0) {
-        user = this._getUserById(element.attr('data-user-id'));
-        this.userDetailsDialog.show(this, user);
+        window.location.hash = "user/" + (element.attr('data-user-id'));
         return;
       }
       element = targetElement.closest('.js--remove--user');

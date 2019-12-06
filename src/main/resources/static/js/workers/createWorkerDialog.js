@@ -3,19 +3,19 @@
   var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
-  this.CreateClientDialog = (function(superClass) {
-    extend(CreateClientDialog, superClass);
+  this.CreateWorkerDialog = (function(superClass) {
+    extend(CreateWorkerDialog, superClass);
 
-    function CreateClientDialog() {
-      CreateClientDialog.__super__.constructor.call(this);
+    function CreateWorkerDialog() {
+      CreateWorkerDialog.__super__.constructor.call(this);
     }
 
-    CreateClientDialog.prototype.getPageTitle = function() {
-      return 'Kreiranje klijenta';
+    CreateWorkerDialog.prototype.getPageTitle = function() {
+      return 'Kreiranje radnika';
     };
 
-    CreateClientDialog.prototype.show = function() {
-      CreateClientDialog.__super__.show.call(this);
+    CreateWorkerDialog.prototype.show = function() {
+      CreateWorkerDialog.__super__.show.call(this);
       this.customHTML();
       this.firstName = this.container.find('.js--firstName');
       this.lastName = this.container.find('.js--lastName');
@@ -23,34 +23,33 @@
       this.buildNumber = this.container.find('.js--buildNumber');
       this.city = this.container.find('.js--city');
       this.phoneNumber = this.container.find('.js--phoneNumber');
-      this.email = this.container.find('.js--email');
-      return this.password = this.container.find('.js--password');
+      return this.email = this.container.find('.js--email');
     };
 
-    CreateClientDialog.prototype.hide = function() {
-      return CreateClientDialog.__super__.hide.call(this);
+    CreateWorkerDialog.prototype.hide = function() {
+      return CreateWorkerDialog.__super__.hide.call(this);
     };
 
-    CreateClientDialog.prototype.destroy = function() {
+    CreateWorkerDialog.prototype.destroy = function() {
+      CreateWorkerDialog.__super__.destroy.call(this);
       this.firstName = null;
       this.lastName = null;
       this.street = null;
       this.buildNumber = null;
       this.city = null;
       this.phoneNumber = null;
-      this.email = null;
-      return this.password = null;
+      return this.email = null;
     };
 
-    CreateClientDialog.prototype._customHTML = function() {
+    CreateWorkerDialog.prototype._customHTML = function() {
       return "<div class='col-7 m-auto h-75 pt-5 flex'> <div class='container w-50'> <div class='form-group'> <label>Email    </label> <input type='email' class='form-control js--email' placeholder='email'/> </div> <div class='form-group'> <label>Ime*</label> <input type='text' class='form-control js--firstName' placeholder='ime'/> </div> <div class='form-group'> <label>Prezime*</label> <input type='text' class='form-control js--lastName' placeholder='prezime'/> </div> <div class='form-group'> <label>Ulica</label> <input type='text' class='form-control js--street' placeholder='ulica'/> </div> </div> <div class='container w-50'> <div class='form-group'> <label>Broj stana</label> <input type='text' class='form-control js--buildNumber' placeholder='broj kuce/stana'/> </div> <div class='form-group'> <label>Grad</label> <input type='text' class='form-control js--city' placeholder='grad'/> </div> <div class='form-group'> <label>Telefon*</label> <input type='tel' class='form-control js--phoneNumber' placeholder='telefon'/> </div> </div> </div>";
     };
 
-    CreateClientDialog.prototype.negativeAction = function() {
+    CreateWorkerDialog.prototype.negativeAction = function() {
       return this.hide();
     };
 
-    CreateClientDialog.prototype.positiveAction = function() {
+    CreateWorkerDialog.prototype.positiveAction = function() {
       var buildNumber, city, data, email, firstName, lastName, mobileValid, phoneNumber, phoneValid, street, valid;
       valid = true;
       phoneValid = true;
@@ -92,20 +91,20 @@
         phoneNumber: phoneNumber,
         email: email
       };
-      ClientService.save(data, null, this, this._saveClientSuccess, this._saveClientError);
+      WorkerService.save(data, null, this, this._saveWorkerSuccess, this._saveWorkerError);
       return this.hide();
     };
 
-    CreateClientDialog.prototype._saveClientSuccess = function(response) {
+    CreateWorkerDialog.prototype._saveWorkerSuccess = function(response) {
       FloatingMessage.success("Kreiran klijent " + response.data.firstName + "  " + response.data.lastName);
-      return EventUtils.triggerCreatedNewClient(response.data);
+      return EventUtils.triggerCreatedNewWorker(response.data);
     };
 
-    CreateClientDialog.prototype._saveClientError = function(response) {
+    CreateWorkerDialog.prototype._saveWorkerError = function(response) {
       return FloatingMessage.error("Korisnik nije uspesno kreiran, pokusajte ponovo.");
     };
 
-    return CreateClientDialog;
+    return CreateWorkerDialog;
 
   })(AbstractDialog);
 

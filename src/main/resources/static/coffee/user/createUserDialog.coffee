@@ -2,18 +2,10 @@ class @CreateUserDialog extends AbstractDialog
 
     constructor: () ->
         super()
-        # @container.html(@_html())
-
-        # @clickEvent = @_clickEventHandler.bind(this)
-        # @container.on 'click', @clickEvent
-
-        # # Buttons
-        # @negativeButton = @container.find(".#{ComponentsUtils.NEGATIVE_BUTTON}")
-        # @positiveButton = @container.find(".#{ComponentsUtils.POSITIVE_BUTTON}")
-
+     
     show: () ->
         super()
-        
+        @customHTML()
         # Inputs
         @firstName   = @container.find('.js--firstName')
         @lastName    = @container.find('.js--lastName')

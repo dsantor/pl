@@ -7,6 +7,7 @@ class @ShutterBidDialog extends AbstractDialog
 
     show: (@parentPage, updateItem = null) ->
         super()
+        @customHTML()
         @sort     = @container.find('.js--sort')
         @box      = @container.find('.js--box')
         @boxType  = @container.find('.js--box--type')

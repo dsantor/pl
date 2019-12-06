@@ -7,6 +7,7 @@ class @ThresholdBidDialog extends AbstractDialog
 
     show: (@parentPage, updateItem = null) ->
         super()
+        @customHTML()
         @sort       = @container.find('.js--sort')
         @width      = @container.find('.js--width')
         @height     = @container.find('.js--height')

@@ -12,6 +12,7 @@
 
     CreateUserDialog.prototype.show = function() {
       CreateUserDialog.__super__.show.call(this);
+      this.customHTML();
       this.firstName = this.container.find('.js--firstName');
       this.lastName = this.container.find('.js--lastName');
       this.street = this.container.find('.js--street');

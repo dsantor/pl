@@ -73,7 +73,7 @@ public class UserActivityLogServiceImpl implements UserActivityLogService {
 			actionLogDto.setUser(userDto);
 		}
 		
-		Long clientId = actionLog.getUserId();
+		Long clientId = actionLog.getClientId();
 		if (clientId != null) {
 			IClient client = clientService.getClientById(clientId);
 			actionLogDto.setClient(client);

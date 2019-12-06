@@ -3,13 +3,35 @@
   this.AbstractPage = (function() {
     function AbstractPage() {
       this.container = $('.js--page--container');
+      this._loadingPage();
       this.clickEvent = this._clickEventHandler.bind(this);
       this.container.on('click', this.clickEvent);
     }
 
     AbstractPage.prototype.destroy = function() {
       this.container.off('click', this.clickEvent);
-      return this.clickEvent = null;
+      this.clickEvent = null;
+      return this.container = null;
+    };
+
+    AbstractPage.prototype.getPageTitle = function() {
+      return 'Daki plast';
+    };
+
+    AbstractPage.prototype.pageHTML = function() {
+      return this.container.html(this._customHTML());
+    };
+
+    AbstractPage.prototype.emptyState = function() {
+      return '';
+    };
+
+    AbstractPage.prototype._customHTML = function() {
+      return '';
+    };
+
+    AbstractPage.prototype._loadingPage = function() {
+      return this.container.html(ComponentsUtils.loadingPage());
     };
 
     return AbstractPage;

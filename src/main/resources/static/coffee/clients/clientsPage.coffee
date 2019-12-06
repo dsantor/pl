@@ -103,10 +103,8 @@ class @ClientsPage #extends @AbstractPage
             return
 
         if @_closest(target, '.js--show--client')
-            # @clientProfilePage = new ClientProfilePage(target.attr('data-client-id'))
             id = target.attr('data-client-id')
             window.location.hash = 'client/' + id
-            # @showClientDialog.show(target.attr('data-client-id'))
             return
 
 

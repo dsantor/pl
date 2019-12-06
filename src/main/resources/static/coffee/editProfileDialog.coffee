@@ -7,7 +7,7 @@ class @EditProfileDialog extends AbstractDialog
     
     show: (@parentController, user) ->
         super()
-        # @container.addClass('show')
+        @customHTML()
 
         # Buttons
         @negativeButton = @container.find(".#{ComponentsUtils.NEGATIVE_BUTTON}")

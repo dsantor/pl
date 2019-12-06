@@ -18,6 +18,7 @@
         updateItem = null;
       }
       ThresholdBidDialog.__super__.show.call(this);
+      this.customHTML();
       this.sort = this.container.find('.js--sort');
       this.width = this.container.find('.js--width');
       this.height = this.container.find('.js--height');

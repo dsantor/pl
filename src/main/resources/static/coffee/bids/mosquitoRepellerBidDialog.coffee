@@ -7,6 +7,7 @@ class @MosquitoRepellerBidDialog extends AbstractDialog
 
     show: (@parentPage, updateItem = null) ->
         super()
+        @customHTML()
         @sort     = @container.find('.js--sort')
         @type     = @container.find('.js--type')
         @openSide = @container.find('.js--open--side')

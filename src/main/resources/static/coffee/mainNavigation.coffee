@@ -1,9 +1,8 @@
 class @MainNavigation
     constructor: () ->
 
-        @pageAndHash = {'#profile': 'profile', '#users': 'users', '#clients': "clients", "#bids": 'bids', '#client': 'clients'}
+        @pageAndHash = {'#profile': 'profile', '#users': 'users', '#user': 'users', '#workers': 'workers', '#workers', 'worker', '#clients': "clients", "#bids": 'bids', '#client': 'clients'}
         @currentPage = null
-        @pageFromTab = true
         @pageTitle = $('.js--page--title')
         @navigationBar = $('.js--nav--bar')
         @container = $('.js--page--container')
@@ -37,7 +36,6 @@ class @MainNavigation
 
 
     _openPage: (hash) ->
-        @pageFromTab = true
         switch hash.page
             when '#profile'
                 @currentPage = new UserProfile()
@@ -45,15 +43,25 @@ class @MainNavigation
             when '#users'
                 @currentPage = new UserPage()
                 return
+            when '#user'
+                @currentPage = new UserDetailsDialog(hash.value)
+                return
+            when '#workers'
+                @currentPage = new WorkersPage()
+                return
+            when '#worker'
+                @currentPage = new WorkerPage(hash.value)
+                return
             when '#clients'
                 @currentPage = new ClientsPage()
+                return
+            when '#client'
+                @currentPage = new ClientProfilePage(hash.value)
                 return
             when '#bids'
                 @currentPage = new BidsPage(hash.value)
                 return
-            when '#client'
-                @pageFromTab = false
-                @currentPage = new ClientProfilePage(hash.value)
+
             else
                 @_redirectToErrorPage()
                 return

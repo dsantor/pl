@@ -15,9 +15,8 @@
 
     ActivityDialog.prototype.show = function(userId) {
       ActivityDialog.__super__.show.call(this);
-      if (!this.loadedActivity) {
-        return UserActionLogService.getUserActivityLogForUser(userId, null, this, this.s, this.e);
-      }
+      this.customHTML();
+      return UserActionLogService.getUserActivityLogForUser(userId, null, this, this.s, this.e);
     };
 
     ActivityDialog.prototype.hide = function() {
@@ -32,34 +31,28 @@
 
     ActivityDialog.prototype._customHTML = function() {
       var actionLogs, al, i, len, rowHtml, tableHtml;
-      if (!this.loadedActivity) {
-        return "<div> <span class='loader-icon'></span> </div>";
-      }
-      if (this.actionLogs.length === 0) {
-        return this._getEmptyState();
-      }
       actionLogs = this._prettyPrint(this.actionLogs);
-      tableHtml = "<div> <table class='table mb-0'> <tr> <th class='table-text w-20'>Osoba</th> <th class='table-text w-20'>Akcija</th> <th class='table-text w-20'>Vreme</th> </tr> </table> <table class='table table-striped'>";
+      tableHtml = "<div class='w-95 m-auto'> <table class='table mb-0'> <tr> <th class='table-text w-20'>Akcija nad osobom</th> <th class='table-text w-20'>Akcija</th> <th class='table-text w-20'>Vreme</th> </tr> </table> <table class='table table-striped'>";
       rowHtml = "";
       for (i = 0, len = actionLogs.length; i < len; i++) {
         al = actionLogs[i];
         rowHtml = "<tr> <td class='table-text w-20'>" + al.person + "</td> <td class='table-text w-20'>" + al.action + "</td> <td class='table-text w-20'>" + al.time + "</td> </tr>";
+        tableHtml += rowHtml;
       }
-      tableHtml += rowHtml;
       tableHtml += "</table></div>";
       return tableHtml;
     };
 
-    ActivityDialog.prototype._getEmptyState = function() {
+    ActivityDialog.prototype._emptyStateHTML = function() {
       return "<div class'container js--page--container'> <div class='col-5 m-auto h-75 pt-5 text-center'>Nema zabeleženih aktivnosti</div> </div>";
     };
 
     ActivityDialog.prototype._prettyPrint = function(actionLogs) {
       var actionLog, i, item, items, len;
-      item = {};
       items = [];
       for (i = 0, len = actionLogs.length; i < len; i++) {
         actionLog = actionLogs[i];
+        item = {};
         if (actionLog.user) {
           item.person = actionLog.user.firstName + ' ' + actionLog.user.lastName;
         }
@@ -74,22 +67,29 @@
     };
 
     ActivityDialog.prototype._getTime = function(time) {
-      var date, day, month, year;
+      var date, day, hour, minutes, month, seconds, year;
       date = new Date(time);
       year = date.getFullYear();
       month = date.getMonth();
       day = date.getDate();
-      return day + '-' + month + '-' + year;
+      hour = date.getHours();
+      minutes = date.getMinutes();
+      seconds = date.getSeconds();
+      return day + "-" + month + "-" + year + " (" + hour + ":" + minutes + ":" + seconds + ")";
     };
 
     ActivityDialog.prototype.s = function(data) {
       this.actionLogs = data.data;
-      this.loadedActivity = true;
-      return this.refresh();
+      if (this.actionLogs.length === 0) {
+        this.emptyStateHTML();
+        return;
+      }
+      return this.customHTML();
     };
 
     ActivityDialog.prototype.e = function(data) {
-      return console.log(data);
+      console.log(data);
+      return this.loadedActivity = false;
     };
 
     return ActivityDialog;

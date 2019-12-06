@@ -14,7 +14,7 @@
     AbstractDialog.prototype.show = function() {
       this.clickEvent = this._clickEventHandler.bind(this);
       this.container.on('click', this.clickEvent);
-      this.container.html(this._templateHTML());
+      this.loadingPageHTML();
       return this.container.attr('visibility', true);
     };
 
@@ -22,10 +22,6 @@
       this.container.attr('visibility', false);
       this.container.off('click', this.clickEvent);
       return this.clickEvent = null;
-    };
-
-    AbstractDialog.prototype.refresh = function() {
-      return this.container.html(this._templateHTML());
     };
 
     AbstractDialog.prototype.destroy = function() {
@@ -72,11 +68,32 @@
       return this.hide();
     };
 
-    AbstractDialog.prototype._templateHTML = function() {
-      return "<div style=background-color:white;> <div class='form-group form-inline header'> <div> <img src='https://www.dakiplast.rs/wp-content/uploads/2017/05/logo-small-01-300x75.png' style='max-width: 50%;'> </div> <div> <button class='cbtn btn-light " + ComponentsUtils.NEGATIVE_BUTTON + " " + this.JS_NEGATIVE_BUTTON_VISIBILITY + "'> " + this.JS_NEGATIVE_BUTTON_TEXT + " </button> <button class='cbtn btn-primary mr-15px " + ComponentsUtils.POSITIVE_BUTTON + " " + this.JS_POSITIVE_BUTTON_VISIBILITY + "'> " + this.JS_POSITIVE_BUTTON_TEXT + " </button> </div> </div> </div> " + (this._customHTML());
+    AbstractDialog.prototype._templateHTML = function(innerHtml) {
+      var html;
+      if (innerHtml == null) {
+        innerHtml = '';
+      }
+      html = "<div style=background-color:white;> <div class='form-group form-inline header'> <div> <img src='https://www.dakiplast.rs/wp-content/uploads/2017/05/logo-small-01-300x75.png' style='max-width: 50%;'> </div> <div> <button class='cbtn btn-light " + ComponentsUtils.NEGATIVE_BUTTON + " " + this.JS_NEGATIVE_BUTTON_VISIBILITY + "'> " + this.JS_NEGATIVE_BUTTON_TEXT + " </button> <button class='cbtn btn-primary mr-15px " + ComponentsUtils.POSITIVE_BUTTON + " " + this.JS_POSITIVE_BUTTON_VISIBILITY + "'> " + this.JS_POSITIVE_BUTTON_TEXT + " </button> </div> </div> </div> " + innerHtml;
+      return this.container.html(html);
+    };
+
+    AbstractDialog.prototype.customHTML = function() {
+      return this._templateHTML(this._customHTML());
     };
 
     AbstractDialog.prototype._customHTML = function() {
+      return '';
+    };
+
+    AbstractDialog.prototype.loadingPageHTML = function() {
+      return this._templateHTML("<div><span class='loader-icon'></span></div>");
+    };
+
+    AbstractDialog.prototype.emptyStateHTML = function() {
+      return this._templateHTML(this._emptyStateHTML());
+    };
+
+    AbstractDialog.prototype._emptyStateHTML = function() {
       return '';
     };
 

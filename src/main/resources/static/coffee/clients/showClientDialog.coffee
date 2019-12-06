@@ -30,9 +30,7 @@ class @ShowClientDialog extends AbstractDialog
 
     _loadedClient: (response) ->
         @client = response.data
-        profileHTML = @_generateClientProfileHTML(@client)
-        @container.append(profileHTML)
-        
+        @customHTML()
 
     _loadedClientError: (error) ->
         console.log error
@@ -48,7 +46,7 @@ class @ShowClientDialog extends AbstractDialog
             alert("h2")
             return
 
-    _generateClientProfileHTML: (client) ->
+    _customHTML: () ->
         return "<div class='container '>
                 <nav class='nav header justify-content-end pt-3'>
                     <span class='nav-link span-a js--change--color'>Promeni oznaku</span>
@@ -63,36 +61,36 @@ class @ShowClientDialog extends AbstractDialog
                         <table class='table table-borderless'>
                             <tr>
                                 <td>Ime</td>
-                                <td>#{client.firstName or '/'}</td>
+                                <td>#{@client.firstName or '/'}</td>
                             </tr>
                                 
                             <tr>
                                 <td>Prezime</td>
-                                <td>#{client.lastName or '/'}</td>
+                                <td>#{@client.lastName or '/'}</td>
                             </tr>
                                 
                             <tr>
                                 <td>Ulica</td>
-                                <td>#{client.street or '/'}</td>
+                                <td>#{@client.street or '/'}</td>
                             </tr>
                             
                             <tr>
                                 <td>Broj stana</td>
-                                <td>#{client.buildNumber or '/'}</td>
+                                <td>#{@client.buildNumber or '/'}</td>
                             </tr>
                             <tr>
                                 <td>Grad</td>
-                                <td>#{client.city or '/'}</td>
+                                <td>#{@client.city or '/'}</td>
                             </tr>
                                 
                             <tr>
                                 <td>Telefon</td>
-                                <td>#{client.phoneNumber or '/'}</td>
+                                <td>#{@client.phoneNumber or '/'}</td>
                             </tr>
                                 
                             <tr>
                                 <td>Email</td>
-                                <td>#{client.email or '/'}</td>
+                                <td>#{@client.email or '/'}</td>
                             </tr>
                             <!-- <tr>
                                 <td colspan='2'><input type='button' value='Izmeni' class='btn btn-lg btn-primary btn-block js--edit--profile'/></td>

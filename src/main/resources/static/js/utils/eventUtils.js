@@ -7,6 +7,8 @@
 
     EventUtils.NEW_USER_IS_CREATED = 'NEW_USER_IS_CREATED';
 
+    EventUtils.NEW_WORKER_IS_CREATED = 'NEW_WORKER_IS_CREATED';
+
     EventUtils.triggerEvent = function(eventName, data) {
       return $(document).trigger(eventName, data);
     };
@@ -47,6 +49,21 @@
 
     EventUtils.unbindCreatedNewUser = function(handler) {
       return this.unbindEventHandler(EventUtils.NEW_USER_IS_CREATED, handler);
+    };
+
+
+    /* Worker */
+
+    EventUtils.triggerCreatedNewWorker = function(worker) {
+      return this.triggerEvent(EventUtils.NEW_WORKER_IS_CREATED, client);
+    };
+
+    EventUtils.bindCreatedNewWorker = function(handler) {
+      return this.bindEventHandler(EventUtils.NEW_WORKER_IS_CREATED, handler);
+    };
+
+    EventUtils.unbindCreatedNewWorker = function(handler) {
+      return this.unbindEventHandler(EventUtils.NEW_WORKER_IS_CREATED, handler);
     };
 
     return EventUtils;

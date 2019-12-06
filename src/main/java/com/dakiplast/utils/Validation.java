@@ -36,4 +36,8 @@ public class Validation {
 	public static boolean isAdmin(IUser user) {
 		return RolesEnum.ROLE_ADMIN.equals(user.getRole());
 	}
+	
+	public static boolean isUserOrAdmin(IUser user) {
+		return RolesEnum.ROLE_ADMIN.equals(user.getRole()) || RolesEnum.ROLE_USER.equals(user.getRole());
+	}
 }

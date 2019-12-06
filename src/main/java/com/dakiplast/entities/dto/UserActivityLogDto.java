@@ -3,7 +3,6 @@ package com.dakiplast.entities.dto;
 import java.util.Calendar;
 
 import com.dakiplast.entities.interfaces.IClient;
-import com.dakiplast.enums.UserActivityLogType;
 
 public class UserActivityLogDto {
 

@@ -18,6 +18,7 @@
         updateItem = null;
       }
       MosquitoRepellerBidDialog.__super__.show.call(this);
+      this.customHTML();
       this.sort = this.container.find('.js--sort');
       this.type = this.container.find('.js--type');
       this.openSide = this.container.find('.js--open--side');

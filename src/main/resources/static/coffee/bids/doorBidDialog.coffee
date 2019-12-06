@@ -7,7 +7,7 @@ class @DoorBidDialog extends AbstractDialog
 
     show: (@parentPage, updateItem = null) ->
         super()
-
+        @customHTML()
         @sort       = @container.find('.js--sort')
         @type       = @container.find('.js--type')
         @openSide   = @container.find('.js--open--side')
@@ -162,6 +162,12 @@ class @DoorBidDialog extends AbstractDialog
                                     <label class='mr-2 wh-10 left-label'>Unutrasnja sirina*</label>
                                     <input type='number' min='0' class='form-control js--inner-width' placeholder='cm'>
                                 </div>
+                            </div>
+
+
+                            <div class='form-group'>
+                                <label>Cena*</label>
+                                <input type='number' min='0' class='form-control js--price' placeholder='Cena u din.'>
                             </div>
                     </div>
              </div>"

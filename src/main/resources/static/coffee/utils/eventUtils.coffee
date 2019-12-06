@@ -2,6 +2,7 @@ class @EventUtils
 
     @NEW_CLIENT_IS_CREATED = 'NEW_CLIENT_IS_CREATED'
     @NEW_USER_IS_CREATED   = 'NEW_USER_IS_CREATED'
+    @NEW_WORKER_IS_CREATED = 'NEW_WORKER_IS_CREATED'
 
     @triggerEvent: (eventName, data) ->
         $(document).trigger(eventName, data)
@@ -34,3 +35,14 @@ class @EventUtils
 
     @unbindCreatedNewUser: (handler) ->
         @unbindEventHandler(EventUtils.NEW_USER_IS_CREATED, handler)
+
+
+    ### Worker ###
+    @triggerCreatedNewWorker: (worker) ->
+        @triggerEvent(EventUtils.NEW_WORKER_IS_CREATED, client)
+
+    @bindCreatedNewWorker: (handler) ->
+        @bindEventHandler(EventUtils.NEW_WORKER_IS_CREATED, handler)
+
+    @unbindCreatedNewWorker: (handler) ->
+        @unbindEventHandler(EventUtils.NEW_WORKER_IS_CREATED, handler)

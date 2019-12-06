@@ -8,8 +8,8 @@ class @ActivityDialog extends AbstractDialog
     
     show:(userId) ->
         super()
-        if not @loadedActivity
-            UserActionLogService.getUserActivityLogForUser(userId, null, this, @s, @e)
+        @customHTML()
+        UserActionLogService.getUserActivityLogForUser(userId, null, this, @s, @e)
 
     hide: () ->
         super()
@@ -20,19 +20,11 @@ class @ActivityDialog extends AbstractDialog
         super()
 
     _customHTML: () ->
-        if not @loadedActivity
-            return "<div>
-                        <span class='loader-icon'></span>
-                    </div>"
-
-        if @actionLogs.length is 0
-            return @_getEmptyState()
-
         actionLogs = @_prettyPrint(@actionLogs)
-        tableHtml = "<div>
+        tableHtml = "<div class='w-95 m-auto'>
                         <table class='table mb-0'>
                             <tr>
-                                <th class='table-text w-20'>Osoba</th>
+                                <th class='table-text w-20'>Akcija nad osobom</th>
                                 <th class='table-text w-20'>Akcija</th>
                                 <th class='table-text w-20'>Vreme</th>
                             </tr>
@@ -45,22 +37,21 @@ class @ActivityDialog extends AbstractDialog
                         <td class='table-text w-20'>#{al.action}</td>
                         <td class='table-text w-20'>#{al.time}</td>
                     </tr>"
-        
-        tableHtml += rowHtml
+            tableHtml += rowHtml
         tableHtml += "</table></div>"
         
         return tableHtml
 
-    _getEmptyState: () ->
+    _emptyStateHTML: () ->
         return "<div class'container js--page--container'>
                     <div class='col-5 m-auto h-75 pt-5 text-center'>Nema zabeleženih aktivnosti</div>
                 </div>"
 
     _prettyPrint:(actionLogs) ->
-        item = {}
         items = []
 
         for actionLog in actionLogs
+            item = {}
             if actionLog.user
                 item.person = actionLog.user.firstName + ' ' + actionLog.user.lastName
             
@@ -80,14 +71,22 @@ class @ActivityDialog extends AbstractDialog
         month = date.getMonth()
         day  = date.getDate()
 
-        return day + '-' + month + '-' + year
+        hour = date.getHours()
+        minutes = date.getMinutes()
+        seconds = date.getSeconds()
+
+        return "#{day}-#{month}-#{year} (#{hour}:#{minutes}:#{seconds})"
 
 
 
     s: (data) ->
         @actionLogs = data.data
-        @loadedActivity = true
-        @refresh()
+        
+        if @actionLogs.length is 0
+            @emptyStateHTML()
+            return
+        @customHTML()
 
     e: (data) ->
         console.log data
+        @loadedActivity = false
