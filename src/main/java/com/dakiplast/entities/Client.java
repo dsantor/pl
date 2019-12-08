@@ -50,8 +50,8 @@ public class Client implements IClient, Serializable {
 	@Column(name = "phone_number")
 	private String phoneNumber;
 	
-//	@Column(name = "mobile_number")
-//	private String mobileNumber;
+	@Column(name = "created_by")
+	private Long createdBy;
 	
 	public Long getId() {
 		return id;
@@ -101,10 +101,10 @@ public class Client implements IClient, Serializable {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-//	public String getMobileNumber() {
-//		return mobileNumber;
-//	}
-//	public void setMobileNumber(String mobileNumber) {
-//		this.mobileNumber = mobileNumber;
-//	}
+	public Long getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(Long createdBy) {
+		this.createdBy = createdBy;
+	}
 }

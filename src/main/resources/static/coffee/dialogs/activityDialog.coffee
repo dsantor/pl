@@ -8,8 +8,7 @@ class @ActivityDialog extends AbstractDialog
     
     show:(userId) ->
         super()
-        @customHTML()
-        UserActionLogService.getUserActivityLogForUser(userId, null, this, @s, @e)
+        UserActionLogService.getUserActivityLogForUser(userId, null, this, @_activityLogSuccess, @_activityLogError)
 
     hide: () ->
         super()
@@ -79,7 +78,7 @@ class @ActivityDialog extends AbstractDialog
 
 
 
-    s: (data) ->
+    _activityLogSuccess: (data) ->
         @actionLogs = data.data
         
         if @actionLogs.length is 0
@@ -87,6 +86,6 @@ class @ActivityDialog extends AbstractDialog
             return
         @customHTML()
 
-    e: (data) ->
-        console.log data
+    _activityLogError: (data) ->
+        console.log data.message
         @loadedActivity = false

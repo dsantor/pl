@@ -20,8 +20,8 @@ import com.dakiplast.enums.UserActivityLogType;
 @Entity
 @Table(name = "user_activity_log")
 @NamedQueries({
-		@NamedQuery(name = "UserActivityLog.getAllActivitiesForUser", query = "SELECT o FROM UserActivityLog o where o.actionUserId = :actionUserId"),
-		@NamedQuery(name = "UserActivityLog.getAllActivitiesExcludingUser", query = "SELECT o FROM UserActivityLog o where o.actionUserId != :actionUserId")
+		@NamedQuery(name = "UserActivityLog.getAllActivitiesForUser", query = "SELECT o FROM UserActivityLog o where o.actionUserId = :actionUserId ORDER BY o.time DESC"),
+		@NamedQuery(name = "UserActivityLog.getAllActivitiesExcludingUser", query = "SELECT o FROM UserActivityLog o where o.actionUserId != :actionUserId ORDER BY o.time DESC")
 		})
 public class UserActivityLog implements Serializable, IUserActivityLog {
 

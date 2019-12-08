@@ -39,7 +39,7 @@ class @EventUtils
 
     ### Worker ###
     @triggerCreatedNewWorker: (worker) ->
-        @triggerEvent(EventUtils.NEW_WORKER_IS_CREATED, client)
+        @triggerEvent(EventUtils.NEW_WORKER_IS_CREATED, worker)
 
     @bindCreatedNewWorker: (handler) ->
         @bindEventHandler(EventUtils.NEW_WORKER_IS_CREATED, handler)

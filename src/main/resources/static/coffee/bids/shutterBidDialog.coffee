@@ -15,6 +15,7 @@ class @ShutterBidDialog extends AbstractDialog
         @count    = @container.find('.js--count')
         @width    = @container.find('.js--width')
         @height   = @container.find('.js--height')
+        @price    = @container.find('.js--price')
         @id       = null
 
         @additionBoxOptions = @container.find('.js--box--type--option')
@@ -28,6 +29,7 @@ class @ShutterBidDialog extends AbstractDialog
             @count.val(updateItem.count or '')
             @width.val(updateItem.width or '')
             @height.val(updateItem.height or '')
+            @price.val(updateItem.price or '')
             @id = updateItem.id
 
             if updateItem.boxType
@@ -48,6 +50,7 @@ class @ShutterBidDialog extends AbstractDialog
         @count    = null
         @width    = null
         @height   = null
+        @price    = null
 
         super()
 
@@ -82,6 +85,7 @@ class @ShutterBidDialog extends AbstractDialog
             count      : @_valueOf(@count.val())
             width      : @_valueOf(@width.val())
             height     : @_valueOf(@height.val())
+            price      : @_valueOf(@price.val())
         }   
 
     _valueOf: (value) ->
@@ -166,7 +170,10 @@ class @ShutterBidDialog extends AbstractDialog
                             <label>Kolicina*</label>
                             <input type='number' min='1' class='form-control js--count' value='1'>
                         </div>
-                        
+                        <div class='form-group'>
+                            <label>Cena*</label>
+                            <input type='number' min='1' class='form-control js--price' placeholder='din'>
+                        </div>
                         <div class='form-group'>
                             <br> <hr>
                             <h5>Dimenzije</h5>     

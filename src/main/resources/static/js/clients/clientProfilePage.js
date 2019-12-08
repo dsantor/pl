@@ -5,7 +5,7 @@
       this.container = $('.js--page--container');
       this.clientId = Number(clientId);
       this.client = null;
-      ClientService.getClient(clientId, null, this, this._loadedClient, this._loadedClientError);
+      ClientService.get(clientId, null, this, this._loadedClient, this._loadedClientError);
       this.clickEvent = this._clickEventHandler.bind(this);
       this.container.on('click', this.clickEvent);
     }

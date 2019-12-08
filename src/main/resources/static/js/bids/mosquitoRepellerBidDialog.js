@@ -24,6 +24,7 @@
       this.openSide = this.container.find('.js--open--side');
       this.width = this.container.find('.js--width');
       this.height = this.container.find('.js--height');
+      this.price = this.container.find('.js--price');
       this.count = this.container.find('.js--count');
       this.id = null;
       if (updateItem) {
@@ -33,12 +34,21 @@
         this.width.val(updateItem.width || '');
         this.height.val(updateItem.height || '');
         this.count.val(updateItem.count || '');
+        this.price.val(updateItem.price || '');
         return this.id = updateItem.id;
       }
     };
 
     MosquitoRepellerBidDialog.prototype.hide = function() {
-      return MosquitoRepellerBidDialog.__super__.hide.call(this);
+      MosquitoRepellerBidDialog.__super__.hide.call(this);
+      this.sort = null;
+      this.type = null;
+      this.openSide = null;
+      this.width = null;
+      this.height = null;
+      this.price = null;
+      this.count = null;
+      return this.id = null;
     };
 
     MosquitoRepellerBidDialog.prototype.destroy = function() {
@@ -68,6 +78,7 @@
         openSide: this._valueOf(this.openSide.val()),
         width: this._valueOf(this.width.val()),
         height: this._valueOf(this.height.val()),
+        price: this._valueOf(this.price.val()),
         count: this._valueOf(this.count.val())
       };
     };
@@ -104,7 +115,7 @@
     };
 
     MosquitoRepellerBidDialog.prototype._customHTML = function() {
-      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta komarnika*</label> <select class='js--sort'> <option selected>---</option> <option>Fiksni</option> <option>Rolo</option> </select> </div> <div class='form-group'> <label>Tip komarnika*</label> <select class='js--type'> <option selected>---</option> <option>Vrata</option> <option>Rolo</option> </select> </div> <div class='form-group'> <label>Strana otvora*</label> <select class='js--open--side'> <option selected>---</option> <option>Levi otvor</option> <option>Desni otvor</option> </select> </div> <div class='form-group'> <label>Kolicina*</label> <input type='number' min='1' class='form-control js--count' value='1'> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Sirina</label> <input type='number' class='form-control js--width' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Visina</label> <input type='number' class='form-control js--height' placeholder='cm'> </div> </div> </div> </div>";
+      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta komarnika*</label> <select class='js--sort'> <option selected>---</option> <option>Fiksni</option> <option>Rolo</option> </select> </div> <div class='form-group'> <label>Tip komarnika*</label> <select class='js--type'> <option selected>---</option> <option>Vrata</option> <option>Rolo</option> </select> </div> <div class='form-group'> <label>Strana otvora*</label> <select class='js--open--side'> <option selected>---</option> <option>Levi otvor</option> <option>Desni otvor</option> </select> </div> <div class='form-group'> <label>Kolicina*</label> <input type='number' min='1' class='form-control js--count' value='1'> </div> <div class='form-group'> <label>Cena*</label> <input type='number' min='1' class='form-control js--price' placeholder='din'> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Sirina</label> <input type='number' class='form-control js--width' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Visina</label> <input type='number' class='form-control js--height' placeholder='cm'> </div> </div> </div> </div>";
     };
 
     return MosquitoRepellerBidDialog;

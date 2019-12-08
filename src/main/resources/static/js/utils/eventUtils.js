@@ -55,7 +55,7 @@
     /* Worker */
 
     EventUtils.triggerCreatedNewWorker = function(worker) {
-      return this.triggerEvent(EventUtils.NEW_WORKER_IS_CREATED, client);
+      return this.triggerEvent(EventUtils.NEW_WORKER_IS_CREATED, worker);
     };
 
     EventUtils.bindCreatedNewWorker = function(handler) {

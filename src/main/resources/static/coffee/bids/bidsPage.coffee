@@ -2,14 +2,41 @@ class @BidsPage
 
     constructor: (clientId) ->
         @clientId = clientId
+        @client = null
+        @clients = []
+        @newClient = null
+        @worker = null
+        @workers = []
         @bidCurrentId = 1
         @container = $('.js--page--container')
-        @choseBidActive = true
         @allowedSaveBidsButton = false
         @_renderChoseBidHTML()
+
+        WorkerService.getAll(null, this, @_loadWorkersSuccess, @_loadWorkersError)
+
+        if @clientId
+            ClientService.get(clientId, null, this, @_loadedClientSuccess, @_loadWorkersError)
+        else
+            ClientService.getAll(null, this, @_loadedClientsSuccess, @_loadWorkersError)
+
+        @bidsContainer              = @container.find('.bids--container')        
+        @overviewContainer          = @container.find('.overview--container')
+
+        @autoSuggestInputs          = @container.find('.js--autosuggest--input')  
+        @workerInput                = @container.find('.js--worker--input')   
+        @workerSuggestionsContainer = @container.find('.js--worker--suggestions')
+
+        @clientInput                = @container.find('.js--client--input')   
+        @clientSuggestionsContainer = @container.find('.js--client--suggestions')
         
+        @saveOrderErrorMessage      = @container.find('.js--order--error--message')
+
+        @buildDate                  = @container.find('.js--build--date')
         @clickEvent = @_clickEventHandler.bind(this)
         @container.on 'click', @clickEvent
+
+        @autoSuggestInputEvent = @_autoSuggestInputEventHandler.bind(this)
+        @autoSuggestInputs.on 'keyup', @autoSuggestInputEvent
 
         @doorBidDialog             = new DoorBidDialog()
         @thresholdBidDialog        = new ThresholdBidDialog()
@@ -39,17 +66,40 @@ class @BidsPage
         @container.off 'click', @clickEvent
         @clickEvent= null
 
+        @autoSuggestInputs.off 'keyup', @autoSuggestInputEvent
+        @autoSuggestInputEvent = null
+
+        @bidsContainer              = null
+        @overviewContainer          = null
+        @autoSuggestInputs          = null
+        @workerSuggestionsContainer = null
+        @clientInput                = null
+        @clientSuggestionsContainer = null
+        @buildDate                  = null
+
         @container.html('')
-        @clientId = null
+        @clientId              = null
+        @client                = null
+        @clients               = null
+        @newClient             = null
+        @worker                = null
+        @workers               = null
+        @bidCurrentId          = null
+        @cartList              = null
+        @allowedSaveBidsButton = null
 
     getPageTitle: () ->
         return "Porudzbine"
     
     _renderChoseBidHTML: () ->
-        @choseBidActive = true
-        bodyHTML = "<div class='container'>
-                        #{@_getNavHTML()}
-                        <div class='col-7 m-auto w-100 pt-3 flex flex-column'>
+        bodyHTML = "<div class='container bids--container bids-container' data-page='bids'>
+                        <nav class='nav header justify-content-end pt-3'>
+                            <span class='nav-link span-a js--chose--bids nav--bids active'>Odaberi proizvod</span>
+                            <span class='nav-link span-a js--bids--overview nav--overview nav--empty'>Pregled porudzbine</span>
+                            <span class='nav-link span-a #{@_createClientButtonClass()} js--chose--client nav--client'>Unesi klijenta</span>
+                            <span class='nav-link span-a js--bids--order nav--order'>Poruči</span>
+                        </nav>
+                        <div class='col-7 m-auto w-100 pt-3 flex flex-column bidsPage' data-page='bids'>
                             <div class='flex flex-row justify-content-center'>
                                 <div class='item-order text-center mb-5'>
                                         <div class='js--create--door'>
@@ -85,32 +135,86 @@ class @BidsPage
                                 </div>
                             </div>
                         </div>
-                    </div>"
-        @container.html(bodyHTML)
+                        <div class='bidsClient' data-page='client'>
+                            <div class='col-7 m-auto h-75 pt-5 flex'>
+                                <div class='form-group w-50'>
+                                    <div class='container'>
+                                        <label class='js--radio--button--old--client switch-section active'>Postojeci klijent</label>
+                                        <div class='js--radio--button--old--client--container'>
+                                            <input type='text' class='form-control js--autosuggest--input js--client--input' placeholder='klijent'>
+                                            <div class='suggestion-container js--client--suggestions hide'>
+                                            </div>    
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-7 m-auto h-75 pt-5 flex'> 
+                                <div class='container'>
+                                    <label class='js--radio--button--new--client switch-section'>Kreiraj klijenta</label>
+                                </div>
+                            </div>
+                            <div class='col-7 m-auto h-75 flex js--radio--button--new--client--container disabled'>
+                                
+                                <div class='container w-50'>
+                                    
+                                    <div class='form-group'>
+                                        <label>Email</label>
+                                        <input type='email' class='form-control js--email' placeholder='email'/>
+                                    </div>
 
-    _getNavHTML: () ->
-        choseBidCss = ''
-        overviewCss = 'hide'
-        if @choseBidActive
-            choseBidCss = 'hide'
-            overviewCss = ''
-        saveBidsCss = 'disabled'
-        if @allowedSaveBidsButton
-            saveBidsCss = ''
-            
-        return "<nav class='nav header justify-content-end pt-3'>
-                    <span class='nav-link span-a js--chose--bids #{choseBidCss}'>Odaberi proizvod</span>
-                    <span class='nav-link span-a js--bids-overview #{overviewCss}'>Pregled porudzbine</span>
-                    <span class='nav-link span-a #{@_createClientButtonClass()} js--chose--client'>Unesi klijenta</span>
-                    <span class='nav-link span-a #{saveBidsCss} js--save--bids'>Poruči</span>
-                </nav>"
-
-    _renderOverviewHTML: (innerHTML) ->
-        navHTML = @_getNavHTML()
-        bodyHTML = "<div class='container'>
-                        #{navHTML}
-                        <div class=' pt-3 flex flex-column'>              
-                            #{innerHTML}
+                                    <div class='form-group'>
+                                        <label>Ime*</label>
+                                        <input type='text' class='form-control js--firstName' placeholder='ime'/>
+                                        </div>
+                                    <div class='form-group'>
+                                        <label>Prezime*</label>
+                                        <input type='text' class='form-control js--lastName' placeholder='prezime'/>
+                                    </div>
+                                
+                                    <div class='form-group'>
+                                        <label>Ulica</label>
+                                        <input type='text' class='form-control js--street' placeholder='ulica'/>
+                                    </div>
+                                </div>
+                                <div class='container w-50'>
+                                    <div class='form-group'>
+                                        <label>Broj stana</label>
+                                        <input type='text' class='form-control js--buildNumber' placeholder='broj kuce/stana'/>
+                                    </div>
+                                    <div class='form-group'>
+                                        <label>Grad</label>
+                                        <input type='text' class='form-control js--city' placeholder='grad'/>
+                                    </div>
+                                    
+                                    <div class='form-group'>
+                                        <label>Telefon*</label>
+                                        <input type='tel' class='form-control js--phoneNumber' placeholder='telefon'/>
+                                    </div>               
+                                </div>
+                            </div>
+                        </div>
+                        <div class='pt-3 flex flex-column overview--container bidsOverview' data-page='overview'></div>
+                        <div class='pt-3 flex flex-column bidsEmptyState' data-page='empty'>
+                            #{BidSectionsHTML.emptyState()}
+                        </div>
+                        <div class='col-7 m-auto p-5 flex bidsOrder' data-page='order'>
+                            <div class='container container-padding w-50'>
+                                <div class='form-group'>
+                                    <label>Datum ugradnje</label>
+                                    <input type='date' class='form-control js--build--date'>
+                                </div>
+                                <div class='form-group'>
+                                    <label>Radnik</label>
+                                    <input type='text' class='form-control js--autosuggest--input js--worker--input' placeholder='radnik'>
+                                    <div class='suggestion-container js--worker--suggestions hide'>
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <button class='btn btn-lg btn-primary btn-block js--save--order'>Poruči</button>
+                                    <span class='text-danger js--order--error--message hide'>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>"
         @container.html(bodyHTML)
@@ -138,16 +242,21 @@ class @BidsPage
             @shutterBidDialog.show(this)
             return
        
-        if closest(target, '.js--bids-overview')
+        if closest(target, '.js--bids--overview')
             @_showBids()
             return
         
         if closest(target, '.js--chose--bids')
-            @_renderChoseBidHTML()
+            @_activePage('bids')
             return
 
         if closest(target, '.js--chose--client')
+            @_activePage('client')
+            return
 
+        if closest(target, '.js--bids--order')
+            @saveOrderErrorMessage.addClass('hide')
+            @_activePage('order')
             return
 
         if closest(target, '.js--save--bids')
@@ -160,6 +269,90 @@ class @BidsPage
         if closest(target, '.js--edit--bid')
             @_editBid(target)
             return
+
+        if closest(target, '.js--worker--suggestions')
+            @_selectWorkerFromAutoSuggestion(target)
+            return
+        
+        if closest(target, '.js--client--suggestions')
+            @_selectClientFromAutoSuggestion(target)
+            return
+        if closest(target, '.js--save--order')
+            @_saveOrder()
+            return
+        
+        if closest(target, '.js--radio--button--old--client')
+            $('.js--radio--button--old--client--container').removeClass('disabled')
+            $('.js--radio--button--new--client--container').addClass('disabled')
+            $('.js--radio--button--new--client').removeClass('active')
+            $('.js--radio--button--old--client').addClass('active')
+            return
+
+        if closest(target, '.js--radio--button--new--client')
+            $('.js--radio--button--new--client--container').removeClass('disabled')
+            $('.js--radio--button--old--client--container').addClass('disabled')
+            $('.js--radio--button--old--client').removeClass('active')
+            $('.js--radio--button--new--client').addClass('active')
+            return
+
+    _autoSuggestInputEventHandler: (event) ->
+        target = $(event.target)
+
+        if closest(target, '.js--worker--input')
+            @_workerAutoSuggestion()
+            return
+        if closest(target, '.js--client--input')
+            @_clientAutoSuggestion()
+            return
+
+    _workerAutoSuggestion: () ->
+        input = @workerInput.val()
+        if input.length < 2
+            @workerSuggestionsContainer.addClass('hide')
+            return
+
+        workers = []
+        for w in @workers
+            input = input.toLowerCase()
+            firstName = w.firstName.toLowerCase()
+            lastName = w.lastName.toLowerCase()
+            if firstName.startsWith(input) or lastName.startsWith(input)
+                workers.push(w)
+        if workers.length > 0
+            html = ''
+            for worker in workers
+                html += "<span class='suggestion-item' data-worker-id='#{worker.id}'>#{worker.firstName} #{worker.lastName}</span>"
+            @workerSuggestionsContainer.html(html)
+            @workerSuggestionsContainer.removeClass('hide')
+        else 
+            @workerSuggestionsContainer.addClass('hide')
+
+    _clientAutoSuggestion: () ->
+        input = @clientInput.val()
+        if input.length < 2
+         @clientSuggestionsContainer.addClass('hide')
+         return
+
+        clients = []
+        for client in @clients
+            input = input.toLowerCase()
+            firstName = client.firstName.toLowerCase()
+            lastName = client.lastName.toLowerCase()
+            if firstName.startsWith(input) or lastName.startsWith(input)
+                clients.push(client)
+        if clients.length > 0
+            html = ''
+            for client in clients
+                html += "<span class='suggestion-item' data-client-id='#{client.id}'>#{client.firstName} #{client.lastName}</span>"
+            @clientSuggestionsContainer.html(html)
+            @clientSuggestionsContainer.removeClass('hide')
+        else 
+            @clientSuggestionsContainer.addClass('hide')
+    _activePage: (page) ->
+        @bidsContainer.attr('data-page', page)
+        @bidsContainer.find('.nav-link').removeClass('active')
+        @bidsContainer.find(".nav--#{page}").addClass('active')
+
 
     _editBid: (element) ->
         bidId = Number(element.attr('data-bid-id'))
@@ -223,7 +416,7 @@ class @BidsPage
         keys = Object.keys(@cartList)
         if keys.length is 0
             @allowedSaveBidsButton = false
-            @_renderOverviewHTML(BidSectionsHTML.emptyState())
+            @_activePage('empty')
 
     _getClientIdFromURL: () ->
         hash = window.location.hash
@@ -255,11 +448,9 @@ class @BidsPage
     _showBids: () ->
         keys = Object.keys(@cartList)
 
-        @choseBidActive = false
         if keys.length is 0
             @allowedSaveBidsButton = false
-            @_renderOverviewHTML(BidSectionsHTML.emptyState())
-            @save
+            @_activePage('empty')
             return
 
         html = ''    
@@ -267,7 +458,8 @@ class @BidsPage
             if @cartList[key].length > 0
                 html += @_renderOverviewBidSection(key)
         
-        @_renderOverviewHTML(html)
+        @overviewContainer.html(html)
+        @_activePage('overview')
         
     _renderOverviewBidSection: (bidType) ->
         switch bidType
@@ -290,3 +482,73 @@ class @BidsPage
 
     _createClientButtonClass: () ->
         if @clientId then return 'disabled' else return ''
+
+    _loadWorkersSuccess: (response) ->
+        @workers = response.data
+
+    _loadWorkersError: (response) ->
+        console.log response.message
+
+    _selectWorkerFromAutoSuggestion: (target) ->
+        id = Number(target.attr('data-worker-id'))
+        for worker in @workers
+            if worker.id is id
+                @worker = worker
+                break
+        
+        @workerInput.val(@worker.firstName + ' ' + @worker.lastName)
+        @workerSuggestionsContainer.addClass('hide')
+
+    _selectClientFromAutoSuggestion: (target) ->
+        id = Number(target.attr('data-client-id'))
+        for client in @clients
+            if client.id is id
+                @client = client
+                break
+        
+        @clientInput.val(@client.firstName + ' ' + @client.lastName)
+        @clientSuggestionsContainer.addClass('hide')
+
+    _loadedClientSuccess: (response) ->
+        @client = response.data
+
+    _loadedClientsSuccess: (response) ->
+        @clients = response.data
+
+    _saveOrder: () ->
+        keys = Object.keys(@cartList)
+        if keys.length is 0
+            @saveOrderErrorMessage.html('Korpa je prazna!').removeClass('hide')
+            return
+        
+        if @client is null
+            @saveOrderErrorMessage.html('Klijent nije odabran!').removeClass('hide')
+            return
+        if @worker is null
+            @saveOrderErrorMessage.html('Radnik nije odabran!').removeClass('hide')
+            return
+
+        if @buildDate.val() is ''
+            @saveOrderErrorMessage.html('Vreme ugradnje nije odabrano!').removeClass('hide')
+            return
+        
+        @saveOrderErrorMessage.addClass('hide')
+
+        buildDate = new Date(@buildDate.val()).getTime()
+        data = {
+            doors: @cartList[DoorBidDialog.BID_TYPE]
+            thresholds: @cartList[ThresholdBidDialog.BID_TYPE]
+            mosquitos: @cartList[MosquitoRepellerBidDialog.BID_TYPE]
+            windows: @cartList[WindowBidDialog.BID_TYPE]
+            shutters: @cartList[ShutterBidDialog.BID_TYPE]
+            clientId: @client.id
+            createClient: @newClient
+            workerId: @worker.id
+            buildDate: buildDate
+            oldClientIsChosen: true
+        }
+
+        OrderService.create(data, null, this, @_s, @_s)
+
+    _s:(d)->
+        console.log d

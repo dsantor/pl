@@ -3,13 +3,34 @@
   this.BidsPage = (function() {
     function BidsPage(clientId) {
       this.clientId = clientId;
+      this.client = null;
+      this.clients = [];
+      this.newClient = null;
+      this.worker = null;
+      this.workers = [];
       this.bidCurrentId = 1;
       this.container = $('.js--page--container');
-      this.choseBidActive = true;
       this.allowedSaveBidsButton = false;
       this._renderChoseBidHTML();
+      WorkerService.getAll(null, this, this._loadWorkersSuccess, this._loadWorkersError);
+      if (this.clientId) {
+        ClientService.get(clientId, null, this, this._loadedClientSuccess, this._loadWorkersError);
+      } else {
+        ClientService.getAll(null, this, this._loadedClientsSuccess, this._loadWorkersError);
+      }
+      this.bidsContainer = this.container.find('.bids--container');
+      this.overviewContainer = this.container.find('.overview--container');
+      this.autoSuggestInputs = this.container.find('.js--autosuggest--input');
+      this.workerInput = this.container.find('.js--worker--input');
+      this.workerSuggestionsContainer = this.container.find('.js--worker--suggestions');
+      this.clientInput = this.container.find('.js--client--input');
+      this.clientSuggestionsContainer = this.container.find('.js--client--suggestions');
+      this.saveOrderErrorMessage = this.container.find('.js--order--error--message');
+      this.buildDate = this.container.find('.js--build--date');
       this.clickEvent = this._clickEventHandler.bind(this);
       this.container.on('click', this.clickEvent);
+      this.autoSuggestInputEvent = this._autoSuggestInputEventHandler.bind(this);
+      this.autoSuggestInputs.on('keyup', this.autoSuggestInputEvent);
       this.doorBidDialog = new DoorBidDialog();
       this.thresholdBidDialog = new ThresholdBidDialog();
       this.windowBidDialog = new WindowBidDialog();
@@ -31,8 +52,25 @@
       this.mosquitoRepellerBidDialog = null;
       this.container.off('click', this.clickEvent);
       this.clickEvent = null;
+      this.autoSuggestInputs.off('keyup', this.autoSuggestInputEvent);
+      this.autoSuggestInputEvent = null;
+      this.bidsContainer = null;
+      this.overviewContainer = null;
+      this.autoSuggestInputs = null;
+      this.workerSuggestionsContainer = null;
+      this.clientInput = null;
+      this.clientSuggestionsContainer = null;
+      this.buildDate = null;
       this.container.html('');
-      return this.clientId = null;
+      this.clientId = null;
+      this.client = null;
+      this.clients = null;
+      this.newClient = null;
+      this.worker = null;
+      this.workers = null;
+      this.bidCurrentId = null;
+      this.cartList = null;
+      return this.allowedSaveBidsButton = null;
     };
 
     BidsPage.prototype.getPageTitle = function() {
@@ -41,30 +79,7 @@
 
     BidsPage.prototype._renderChoseBidHTML = function() {
       var bodyHTML;
-      this.choseBidActive = true;
-      bodyHTML = "<div class='container'> " + (this._getNavHTML()) + " <div class='col-7 m-auto w-100 pt-3 flex flex-column'> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--door'> <img class='item-order pointer' draggable=false src='/images/door.png'> </div> <label>Vrata</label> </div> <div class='item-order text-center'> <div class='js--create--threshold'> <img class='item-order pointer' draggable=false src='/images/threshold.png'> </div> <label>Prag</label> </div> <div class='item-order text-center'> <div class='js--create--mosquito--repeller'> <img class='item-order pointer' draggable=false src='/images/mosquitoRepeller.png'> </div> <label>Komarnik</label> </div> </div> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--window'> <img class='item-order pointer' draggable=false src='/images/window.png'> </div> <label>Prozor</label> </div> <div class='item-order text-center'> <div class='js--create--shutter'> <img class='item-order pointer' draggable=false src='/images/shutter.png'> </div> <label>Roletne</label> </div> </div> </div> </div>";
-      return this.container.html(bodyHTML);
-    };
-
-    BidsPage.prototype._getNavHTML = function() {
-      var choseBidCss, overviewCss, saveBidsCss;
-      choseBidCss = '';
-      overviewCss = 'hide';
-      if (this.choseBidActive) {
-        choseBidCss = 'hide';
-        overviewCss = '';
-      }
-      saveBidsCss = 'disabled';
-      if (this.allowedSaveBidsButton) {
-        saveBidsCss = '';
-      }
-      return "<nav class='nav header justify-content-end pt-3'> <span class='nav-link span-a js--chose--bids " + choseBidCss + "'>Odaberi proizvod</span> <span class='nav-link span-a js--bids-overview " + overviewCss + "'>Pregled porudzbine</span> <span class='nav-link span-a " + (this._createClientButtonClass()) + " js--chose--client'>Unesi klijenta</span> <span class='nav-link span-a " + saveBidsCss + " js--save--bids'>Poruči</span> </nav>";
-    };
-
-    BidsPage.prototype._renderOverviewHTML = function(innerHTML) {
-      var bodyHTML, navHTML;
-      navHTML = this._getNavHTML();
-      bodyHTML = "<div class='container'> " + navHTML + " <div class=' pt-3 flex flex-column'> " + innerHTML + " </div> </div>";
+      bodyHTML = "<div class='container bids--container bids-container' data-page='bids'> <nav class='nav header justify-content-end pt-3'> <span class='nav-link span-a js--chose--bids nav--bids active'>Odaberi proizvod</span> <span class='nav-link span-a js--bids--overview nav--overview nav--empty'>Pregled porudzbine</span> <span class='nav-link span-a " + (this._createClientButtonClass()) + " js--chose--client nav--client'>Unesi klijenta</span> <span class='nav-link span-a js--bids--order nav--order'>Poruči</span> </nav> <div class='col-7 m-auto w-100 pt-3 flex flex-column bidsPage' data-page='bids'> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--door'> <img class='item-order pointer' draggable=false src='/images/door.png'> </div> <label>Vrata</label> </div> <div class='item-order text-center'> <div class='js--create--threshold'> <img class='item-order pointer' draggable=false src='/images/threshold.png'> </div> <label>Prag</label> </div> <div class='item-order text-center'> <div class='js--create--mosquito--repeller'> <img class='item-order pointer' draggable=false src='/images/mosquitoRepeller.png'> </div> <label>Komarnik</label> </div> </div> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--window'> <img class='item-order pointer' draggable=false src='/images/window.png'> </div> <label>Prozor</label> </div> <div class='item-order text-center'> <div class='js--create--shutter'> <img class='item-order pointer' draggable=false src='/images/shutter.png'> </div> <label>Roletne</label> </div> </div> </div> <div class='bidsClient' data-page='client'> <div class='col-7 m-auto h-75 pt-5 flex'> <div class='form-group w-50'> <div class='container'> <label class='js--radio--button--old--client switch-section active'>Postojeci klijent</label> <div class='js--radio--button--old--client--container'> <input type='text' class='form-control js--autosuggest--input js--client--input' placeholder='klijent'> <div class='suggestion-container js--client--suggestions hide'> </div> </div> </div> </div> </div> <div class='col-7 m-auto h-75 pt-5 flex'> <div class='container'> <label class='js--radio--button--new--client switch-section'>Kreiraj klijenta</label> </div> </div> <div class='col-7 m-auto h-75 flex js--radio--button--new--client--container disabled'> <div class='container w-50'> <div class='form-group'> <label>Email</label> <input type='email' class='form-control js--email' placeholder='email'/> </div> <div class='form-group'> <label>Ime*</label> <input type='text' class='form-control js--firstName' placeholder='ime'/> </div> <div class='form-group'> <label>Prezime*</label> <input type='text' class='form-control js--lastName' placeholder='prezime'/> </div> <div class='form-group'> <label>Ulica</label> <input type='text' class='form-control js--street' placeholder='ulica'/> </div> </div> <div class='container w-50'> <div class='form-group'> <label>Broj stana</label> <input type='text' class='form-control js--buildNumber' placeholder='broj kuce/stana'/> </div> <div class='form-group'> <label>Grad</label> <input type='text' class='form-control js--city' placeholder='grad'/> </div> <div class='form-group'> <label>Telefon*</label> <input type='tel' class='form-control js--phoneNumber' placeholder='telefon'/> </div> </div> </div> </div> <div class='pt-3 flex flex-column overview--container bidsOverview' data-page='overview'></div> <div class='pt-3 flex flex-column bidsEmptyState' data-page='empty'> " + (BidSectionsHTML.emptyState()) + " </div> <div class='col-7 m-auto p-5 flex bidsOrder' data-page='order'> <div class='container container-padding w-50'> <div class='form-group'> <label>Datum ugradnje</label> <input type='date' class='form-control js--build--date'> </div> <div class='form-group'> <label>Radnik</label> <input type='text' class='form-control js--autosuggest--input js--worker--input' placeholder='radnik'> <div class='suggestion-container js--worker--suggestions hide'> </div> </div> <div class='form-group'> <button class='btn btn-lg btn-primary btn-block js--save--order'>Poruči</button> <span class='text-danger js--order--error--message hide'> </span> </div> </div> </div> </div>";
       return this.container.html(bodyHTML);
     };
 
@@ -91,15 +106,21 @@
         this.shutterBidDialog.show(this);
         return;
       }
-      if (closest(target, '.js--bids-overview')) {
+      if (closest(target, '.js--bids--overview')) {
         this._showBids();
         return;
       }
       if (closest(target, '.js--chose--bids')) {
-        this._renderChoseBidHTML();
+        this._activePage('bids');
         return;
       }
       if (closest(target, '.js--chose--client')) {
+        this._activePage('client');
+        return;
+      }
+      if (closest(target, '.js--bids--order')) {
+        this.saveOrderErrorMessage.addClass('hide');
+        this._activePage('order');
         return;
       }
       if (closest(target, '.js--save--bids')) {
@@ -111,7 +132,113 @@
       }
       if (closest(target, '.js--edit--bid')) {
         this._editBid(target);
+        return;
       }
+      if (closest(target, '.js--worker--suggestions')) {
+        this._selectWorkerFromAutoSuggestion(target);
+        return;
+      }
+      if (closest(target, '.js--client--suggestions')) {
+        this._selectClientFromAutoSuggestion(target);
+        return;
+      }
+      if (closest(target, '.js--save--order')) {
+        this._saveOrder();
+        return;
+      }
+      if (closest(target, '.js--radio--button--old--client')) {
+        $('.js--radio--button--old--client--container').removeClass('disabled');
+        $('.js--radio--button--new--client--container').addClass('disabled');
+        $('.js--radio--button--new--client').removeClass('active');
+        $('.js--radio--button--old--client').addClass('active');
+        return;
+      }
+      if (closest(target, '.js--radio--button--new--client')) {
+        $('.js--radio--button--new--client--container').removeClass('disabled');
+        $('.js--radio--button--old--client--container').addClass('disabled');
+        $('.js--radio--button--old--client').removeClass('active');
+        $('.js--radio--button--new--client').addClass('active');
+      }
+    };
+
+    BidsPage.prototype._autoSuggestInputEventHandler = function(event) {
+      var target;
+      target = $(event.target);
+      if (closest(target, '.js--worker--input')) {
+        this._workerAutoSuggestion();
+        return;
+      }
+      if (closest(target, '.js--client--input')) {
+        this._clientAutoSuggestion();
+      }
+    };
+
+    BidsPage.prototype._workerAutoSuggestion = function() {
+      var firstName, html, i, input, j, lastName, len, len1, ref, w, worker, workers;
+      input = this.workerInput.val();
+      if (input.length < 2) {
+        this.workerSuggestionsContainer.addClass('hide');
+        return;
+      }
+      workers = [];
+      ref = this.workers;
+      for (i = 0, len = ref.length; i < len; i++) {
+        w = ref[i];
+        input = input.toLowerCase();
+        firstName = w.firstName.toLowerCase();
+        lastName = w.lastName.toLowerCase();
+        if (firstName.startsWith(input) || lastName.startsWith(input)) {
+          workers.push(w);
+        }
+      }
+      if (workers.length > 0) {
+        html = '';
+        for (j = 0, len1 = workers.length; j < len1; j++) {
+          worker = workers[j];
+          html += "<span class='suggestion-item' data-worker-id='" + worker.id + "'>" + worker.firstName + " " + worker.lastName + "</span>";
+        }
+        this.workerSuggestionsContainer.html(html);
+        return this.workerSuggestionsContainer.removeClass('hide');
+      } else {
+        return this.workerSuggestionsContainer.addClass('hide');
+      }
+    };
+
+    BidsPage.prototype._clientAutoSuggestion = function() {
+      var client, clients, firstName, html, i, input, j, lastName, len, len1, ref;
+      input = this.clientInput.val();
+      if (input.length < 2) {
+        this.clientSuggestionsContainer.addClass('hide');
+        return;
+      }
+      clients = [];
+      ref = this.clients;
+      for (i = 0, len = ref.length; i < len; i++) {
+        client = ref[i];
+        input = input.toLowerCase();
+        firstName = client.firstName.toLowerCase();
+        lastName = client.lastName.toLowerCase();
+        if (firstName.startsWith(input) || lastName.startsWith(input)) {
+          clients.push(client);
+        }
+      }
+      if (clients.length > 0) {
+        html = '';
+        for (j = 0, len1 = clients.length; j < len1; j++) {
+          client = clients[j];
+          html += "<span class='suggestion-item' data-client-id='" + client.id + "'>" + client.firstName + " " + client.lastName + "</span>";
+        }
+        this.clientSuggestionsContainer.html(html);
+        return this.clientSuggestionsContainer.removeClass('hide');
+      } else {
+        return this.clientSuggestionsContainer.addClass('hide');
+      }
+    };
+
+    BidsPage.prototype._activePage = function(page) {
+      this.bidsContainer.attr('data-page', page);
+      this.bidsContainer.find('.nav-link').removeClass('active');
+      return this.bidsContainer.find(".nav--" + page).addClass('active');
     };
 
     BidsPage.prototype._editBid = function(element) {
@@ -185,7 +312,7 @@
       keys = Object.keys(this.cartList);
       if (keys.length === 0) {
         this.allowedSaveBidsButton = false;
-        return this._renderOverviewHTML(BidSectionsHTML.emptyState());
+        return this._activePage('empty');
       }
     };
 
@@ -229,11 +356,9 @@
     BidsPage.prototype._showBids = function() {
       var html, i, key, keys, len;
       keys = Object.keys(this.cartList);
-      this.choseBidActive = false;
       if (keys.length === 0) {
         this.allowedSaveBidsButton = false;
-        this._renderOverviewHTML(BidSectionsHTML.emptyState());
-        this.save;
+        this._activePage('empty');
         return;
       }
       html = '';
@@ -243,7 +368,8 @@
           html += this._renderOverviewBidSection(key);
         }
       }
-      return this._renderOverviewHTML(html);
+      this.overviewContainer.html(html);
+      return this._activePage('overview');
     };
 
     BidsPage.prototype._renderOverviewBidSection = function(bidType) {
@@ -269,6 +395,92 @@
       } else {
         return '';
       }
+    };
+
+    BidsPage.prototype._loadWorkersSuccess = function(response) {
+      return this.workers = response.data;
+    };
+
+    BidsPage.prototype._loadWorkersError = function(response) {
+      return console.log(response.message);
+    };
+
+    BidsPage.prototype._selectWorkerFromAutoSuggestion = function(target) {
+      var i, id, len, ref, worker;
+      id = Number(target.attr('data-worker-id'));
+      ref = this.workers;
+      for (i = 0, len = ref.length; i < len; i++) {
+        worker = ref[i];
+        if (worker.id === id) {
+          this.worker = worker;
+          break;
+        }
+      }
+      this.workerInput.val(this.worker.firstName + ' ' + this.worker.lastName);
+      return this.workerSuggestionsContainer.addClass('hide');
+    };
+
+    BidsPage.prototype._selectClientFromAutoSuggestion = function(target) {
+      var client, i, id, len, ref;
+      id = Number(target.attr('data-client-id'));
+      ref = this.clients;
+      for (i = 0, len = ref.length; i < len; i++) {
+        client = ref[i];
+        if (client.id === id) {
+          this.client = client;
+          break;
+        }
+      }
+      this.clientInput.val(this.client.firstName + ' ' + this.client.lastName);
+      return this.clientSuggestionsContainer.addClass('hide');
+    };
+
+    BidsPage.prototype._loadedClientSuccess = function(response) {
+      return this.client = response.data;
+    };
+
+    BidsPage.prototype._loadedClientsSuccess = function(response) {
+      return this.clients = response.data;
+    };
+
+    BidsPage.prototype._saveOrder = function() {
+      var buildDate, data, keys;
+      keys = Object.keys(this.cartList);
+      if (keys.length === 0) {
+        this.saveOrderErrorMessage.html('Korpa je prazna!').removeClass('hide');
+        return;
+      }
+      if (this.client === null) {
+        this.saveOrderErrorMessage.html('Klijent nije odabran!').removeClass('hide');
+        return;
+      }
+      if (this.worker === null) {
+        this.saveOrderErrorMessage.html('Radnik nije odabran!').removeClass('hide');
+        return;
+      }
+      if (this.buildDate.val() === '') {
+        this.saveOrderErrorMessage.html('Vreme ugradnje nije odabrano!').removeClass('hide');
+        return;
+      }
+      this.saveOrderErrorMessage.addClass('hide');
+      buildDate = new Date(this.buildDate.val()).getTime();
+      data = {
+        doors: this.cartList[DoorBidDialog.BID_TYPE],
+        thresholds: this.cartList[ThresholdBidDialog.BID_TYPE],
+        mosquitos: this.cartList[MosquitoRepellerBidDialog.BID_TYPE],
+        windows: this.cartList[WindowBidDialog.BID_TYPE],
+        shutters: this.cartList[ShutterBidDialog.BID_TYPE],
+        clientId: this.client.id,
+        createClient: this.newClient,
+        workerId: this.worker.id,
+        buildDate: buildDate,
+        oldClientIsChosen: true
+      };
+      return OrderService.create(data, null, this, this._s, this._s);
+    };
+
+    BidsPage.prototype._s = function(d) {
+      return console.log(d);
     };
 
     return BidsPage;

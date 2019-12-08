@@ -23,6 +23,7 @@
       this.width = this.container.find('.js--width');
       this.height = this.container.find('.js--height');
       this.innerWidth = this.container.find('.js--inner--width');
+      this.price = this.container.find('.js--pice');
       this.count = this.container.find('.js--count');
       this.id = null;
       if (updateItem) {
@@ -30,6 +31,7 @@
         this.width.val(updateItem.width || '');
         this.height.val(updateItem.height || '');
         this.innerWidth.val(updateItem.innerWidth || '');
+        this.price.val(updateItem.price || '');
         this.count.val(updateItem.count || '');
         return this.id = updateItem.id;
       }
@@ -66,6 +68,7 @@
         width: this._valueOf(this.width.val()),
         height: this._valueOf(this.height.val()),
         innerWidth: this._valueOf(this.innerWidth.val()),
+        price: this._valueOf(this.price.val()),
         count: this._valueOf(this.count.val())
       };
     };
@@ -94,7 +97,7 @@
     };
 
     ThresholdBidDialog.prototype._customHTML = function() {
-      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta praga</label> <select class='js--sort'> <option selected>---</option> <option>Alu prag</option> <option>Stok</option> </select> </div> <div class='form-group'> <label>Kolicina*</label> <input type='number' min='1' class='form-control js--count' value='1'> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Sirina</label> <input type='number' min='0' class='form-control js--width' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Visina</label> <input type='number' min='0' class='form-control js--height' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Unutrasnja sirina</label> <input type='number' min='0' class='form-control js--inner--width' placeholder='cm'> </div> </div> </div> </div>";
+      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta praga</label> <select class='js--sort'> <option selected>---</option> <option>Alu prag</option> <option>Stok</option> </select> </div> <div class='form-group'> <label>Kolicina*</label> <input type='number' min='1' class='form-control js--count' value='1'> </div> <div class='form-group'> <label>Cena*</label> <input type='number' min='1' class='form-control js--price'> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Sirina</label> <input type='number' min='0' class='form-control js--width' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Visina</label> <input type='number' min='0' class='form-control js--height' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Unutrasnja sirina</label> <input type='number' min='0' class='form-control js--inner--width' placeholder='cm'> </div> </div> </div> </div>";
     };
 
     return ThresholdBidDialog;

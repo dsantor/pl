@@ -7,8 +7,7 @@
         '#users': 'users',
         '#user': 'users',
         '#workers': 'workers',
-        '#workers': '#workers',
-        'worker': 'worker',
+        '#worker': 'workers',
         '#clients': "clients",
         "#bids": 'bids',
         '#client': 'clients'

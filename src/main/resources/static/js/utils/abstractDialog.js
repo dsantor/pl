@@ -73,7 +73,7 @@
       if (innerHtml == null) {
         innerHtml = '';
       }
-      html = "<div style=background-color:white;> <div class='form-group form-inline header'> <div> <img src='https://www.dakiplast.rs/wp-content/uploads/2017/05/logo-small-01-300x75.png' style='max-width: 50%;'> </div> <div> <button class='cbtn btn-light " + ComponentsUtils.NEGATIVE_BUTTON + " " + this.JS_NEGATIVE_BUTTON_VISIBILITY + "'> " + this.JS_NEGATIVE_BUTTON_TEXT + " </button> <button class='cbtn btn-primary mr-15px " + ComponentsUtils.POSITIVE_BUTTON + " " + this.JS_POSITIVE_BUTTON_VISIBILITY + "'> " + this.JS_POSITIVE_BUTTON_TEXT + " </button> </div> </div> </div> " + innerHtml;
+      html = "<div style=background-color:white;> <div class='form-group form-inline header'> <div class='logo-text-icon'> </div> <div> <button class='cbtn btn-light " + ComponentsUtils.NEGATIVE_BUTTON + " " + this.JS_NEGATIVE_BUTTON_VISIBILITY + "'> " + this.JS_NEGATIVE_BUTTON_TEXT + " </button> <button class='cbtn btn-primary mr-15px " + ComponentsUtils.POSITIVE_BUTTON + " " + this.JS_POSITIVE_BUTTON_VISIBILITY + "'> " + this.JS_POSITIVE_BUTTON_TEXT + " </button> </div> </div> </div> " + innerHtml;
       return this.container.html(html);
     };
 

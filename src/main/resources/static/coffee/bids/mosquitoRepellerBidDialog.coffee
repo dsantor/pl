@@ -13,6 +13,7 @@ class @MosquitoRepellerBidDialog extends AbstractDialog
         @openSide = @container.find('.js--open--side')
         @width    = @container.find('.js--width')
         @height   = @container.find('.js--height')
+        @price    = @container.find('.js--price')
         @count    = @container.find('.js--count')
         @id       = null
 
@@ -23,10 +24,19 @@ class @MosquitoRepellerBidDialog extends AbstractDialog
             @width.val(updateItem.width or '')
             @height.val(updateItem.height or '')
             @count.val(updateItem.count or '')
+            @price.val(updateItem.price or '')
             @id = updateItem.id
 
     hide: () ->
         super()
+        @sort     = null
+        @type     = null
+        @openSide = null
+        @width    = null
+        @height   = null
+        @price    = null
+        @count    = null
+        @id       = null
 
     destroy: () ->
         super()
@@ -51,6 +61,7 @@ class @MosquitoRepellerBidDialog extends AbstractDialog
             openSide   : @_valueOf(@openSide.val())
             width      : @_valueOf(@width.val())
             height     : @_valueOf(@height.val())
+            price      : @_valueOf(@price.val())
             count      : @_valueOf(@count.val())
         }   
 
@@ -115,7 +126,11 @@ class @MosquitoRepellerBidDialog extends AbstractDialog
                         <div class='form-group'>
                             <label>Kolicina*</label>
                             <input type='number' min='1' class='form-control js--count' value='1'>
-                        </div>        
+                        </div>   
+                        <div class='form-group'>
+                            <label>Cena*</label>
+                            <input type='number' min='1' class='form-control js--price' placeholder='din'>
+                        </div>      
 
                         <div class='form-group'>
                             <br> <hr>

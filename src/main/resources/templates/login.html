@@ -3,6 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
 	<link rel="stylesheet"  type="text/css" th:href="@{../css/style.css}">
+	<link rel="shortcut icon" type="image/x-icon" th:href="@{/images/logo.png}"/>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <title>Daki plast</title>
 </head>
@@ -30,15 +31,4 @@
 		</div>
 	</div>
 </body>
-	<script>
-		$(document).ready = function() {
-			
-		
-		console.log([[${reset}]]);
-		reset = [[${reset}]];
-		if reset
-			console.log('crkni');
-			window.location.pathname = '/login'
-		}()
-	</script>
 </html>

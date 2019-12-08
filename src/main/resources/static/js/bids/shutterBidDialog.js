@@ -26,6 +26,7 @@
       this.count = this.container.find('.js--count');
       this.width = this.container.find('.js--width');
       this.height = this.container.find('.js--height');
+      this.price = this.container.find('.js--price');
       this.id = null;
       this.additionBoxOptions = this.container.find('.js--box--type--option');
       this.additionBoxActive = false;
@@ -37,6 +38,7 @@
         this.count.val(updateItem.count || '');
         this.width.val(updateItem.width || '');
         this.height.val(updateItem.height || '');
+        this.price.val(updateItem.price || '');
         this.id = updateItem.id;
         if (updateItem.boxType) {
           this.additionBoxOptions.removeClass('hide');
@@ -60,6 +62,7 @@
       this.count = null;
       this.width = null;
       this.height = null;
+      this.price = null;
       return ShutterBidDialog.__super__.destroy.call(this);
     };
 
@@ -101,7 +104,8 @@
         openSide: this._valueOf(this.openSide.val()),
         count: this._valueOf(this.count.val()),
         width: this._valueOf(this.width.val()),
-        height: this._valueOf(this.height.val())
+        height: this._valueOf(this.height.val()),
+        price: this._valueOf(this.price.val())
       };
     };
 
@@ -151,7 +155,7 @@
     };
 
     ShutterBidDialog.prototype._customHTML = function() {
-      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta roletne*</label> <select class='js--sort'> <option selected>---</option> <option>Kais</option> <option>Kurbla</option> <option>Elektronski pogon</option> </select> </div> <div class='form-group'> <label>Vrsta kutije*</label> <select class='js--box'> <option value='0'>---</option> <option value='Unutrasnja'>Unutrasnja</option> <option value='Spoljasnja'>Spoljasnja</option> </select> </div> <div class='form-group js--box--type--option hide'> <label>Tip kutije*</label> <select class='js--box--type'> <option>---</option> <option>RONDO poluzaobljena</option> <option>ALU livena</option> <option>ALU zastorom</option> </select> </div> <div class='form-group'> <label>Strana otvora*</label> <select class='js--open--side'> <option selected>---</option> <option>Levi otvor</option> <option>Desni otvor</option> </select> </div> <div class='form-group'> <label>Kolicina*</label> <input type='number' min='1' class='form-control js--count' value='1'> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Sirina</label> <input type='number' class='form-control js--width' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Visina</label> <input type='number' class='form-control js--height' placeholder='cm'> </div> </div> </div> </div> </div>";
+      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta roletne*</label> <select class='js--sort'> <option selected>---</option> <option>Kais</option> <option>Kurbla</option> <option>Elektronski pogon</option> </select> </div> <div class='form-group'> <label>Vrsta kutije*</label> <select class='js--box'> <option value='0'>---</option> <option value='Unutrasnja'>Unutrasnja</option> <option value='Spoljasnja'>Spoljasnja</option> </select> </div> <div class='form-group js--box--type--option hide'> <label>Tip kutije*</label> <select class='js--box--type'> <option>---</option> <option>RONDO poluzaobljena</option> <option>ALU livena</option> <option>ALU zastorom</option> </select> </div> <div class='form-group'> <label>Strana otvora*</label> <select class='js--open--side'> <option selected>---</option> <option>Levi otvor</option> <option>Desni otvor</option> </select> </div> <div class='form-group'> <label>Kolicina*</label> <input type='number' min='1' class='form-control js--count' value='1'> </div> <div class='form-group'> <label>Cena*</label> <input type='number' min='1' class='form-control js--price' placeholder='din'> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Sirina</label> <input type='number' class='form-control js--width' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Visina</label> <input type='number' class='form-control js--height' placeholder='cm'> </div> </div> </div> </div> </div>";
     };
 
     return ShutterBidDialog;

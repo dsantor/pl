@@ -15,7 +15,7 @@
       return AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError);
     };
 
-    ClientService.getClient = function(clientId, onTheFlyData, callbackContext, callBackFunction, callbackError) {
+    ClientService.get = function(clientId, onTheFlyData, callbackContext, callBackFunction, callbackError) {
       var url;
       url = '../api/client/id/' + clientId;
       return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);

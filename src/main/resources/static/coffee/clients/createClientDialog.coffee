@@ -38,7 +38,7 @@
         "<div class='col-7 m-auto h-75 pt-5 flex'>
             <div class='container w-50'>
                 <div class='form-group'>
-                    <label>Email    </label>
+                    <label>Email</label>
                     <input type='email' class='form-control js--email' placeholder='email'/>
                 </div>
 

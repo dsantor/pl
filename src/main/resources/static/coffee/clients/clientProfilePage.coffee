@@ -6,7 +6,7 @@ class @ClientProfilePage
         # clientId = @_getClientIdFromURL()
         @clientId = Number(clientId)
         @client = null
-        ClientService.getClient(clientId, null, this, @_loadedClient, @_loadedClientError)
+        ClientService.get(clientId, null, this, @_loadedClient, @_loadedClientError)
 
         @clickEvent = @_clickEventHandler.bind(this)
         @container.on 'click', @clickEvent

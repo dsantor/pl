@@ -58,7 +58,7 @@
           }
           adminOptionsHtml = "<td class='table-text w-10'><span class='" + userIcon + " js--show--worker' data-worker-id=" + u.id + "></span></td>";
         }
-        rowHtml = "<tr class='js--user--row' data-worker-id=" + u.id + "> " + adminOptionsHtml + " <td class='table-text w-20'>" + (firstName || '/') + "</td> <td class='table-text w-20'>" + (lastName || '/') + "</td> <td class='table-text w-20'>" + (phoneNumber || '/') + "</td> <td class='table-text w-30'>" + (u.email || '/') + "</td> </tr>";
+        rowHtml = "<tr class='js--user--row' data-worker-id=" + u.id + "> " + adminOptionsHtml + " <td class='table-text w-20'>" + (u.firstName || '/') + "</td> <td class='table-text w-20'>" + (u.lastName || '/') + "</td> <td class='table-text w-20'>" + (u.phoneNumber || '/') + "</td> <td class='table-text w-30'>" + (u.email || '/') + "</td> </tr>";
         tableHtml += rowHtml;
       }
       tableHtml += "</table></div>";

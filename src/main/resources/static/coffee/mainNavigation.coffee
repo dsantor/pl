@@ -1,7 +1,7 @@
 class @MainNavigation
     constructor: () ->
 
-        @pageAndHash = {'#profile': 'profile', '#users': 'users', '#user': 'users', '#workers': 'workers', '#workers', 'worker', '#clients': "clients", "#bids": 'bids', '#client': 'clients'}
+        @pageAndHash = {'#profile': 'profile', '#users': 'users', '#user': 'users', '#workers': 'workers', '#worker': 'workers', '#clients': "clients", "#bids": 'bids', '#client': 'clients'}
         @currentPage = null
         @pageTitle = $('.js--page--title')
         @navigationBar = $('.js--nav--bar')

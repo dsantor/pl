@@ -15,6 +15,7 @@ class @DoorBidDialog extends AbstractDialog
         @width      = @container.find('.js--width')
         @height     = @container.find('.js--height')
         @innerWidth = @container.find('.js--inner-width')
+        @price      = @container.find('.js--price')
         @count      = @container.find('.js--count')
         @id         = null
 
@@ -26,6 +27,7 @@ class @DoorBidDialog extends AbstractDialog
             @width.val(updateItem.width or '')
             @height.val(updateItem.height or '')
             @innerWidth.val(updateItem.innerWidth or '')
+            @price.val(updateItem.price or '')
             @count.val(updateItem.count or '')
             @id = updateItem.id
     hide: () ->
@@ -57,6 +59,7 @@ class @DoorBidDialog extends AbstractDialog
             width      : @_valueOf(@width.val())
             height     : @_valueOf(@height.val())
             innerWidth : @_valueOf(@innerWidth.val())
+            price      : @_valueOf(@price.val())
             count      : @_valueOf(@count.val())
         }
 
@@ -141,9 +144,13 @@ class @DoorBidDialog extends AbstractDialog
                                 </select>
                             </div>
 
-                             <div class='form-group'>
+                            <div class='form-group'>
                                 <label>Kolicina*</label>
                                 <input type='number' min='1' class='form-control js--count' value='1'>
+                            </div>
+                            <div class='form-group'>
+                                <label>Cena*</label>
+                                <input type='number' min='1' class='form-control js--price' placeholder='din'>
                             </div>
 
                             <div class='form-group'>
@@ -162,12 +169,6 @@ class @DoorBidDialog extends AbstractDialog
                                     <label class='mr-2 wh-10 left-label'>Unutrasnja sirina*</label>
                                     <input type='number' min='0' class='form-control js--inner-width' placeholder='cm'>
                                 </div>
-                            </div>
-
-
-                            <div class='form-group'>
-                                <label>Cena*</label>
-                                <input type='number' min='0' class='form-control js--price' placeholder='Cena u din.'>
                             </div>
                     </div>
              </div>"

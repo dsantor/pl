@@ -15,8 +15,7 @@
 
     ActivityDialog.prototype.show = function(userId) {
       ActivityDialog.__super__.show.call(this);
-      this.customHTML();
-      return UserActionLogService.getUserActivityLogForUser(userId, null, this, this.s, this.e);
+      return UserActionLogService.getUserActivityLogForUser(userId, null, this, this._activityLogSuccess, this._activityLogError);
     };
 
     ActivityDialog.prototype.hide = function() {
@@ -78,7 +77,7 @@
       return day + "-" + month + "-" + year + " (" + hour + ":" + minutes + ":" + seconds + ")";
     };
 
-    ActivityDialog.prototype.s = function(data) {
+    ActivityDialog.prototype._activityLogSuccess = function(data) {
       this.actionLogs = data.data;
       if (this.actionLogs.length === 0) {
         this.emptyStateHTML();
@@ -87,8 +86,8 @@
       return this.customHTML();
     };
 
-    ActivityDialog.prototype.e = function(data) {
-      console.log(data);
+    ActivityDialog.prototype._activityLogError = function(data) {
+      console.log(data.message);
       return this.loadedActivity = false;
     };
 

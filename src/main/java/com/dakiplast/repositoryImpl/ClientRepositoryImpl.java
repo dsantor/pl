@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.dakiplast.entities.Client;
 import com.dakiplast.entities.interfaces.IClient;
 import com.dakiplast.repository.ClientRepository;
-import com.dakiplast.requests.ClientRequest;
 @Repository
 @Transactional
 @SuppressWarnings("unchecked")
@@ -33,16 +32,17 @@ public class ClientRepositoryImpl implements ClientRepository {
 	}
 
 	@Override
-	public IClient create(ClientRequest clientRequest) {
+	public IClient create(String firstName, String lastName, String phoneNumber, String email, String city, String street, String buildNumber, Long createdBy) {
 		Client entity = new Client();
 		
-		entity.setBuildNumber(clientRequest.getBuildNumber());
-		entity.setCity(clientRequest.getCity());
-		entity.setEmail(clientRequest.getEmail());
-		entity.setFirstName(clientRequest.getFirstName());
-		entity.setLastName(clientRequest.getLastName());
-		entity.setPhoneNumber(clientRequest.getPhoneNumber());
-		entity.setStreet(clientRequest.getStreet());
+		entity.setBuildNumber(buildNumber);
+		entity.setCity(city);
+		entity.setEmail(email);
+		entity.setFirstName(firstName);
+		entity.setLastName(lastName);
+		entity.setPhoneNumber(phoneNumber);
+		entity.setStreet(street);
+		entity.setCreatedBy(createdBy);
 		
 		em.persist(entity);
 		return entity;

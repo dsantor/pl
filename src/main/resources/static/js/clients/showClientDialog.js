@@ -13,7 +13,7 @@
     }
 
     ShowClientDialog.prototype.show = function(clientId) {
-      ClientService.getClient(clientId, null, this, this._loadedClient, this._loadedClientError);
+      ClientService.get(clientId, null, this, this._loadedClient, this._loadedClientError);
       return ShowClientDialog.__super__.show.call(this);
     };
 

@@ -8,14 +8,16 @@ class @WindowBidDialog extends AbstractDialog
     show: (@parentPage, updateItem = null) ->
         super()
         @customHTML()
-        @sort     = @container.find('.js--sort')
-        @openSide = @container.find('.js--open--side')
-        @glass    = @container.find('.js--glass')
-        @tipper   = @container.find('.js--tipper')
-        @width    = @container.find('.js--width')
-        @height   = @container.find('.js--height')
-        @count    = @container.find('.js--count')
-        @id       = null
+        @sort       = @container.find('.js--sort')
+        @openSide   = @container.find('.js--open--side')
+        @glass      = @container.find('.js--glass')
+        @tipper     = @container.find('.js--tipper')
+        @width      = @container.find('.js--width')
+        @height     = @container.find('.js--height')
+        @innerWidth = @container.find('.js--inner--width')
+        @price      = @container.find('.js--price')
+        @count      = @container.find('.js--count')
+        @id         = null
 
         if updateItem
             @sort.val(updateItem.sort or '---')
@@ -24,6 +26,8 @@ class @WindowBidDialog extends AbstractDialog
             @tipper.val(updateItem.tipper or '---')
             @width.val(updateItem.width or '')
             @height.val(updateItem.height or '')
+            @innerWidth.val(updateItem.innerWidth or '')
+            @price.val(updateItem.price or '')
             @count.val(updateItem.count or '')
             @id = updateItem.id
 
@@ -33,13 +37,15 @@ class @WindowBidDialog extends AbstractDialog
     destroy: () ->
         @parentPage = null
 
-        @sort     = null
-        @openSide = null
-        @glass    = null
-        @tipper   = null
-        @width    = null
-        @height   = null    
-        @count    = null
+        @sort       = null
+        @openSide   = null
+        @glass      = null
+        @tipper     = null
+        @width      = null
+        @height     = null
+        @innerWidth = null    
+        @price      = null
+        @count      = null
 
         super()
 
@@ -64,6 +70,8 @@ class @WindowBidDialog extends AbstractDialog
             tipper     : @_valueOf(@tipper.val())
             width      : @_valueOf(@width.val())
             height     : @_valueOf(@height.val())
+            innerWidth : @_valueOf(@innerWidth.val())
+            price      : @_valueOf(@price.val())
             count      : @_valueOf(@count.val())
         }   
 
@@ -143,6 +151,10 @@ class @WindowBidDialog extends AbstractDialog
                         <div class='form-group'>
                             <label>Kolicina*</label>
                             <input type='number' min='1' class='form-control js--count' value='1'>
+                        </div>
+                        <div class='form-group'>
+                            <label>Cena*</label>
+                            <input type='number' min='1' class='form-control js--price' placeholder='din'>
                         </div>
 
                         <div class='form-group'>

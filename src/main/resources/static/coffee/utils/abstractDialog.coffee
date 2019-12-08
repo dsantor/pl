@@ -58,8 +58,7 @@ class @AbstractDialog
     _templateHTML: (innerHtml = '') ->
         html = "<div style=background-color:white;>
                     <div class='form-group form-inline header'>
-                        <div>
-                            <img src='https://www.dakiplast.rs/wp-content/uploads/2017/05/logo-small-01-300x75.png' style='max-width: 50%;'>
+                        <div class='logo-text-icon'>
                         </div>
                         <div>
                             <button class='cbtn btn-light #{ComponentsUtils.NEGATIVE_BUTTON} #{@JS_NEGATIVE_BUTTON_VISIBILITY}'>

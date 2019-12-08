@@ -6,7 +6,7 @@ class @ShowClientDialog extends AbstractDialog
         @positiveButtonText("Zatvori")
 
     show: (clientId) ->
-        ClientService.getClient(clientId, null, this, @_loadedClient, @_loadedClientError)
+        ClientService.get(clientId, null, this, @_loadedClient, @_loadedClientError)
         super()
         
     hide: () ->

@@ -58,9 +58,9 @@ class @WorkersPage extends AbstractPage
                 adminOptionsHtml = "<td class='table-text w-10'><span class='#{userIcon} js--show--worker' data-worker-id=#{u.id}></span></td>"
             rowHtml = "<tr class='js--user--row' data-worker-id=#{u.id}>
                         #{ adminOptionsHtml }
-				        <td class='table-text w-20'>#{firstName or '/'}</td>
-				        <td class='table-text w-20'>#{lastName or '/'}</td>
-                        <td class='table-text w-20'>#{phoneNumber or '/'}</td>
+				        <td class='table-text w-20'>#{u.firstName or '/'}</td>
+				        <td class='table-text w-20'>#{u.lastName or '/'}</td>
+                        <td class='table-text w-20'>#{u.phoneNumber or '/'}</td>
                         <td class='table-text w-30'>#{u.email or '/'}</td>
 			        </tr>"
             

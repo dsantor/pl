@@ -12,6 +12,7 @@ class @ThresholdBidDialog extends AbstractDialog
         @width      = @container.find('.js--width')
         @height     = @container.find('.js--height')
         @innerWidth = @container.find('.js--inner--width')
+        @price      = @container.find('.js--pice')
         @count      = @container.find('.js--count')
         @id         = null
         if updateItem
@@ -19,6 +20,7 @@ class @ThresholdBidDialog extends AbstractDialog
             @width.val(updateItem.width or '')
             @height.val(updateItem.height or '')
             @innerWidth.val(updateItem.innerWidth or '')
+            @price.val(updateItem.price or '')
             @count.val(updateItem.count or '')
             @id = updateItem.id
         
@@ -48,6 +50,7 @@ class @ThresholdBidDialog extends AbstractDialog
             width      : @_valueOf(@width.val())
             height     : @_valueOf(@height.val())
             innerWidth : @_valueOf(@innerWidth.val())
+            price      : @_valueOf(@price.val())
             count      : @_valueOf(@count.val())
         }
 
@@ -86,6 +89,10 @@ class @ThresholdBidDialog extends AbstractDialog
                         <div class='form-group'>
                             <label>Kolicina*</label>
                             <input type='number' min='1' class='form-control js--count' value='1'>
+                        </div>
+                        <div class='form-group'>
+                            <label>Cena*</label>
+                            <input type='number' min='1' class='form-control js--price'>
                         </div>
                         <div class='form-group'>
                             <br> <hr>
