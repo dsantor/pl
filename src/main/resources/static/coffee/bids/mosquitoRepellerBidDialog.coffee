@@ -14,7 +14,7 @@ class @MosquitoRepellerBidDialog extends AbstractDialog
         @width    = @container.find('.js--width')
         @height   = @container.find('.js--height')
         @price    = @container.find('.js--price')
-        @count    = @container.find('.js--count')
+        @quantity = @container.find('.js--quantity')
         @id       = null
 
         if updateItem
@@ -23,7 +23,7 @@ class @MosquitoRepellerBidDialog extends AbstractDialog
             @openSide.val(updateItem.openSide or '---')
             @width.val(updateItem.width or '')
             @height.val(updateItem.height or '')
-            @count.val(updateItem.count or '')
+            @quantity.val(updateItem.quantity or '')
             @price.val(updateItem.price or '')
             @id = updateItem.id
 
@@ -35,7 +35,7 @@ class @MosquitoRepellerBidDialog extends AbstractDialog
         @width    = null
         @height   = null
         @price    = null
-        @count    = null
+        @quantity = null
         @id       = null
 
     destroy: () ->
@@ -62,7 +62,7 @@ class @MosquitoRepellerBidDialog extends AbstractDialog
             width      : @_valueOf(@width.val())
             height     : @_valueOf(@height.val())
             price      : @_valueOf(@price.val())
-            count      : @_valueOf(@count.val())
+            quantity   : @_valueOf(@quantity.val())
         }   
 
     _valueOf: (value) ->
@@ -125,7 +125,7 @@ class @MosquitoRepellerBidDialog extends AbstractDialog
 
                         <div class='form-group'>
                             <label>Kolicina*</label>
-                            <input type='number' min='1' class='form-control js--count' value='1'>
+                            <input type='number' min='1' class='form-control js--quantity' value='1'>
                         </div>   
                         <div class='form-group'>
                             <label>Cena*</label>

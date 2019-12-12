@@ -37,6 +37,9 @@ public class OrderThreshold implements Serializable, IOrderThreshold {
 	@Column(name = "price")
     private Long price;
 	
+	@Column(name = "quantity")
+	private Long quantity;
+	
 	@Column(name = "order_id")
 	private Long orderId;
 
@@ -94,5 +97,13 @@ public class OrderThreshold implements Serializable, IOrderThreshold {
 
 	public void setPrice(Long price) {
 		this.price = price;
+	}
+
+	public Long getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Long quantity) {
+		this.quantity = quantity;
 	}
 }

@@ -1,7 +1,14 @@
 class @MainNavigation
     constructor: () ->
 
-        @pageAndHash = {'#profile': 'profile', '#users': 'users', '#user': 'users', '#workers': 'workers', '#worker': 'workers', '#clients': "clients", "#bids": 'bids', '#client': 'clients'}
+        @pageAndHash = {
+            '#profile': 'profile', '#users': 'users', '#user': 'users', 
+            '#workers': 'workers', '#worker': 'workers', 
+            '#clients': "clients", '#client': 'clients',
+            '#orders': 'orders',
+            '#order': 'orders',
+            "#bids": 'bids' }
+
         @currentPage = null
         @pageTitle = $('.js--page--title')
         @navigationBar = $('.js--nav--bar')
@@ -61,7 +68,12 @@ class @MainNavigation
             when '#bids'
                 @currentPage = new BidsPage(hash.value)
                 return
-
+            when '#orders'
+                @currentPage = new OrdersPage()
+                return
+            when '#order'
+                @currentPage = new OrderPage(hash.value)
+                return
             else
                 @_redirectToErrorPage()
                 return

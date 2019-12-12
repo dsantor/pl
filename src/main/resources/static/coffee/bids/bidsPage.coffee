@@ -6,10 +6,12 @@ class @BidsPage
         @clients = []
         @newClient = null
         @worker = null
-        @workers = []
+        @workerIds = []
+        @allWorkers = []
         @bidCurrentId = 1
         @container = $('.js--page--container')
         @allowedSaveBidsButton = false
+        @oldClientIsChosen     = true
         @_renderChoseBidHTML()
 
         WorkerService.getAll(null, this, @_loadWorkersSuccess, @_loadWorkersError)
@@ -24,6 +26,7 @@ class @BidsPage
 
         @autoSuggestInputs          = @container.find('.js--autosuggest--input')  
         @workerInput                = @container.find('.js--worker--input')   
+        @workersChosenContainer     = @container.find('.js--workers--chosen')
         @workerSuggestionsContainer = @container.find('.js--worker--suggestions')
 
         @clientInput                = @container.find('.js--client--input')   
@@ -31,8 +34,22 @@ class @BidsPage
         
         @saveOrderErrorMessage      = @container.find('.js--order--error--message')
 
-        @buildDate                  = @container.find('.js--build--date')
-        @clickEvent = @_clickEventHandler.bind(this)
+        @newClientContainer = @container.find('.js--radio--button--new--client--container')
+        @oldClientContainer = @container.find('.js--radio--button--old--client--container')
+        @oldClientButton    = @container.find('.js--radio--button--old--client')
+        @newClientButton    = @container.find('.js--radio--button--new--client')
+        @orderStatus        = @container.find('.js--order--status')
+
+        @firstName    = @container.find('.js--firstName')
+        @lastName     = @container.find('.js--lastName')
+        @street       = @container.find('.js--street')
+        @buildNumber  = @container.find('.js--buildNumber')
+        @city         = @container.find('.js--city')
+        @phoneNumber  = @container.find('.js--phoneNumber')
+        @email        = @container.find('.js--email')
+
+        @buildDate    = @container.find('.js--build--date')
+        @clickEvent   = @_clickEventHandler.bind(this)
         @container.on 'click', @clickEvent
 
         @autoSuggestInputEvent = @_autoSuggestInputEventHandler.bind(this)
@@ -76,6 +93,7 @@ class @BidsPage
         @clientInput                = null
         @clientSuggestionsContainer = null
         @buildDate                  = null
+        @orderStatus                = null
 
         @container.html('')
         @clientId              = null
@@ -83,10 +101,20 @@ class @BidsPage
         @clients               = null
         @newClient             = null
         @worker                = null
-        @workers               = null
+        @workerIds             = null
         @bidCurrentId          = null
         @cartList              = null
         @allowedSaveBidsButton = null
+        @oldClientIsChosen     = null 
+
+        @firstName             = null
+        @lastName              = null
+        @street                = null
+        @buildNumber           = null
+        @city                  = null
+        @phoneNumber           = null
+        @email                 = null
+
 
     getPageTitle: () ->
         return "Porudzbine"
@@ -141,7 +169,7 @@ class @BidsPage
                                     <div class='container'>
                                         <label class='js--radio--button--old--client switch-section active'>Postojeci klijent</label>
                                         <div class='js--radio--button--old--client--container'>
-                                            <input type='text' class='form-control js--autosuggest--input js--client--input' placeholder='klijent'>
+                                            <input type='text' class='form-control js--autosuggest--input js--client--input' placeholder='klijent' autocomplete='false' aria-autocomplete='mrs'>
                                             <div class='suggestion-container js--client--suggestions hide'>
                                             </div>    
                                         </div>
@@ -204,11 +232,22 @@ class @BidsPage
                                     <input type='date' class='form-control js--build--date'>
                                 </div>
                                 <div class='form-group'>
+                                    <label>Status porudzbine</label>
+                                    <select class='js--order--status'>
+                                        <option value='WAITING' selected>Na čekanju</option>
+                                        <option value='ACCEPTED'>Prihvaćen</option>
+                                        <option value='DECLINED'>Odbijen</option>
+                                    </select>
+                                </div>
+                                <div class='form-group'>
                                     <label>Radnik</label>
                                     <input type='text' class='form-control js--autosuggest--input js--worker--input' placeholder='radnik'>
                                     <div class='suggestion-container js--worker--suggestions hide'>
                                     </div>
+                                    <div class='mt-3 js--workers--chosen'>
+                                    </div>
                                 </div>
+                                <div style='color:red;'>Allow user to chose status of order</div>
                                 <div class='form-group'>
                                     <button class='btn btn-lg btn-primary btn-block js--save--order'>Poruči</button>
                                     <span class='text-danger js--order--error--message hide'>
@@ -259,9 +298,6 @@ class @BidsPage
             @_activePage('order')
             return
 
-        if closest(target, '.js--save--bids')
-            return
-
         if closest(target, '.js--remove--bid')
             @_removeBid(target)
             return
@@ -282,18 +318,31 @@ class @BidsPage
             return
         
         if closest(target, '.js--radio--button--old--client')
-            $('.js--radio--button--old--client--container').removeClass('disabled')
-            $('.js--radio--button--new--client--container').addClass('disabled')
-            $('.js--radio--button--new--client').removeClass('active')
-            $('.js--radio--button--old--client').addClass('active')
+            @_setNewClientContainer(false)
             return
 
         if closest(target, '.js--radio--button--new--client')
-            $('.js--radio--button--new--client--container').removeClass('disabled')
-            $('.js--radio--button--old--client--container').addClass('disabled')
-            $('.js--radio--button--old--client').removeClass('active')
-            $('.js--radio--button--new--client').addClass('active')
+            @_setNewClientContainer(true)
             return
+        
+        if closest(target, '.remove--worker')
+            @_removeWorkerFromSelectedList(target)
+            return
+    
+    _setNewClientContainer: (newClient) ->
+        if newClient
+            @newClientContainer.removeClass('disabled')
+            @oldClientContainer.addClass('disabled')
+            @oldClientButton.removeClass('active')
+            @newClientButton.addClass('active')
+            @oldClientIsChosen = false
+        else
+            @oldClientContainer.removeClass('disabled')
+            @newClientContainer.addClass('disabled')
+            @newClientButton.removeClass('active')
+            @oldClientButton.addClass('active')
+            @oldClientIsChosen = true
+
 
     _autoSuggestInputEventHandler: (event) ->
         target = $(event.target)
@@ -312,7 +361,7 @@ class @BidsPage
             return
 
         workers = []
-        for w in @workers
+        for w in @allWorkers
             input = input.toLowerCase()
             firstName = w.firstName.toLowerCase()
             lastName = w.lastName.toLowerCase()
@@ -334,20 +383,31 @@ class @BidsPage
          return
 
         clients = []
+        phoneNumbers = []
         for client in @clients
             input = input.toLowerCase()
             firstName = client.firstName.toLowerCase()
             lastName = client.lastName.toLowerCase()
             if firstName.startsWith(input) or lastName.startsWith(input)
                 clients.push(client)
+            else if client.phoneNumber.startsWith(input)
+                phoneNumbers.push(client)
+        
+        html = ''
         if clients.length > 0
-            html = ''
             for client in clients
                 html += "<span class='suggestion-item' data-client-id='#{client.id}'>#{client.firstName} #{client.lastName}</span>"
+        
+        if phoneNumbers.length > 0
+            for phoneNumber in phoneNumbers
+                html += "<span class='suggestion-item' data-client-id='#{phoneNumber.id}'>#{phoneNumber.phoneNumber}</span>"
+        
+        if clients.length > 0 or phoneNumbers.length > 0
             @clientSuggestionsContainer.html(html)
             @clientSuggestionsContainer.removeClass('hide')
         else 
             @clientSuggestionsContainer.addClass('hide')
+
     _activePage: (page) ->
         @bidsContainer.attr('data-page', page)
         @bidsContainer.find('.nav-link').removeClass('active')
@@ -484,21 +544,37 @@ class @BidsPage
         if @clientId then return 'disabled' else return ''
 
     _loadWorkersSuccess: (response) ->
-        @workers = response.data
+        @allWorkers = response.data
 
     _loadWorkersError: (response) ->
         console.log response.message
 
     _selectWorkerFromAutoSuggestion: (target) ->
         id = Number(target.attr('data-worker-id'))
-        for worker in @workers
+        addHtml = false
+        for worker in @allWorkers
             if worker.id is id
-                @worker = worker
+                if not @workerIds.includes(id)
+                    @workerIds.push(worker.id)
+                    addHtml = true
                 break
-        
-        @workerInput.val(@worker.firstName + ' ' + @worker.lastName)
+        if addHtml
+            workerHTML = "<div class='w-100 br-8 nav-link nav-tabs border remove--worker--container' data-worker-id='#{id}'>
+                            <span>#{worker.firstName + ' ' + worker.lastName.charAt(0)}</span>
+                            <span class='remove-icon close remove--worker'>
+                            </span>
+                            </div>"
+            @workersChosenContainer.append(workerHTML)
+        @workerInput.val('')
         @workerSuggestionsContainer.addClass('hide')
 
+    _removeWorkerFromSelectedList: (target) ->
+        id = Number(target.closest('.remove--worker--container').attr('data-worker-id'))
+        for worker in @allWorkers
+            if worker.id is id
+                @allWorkers.splice(worker, 1)
+                $(".remove--worker--container[data-worker-id='#{id}']").remove()
+                break
     _selectClientFromAutoSuggestion: (target) ->
         id = Number(target.attr('data-client-id'))
         for client in @clients
@@ -521,10 +597,54 @@ class @BidsPage
             @saveOrderErrorMessage.html('Korpa je prazna!').removeClass('hide')
             return
         
-        if @client is null
-            @saveOrderErrorMessage.html('Klijent nije odabran!').removeClass('hide')
-            return
-        if @worker is null
+        clientId = null
+        newClient = null
+        if @oldClientIsChosen
+            if @client is null
+                @saveOrderErrorMessage.html('Klijent nije odabran!').removeClass('hide')
+                return
+            clientId = @client.id
+        else
+            valid       = true
+            firstName    = @firstName.val().trim()
+            lastName     = @lastName.val().trim()
+            street       = @street.val().trim()
+            buildNumber  = @buildNumber.val().trim()
+            city         = @city.val().trim()
+            phoneNumber  = @phoneNumber.val().trim()
+            email        = @email.val().trim()
+
+            if firstName is ''
+                @firstName.addClass(ComponentsUtils.CSS_INVALID_INPUT)
+                valid = false
+            else
+                @firstName.removeClass(ComponentsUtils.CSS_INVALID_INPUT)
+                
+            if lastName is ''
+                @lastName.addClass(ComponentsUtils.CSS_INVALID_INPUT)
+                valid = false
+            else
+                @lastName.removeClass(ComponentsUtils.CSS_INVALID_INPUT)
+
+            if Validation.phone(phoneNumber)
+                @phoneNumber.removeClass(ComponentsUtils.CSS_INVALID_INPUT)
+            else
+                valid = false
+                @phoneNumber.addClass(ComponentsUtils.CSS_INVALID_INPUT)
+    
+            if not valid
+                return
+            else 
+                newClient = {
+                    firstName   : firstName
+                    lastName    : lastName
+                    street      : street
+                    buildNumber : buildNumber
+                    city        : city
+                    phoneNumber : phoneNumber
+                    email       : email
+                }
+        if @workerIds.length == 0
             @saveOrderErrorMessage.html('Radnik nije odabran!').removeClass('hide')
             return
 
@@ -536,19 +656,20 @@ class @BidsPage
 
         buildDate = new Date(@buildDate.val()).getTime()
         data = {
-            doors: @cartList[DoorBidDialog.BID_TYPE]
-            thresholds: @cartList[ThresholdBidDialog.BID_TYPE]
-            mosquitos: @cartList[MosquitoRepellerBidDialog.BID_TYPE]
-            windows: @cartList[WindowBidDialog.BID_TYPE]
-            shutters: @cartList[ShutterBidDialog.BID_TYPE]
-            clientId: @client.id
-            createClient: @newClient
-            workerId: @worker.id
-            buildDate: buildDate
-            oldClientIsChosen: true
+            doors             : @cartList[DoorBidDialog.BID_TYPE]
+            thresholds        : @cartList[ThresholdBidDialog.BID_TYPE]
+            mosquitos         : @cartList[MosquitoRepellerBidDialog.BID_TYPE]
+            windows           : @cartList[WindowBidDialog.BID_TYPE]
+            shutters          : @cartList[ShutterBidDialog.BID_TYPE]
+            clientId          : clientId
+            createClient      : newClient
+            workerIds         : @workerIds
+            buildDate         : buildDate
+            oldClientIsChosen : @oldClientIsChosen
+            orderStatus       : @orderStatus.val()
         }
 
-        OrderService.create(data, null, this, @_s, @_s)
+        OrderService.create(data, null, this, @_orderSavedSuccess, @_loadWorkersError)
 
-    _s:(d)->
-        console.log d
+    _orderSavedSuccess: (response)->
+        console.log response

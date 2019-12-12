@@ -8,6 +8,7 @@ class @AjaxRequest
             success: (data) ->
                 if data.error and callbackError
                     callbackError.call(callbackContext, data)
+                    return
                 if callBackFunction
             	    callBackFunction.call(callbackContext, data)
             error: (jqXHR, textStatus, errorThrown) -> 
@@ -16,6 +17,7 @@ class @AjaxRequest
                     return
                 if callbackError
                     callbackError.call(callbackContext, 500, "Internal server error")
+                    return
         });
 
     @POST: (url, data, onTheFlyData, callbackContext, callBackFunction, callbackError) ->

@@ -9,5 +9,6 @@ public interface IOrderDoor {
 	public Long getHeight();
 	public Long getInnerWidth();
 	public Long getPrice();
+	public Long getQuantity();
 	public Long getOrderId();
 }

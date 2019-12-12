@@ -10297,49 +10297,49 @@ label.left-label {
 }
 
 
-.block-icon {
-    position: relative;
-    display: block;
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-	background: url(../images/block.svg);
-	background-repeat: no-repeat;
+.block-icon, .remove-icon, .user-icon, .blocked-user-icon, .edit-icon, .search-icon, .client-details-icon,
+.loader-icon, .launch-icon {
+  position: relative;
+  display: block;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  background-repeat: no-repeat;
 	background-size: 24px;
 }
-
+.block-icon {
+  background: url(../images/block.svg);
+  background-repeat: no-repeat;
+	background-size: 24px;
+}
 .remove-icon {
-    position: relative;
-    display: block;
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-	background: url(../images/remove.svg);
-	background-repeat: no-repeat;
+  background: url(../images/remove.svg);
+  background-repeat: no-repeat;
 	background-size: 24px;
 }
 
 .user-icon {
-  position: relative;
-  display: block;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
   background: url(../images/user.svg);
   background-repeat: no-repeat;
-  background-size: 24px;
+	background-size: 24px;
 }
 .blocked-user-icon {
-  position: relative;
-  display: block;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
   background: url(../images/blockedUser.svg);
   background-repeat: no-repeat;
-  background-size: 24px;
+	background-size: 24px;
 }
 
+.edit-icon {
+  background: url(../images/edit.png);
+  background-repeat: no-repeat;
+	background-size: 24px;
+}
+
+.search-icon {
+  background-image: url(../images/search.svg);
+  background-repeat: no-repeat;
+	background-size: 24px;
+}
 .profile-image {
   position: relative;
   display: block;
@@ -10350,45 +10350,31 @@ label.left-label {
   background-size: contain;
 }
 
-.edit-icon {
-  position: relative;
-  display: block;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  background: url(../images/edit.png);
-  background-repeat: no-repeat;
-  background-size: 24px;
-}
-.search-icon {
-  background-image: url(../images/search.svg);
-  background-repeat: no-repeat;
-	background-size: 24px;
-}
+
 
 .client-details-icon {
-  position: relative;
-  display: block;
   width: 30px;
   height: 30px;
-  cursor: pointer;
   background: url(../images/clientDetails.png);
   background-repeat: no-repeat;
   background-size: 30px;
 }
 
 .loader-icon {
-  position: relative;
-  display: block;
   width: 60px;
   height: 60px;
   background: url(../images/loading.gif);
-  background-repeat: no-repeat;
   background-size: 60px;
   margin: auto;
   margin-top: 3rem;
+  background-repeat: no-repeat;
+	background-size: 24px;
 }
-
+.launch-icon {
+  background: url(../images/launch.svg);
+  background-repeat: no-repeat;
+	background-size: 24px;
+}
 body {
 	position: relative;
 }
@@ -10632,6 +10618,11 @@ html {
   pointer-events: none;
   opacity: 0.25;
 }
+
+.br-8 {
+  border-radius: 8px;
+}
+
 .bids-container[data-page=bids] .bidsPage {
   display: flex;
 }

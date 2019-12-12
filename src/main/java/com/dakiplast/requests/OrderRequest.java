@@ -2,6 +2,8 @@ package com.dakiplast.requests;
 
 import java.util.List;
 
+import com.dakiplast.enums.OrderStatus;
+
 public class OrderRequest {
 
 	private List<DoorRequest> doors;
@@ -11,9 +13,10 @@ public class OrderRequest {
 	private List<ShutterRequest> shutters;
 	private Long clientId;
 	private ClientRequest createClient;
-	private Long workerId;
+	private List<Long> workerIds;
 	private Long buildDate;
 	private boolean oldClientIsChosen;
+	private OrderStatus orderStatus;
 	
 	public List<DoorRequest> getDoors() {
 		return doors;
@@ -57,12 +60,6 @@ public class OrderRequest {
 	public void setCreateClient(ClientRequest createClient) {
 		this.createClient = createClient;
 	}
-	public Long getWorkerId() {
-		return workerId;
-	}
-	public void setWorkerId(Long workerId) {
-		this.workerId = workerId;
-	}
 	public Long getBuildDate() {
 		return buildDate;
 	}
@@ -74,5 +71,17 @@ public class OrderRequest {
 	}
 	public void setOldClientIsChosen(boolean oldClientIsChosen) {
 		this.oldClientIsChosen = oldClientIsChosen;
+	}
+	public List<Long> getWorkerIds() {
+		return workerIds;
+	}
+	public void setWorkerIds(List<Long> workerIds) {
+		this.workerIds = workerIds;
+	}
+	public OrderStatus getOrderStatus() {
+		return orderStatus;
+	}
+	public void setOrderStatus(OrderStatus orderStatus) {
+		this.orderStatus = orderStatus;
 	}
 }

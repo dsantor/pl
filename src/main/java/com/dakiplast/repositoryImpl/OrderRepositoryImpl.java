@@ -1,8 +1,11 @@
 package com.dakiplast.repositoryImpl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +39,15 @@ public class OrderRepositoryImpl implements OrderRepository {
 	}
 
 	@Override
-	public IOrder create(Long createdBy, Calendar createdAt, Long clientId, Long workerId, Long saldo, Long paid) {
+	public IOrder create(Long createdBy, Calendar createdAt, Long clientId, String workerIdsJson, Long saldo, Long paid, OrderStatus status) {
 		Order entity = new Order();
 		entity.setCreatedBy(createdBy);
 		entity.setCreatedAt(createdAt);
 		entity.setClientId(clientId);
-		entity.setWorkerId(workerId);
+		entity.setWorkerIdsJson(workerIdsJson);
 		entity.setSaldo(saldo);
 		entity.setPaid(paid);
+		entity.setStatus(status);
 		
 		entityManager.persist(entity);
 		return entity;
@@ -74,7 +78,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 	}
 
 	@Override
-	public IOrderDoor createOrderDoor(String sort, String type, String openSide, String glass, Long width, Long height, Long innerWidth, Long price, Long orderId) {
+	public IOrderDoor createOrderDoor(String sort, String type, String openSide, String glass, Long width, Long height, Long innerWidth, Long price, Long quantity, Long orderId) {
 		OrderDoor entity = new OrderDoor();
 		entity.setSort(sort);
 		entity.setType(type);
@@ -84,6 +88,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 		entity.setHeight(height);
 		entity.setInnerWidth(innerWidth);
 		entity.setPrice(price);
+		entity.setQuantity(quantity);
 		entity.setOrderId(orderId);
 		
 		entityManager.persist(entity);
@@ -91,7 +96,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 	}
 
 	@Override
-	public IOrderMosquitoRepeller createOrderMosquitoRepeller(String sort, String type, String openSide, Long width, Long height, Long price, Long orderId) {
+	public IOrderMosquitoRepeller createOrderMosquitoRepeller(String sort, String type, String openSide, Long width, Long height, Long price, Long quantity, Long orderId) {
 		OrderMosquitoRepeller entity = new OrderMosquitoRepeller();
 		entity.setSort(sort);
 		entity.setType(type);
@@ -99,6 +104,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 		entity.setWidth(width);
 		entity.setHeight(height);
 		entity.setPrice(price);
+		entity.setQuantity(quantity);
 		entity.setOrderId(orderId);
 		
 		entityManager.persist(entity);
@@ -106,7 +112,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 	}
 
 	@Override
-	public IOrderShutter createOrderShutter(String sort, String box, String boxType, String openSide, Long width, Long height, Long price, Long orderId) {
+	public IOrderShutter createOrderShutter(String sort, String box, String boxType, String openSide, Long width, Long height, Long price, Long quantity, Long orderId) {
 		OrderShutter entity = new OrderShutter();
 		entity.setSort(sort);
 		entity.setBox(boxType);
@@ -115,6 +121,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 		entity.setWidth(width);
 		entity.setHeight(height);
 		entity.setPrice(price);
+		entity.setQuantity(quantity);
 		entity.setOrderId(orderId);
 		
 		entityManager.persist(entity);
@@ -122,12 +129,13 @@ public class OrderRepositoryImpl implements OrderRepository {
 	}
 
 	@Override
-	public IOrderThreshold createOrderThreshold(String sort, Long width, Long height, Long innerWidth, Long price, Long orderId) {
+	public IOrderThreshold createOrderThreshold(String sort, Long width, Long height, Long innerWidth, Long price, Long quantity, Long orderId) {
 		OrderThreshold entity = new OrderThreshold();
 		entity.setSort(sort);
 		entity.setWidth(innerWidth);
 		entity.setHeight(height);
 		entity.setInnerWidth(innerWidth);
+		entity.setQuantity(quantity);
 		entity.setPrice(price);
 		entity.setOrderId(orderId);
 		
@@ -136,7 +144,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 	}
 
 	@Override
-	public IOrderWindow createOrderWindow(String sort, String openSide, String glass, boolean tipper, Long width, Long height, Long innerWidth, Long price, Long orderId) {
+	public IOrderWindow createOrderWindow(String sort, String openSide, String glass, boolean tipper, Long width, Long height, Long innerWidth, Long price, Long quantity, Long orderId) {
 		OrderWindow entity = new OrderWindow();
 		entity.setSort(sort);
 		entity.setOpenSide(openSide);
@@ -146,9 +154,26 @@ public class OrderRepositoryImpl implements OrderRepository {
 		entity.setHeight(height);
 		entity.setInnerWidth(innerWidth);
 		entity.setPrice(price);
+		entity.setQuantity(quantity);
 		entity.setOrderId(orderId);
 		
 		entityManager.persist(entity);
 		return entity;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<IOrder> getAll() {
+		Query query = entityManager.createNamedQuery("Order.findAll");
+		
+		List<IOrder> result = query.getResultList();
+		return result == null ? new ArrayList<>() : result;
+	}
+
+	@Override
+	public void setSaldo(Long orderId, Long saldo) {
+		Order entity = entityManager.find(Order.class, orderId);
+		entity.setSaldo(saldo);
+		entityManager.merge(entity);
 	}
 }

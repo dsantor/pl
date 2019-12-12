@@ -6,6 +6,9 @@ class @ComponentsUtils
     window.closest = (target, closestTo) ->
         return target.closest(closestTo).length > 0
 
+    window.ajaxCallbackError = (response) ->
+        console.log response.message
+        
     @userDetailsHTML: () ->
          return "<div class='col-7 h-75 pt-5 flex'>
                     <div class='container w-50'>
@@ -102,3 +105,15 @@ class @ComponentsUtils
 
     @loadingPage: () ->
         return "<div class='js--loading--page'><span class='loader-icon'></span></div>"
+
+    @getTimeFromMillis: (millis) ->
+        date = new Date(millis)
+        year = date.getFullYear()
+        month = date.getMonth()
+        day  = date.getDate()
+
+        hour = date.getHours()
+        minutes = date.getMinutes()
+        seconds = date.getSeconds()
+
+        return "#{day}-#{month}-#{year} (#{hour}:#{minutes}:#{seconds})"

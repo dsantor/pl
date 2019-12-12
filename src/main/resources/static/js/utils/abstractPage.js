@@ -34,6 +34,8 @@
       return this.container.html(ComponentsUtils.loadingPage());
     };
 
+    AbstractPage.prototype._clickEventHandler = function(event) {};
+
     return AbstractPage;
 
   })();

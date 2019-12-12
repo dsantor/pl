@@ -42,6 +42,9 @@ public class OrderShutter implements Serializable, IOrderShutter {
 	
 	@Column(name = "price")
     private Long price;
+
+	@Column(name = "quantity")
+    private Long quantity;
 	
 	@Column(name = "order_id")
 	private Long orderId;
@@ -116,5 +119,13 @@ public class OrderShutter implements Serializable, IOrderShutter {
 
 	public void setPrice(Long price) {
 		this.price = price;
+	}
+
+	public Long getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Long quantity) {
+		this.quantity = quantity;
 	}
 }

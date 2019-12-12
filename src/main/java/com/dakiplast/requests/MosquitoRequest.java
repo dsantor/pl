@@ -8,7 +8,7 @@ public class MosquitoRequest {
 	private Long width;
 	private Long height;
 	private Long price;
-	private Long count;
+	private Long quantity;
 
 	public String getSort() {
 		return sort;
@@ -50,12 +50,12 @@ public class MosquitoRequest {
 		this.height = height;
 	}
 
-	public Long getCount() {
-		return count;
+	public Long getQuantity() {
+		return quantity;
 	}
 
-	public void setCount(Long count) {
-		this.count = count;
+	public void setQuantity(Long quantity) {
+		this.quantity = quantity;
 	}
 
 	public Long getPrice() {

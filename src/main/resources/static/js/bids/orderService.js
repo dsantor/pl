@@ -11,6 +11,18 @@
       return AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError);
     };
 
+    OrderService.getAll = function(onTheFlyData, callbackContext, callBackFunction, callbackError) {
+      var url;
+      url = this.apiUrl + '/getAll';
+      return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
+    };
+
+    OrderService.get = function(data, onTheFlyData, callbackContext, callBackFunction, callbackError) {
+      var url;
+      url = this.apiUrl + '/get/' + data;
+      return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
+    };
+
     return OrderService;
 
   })();

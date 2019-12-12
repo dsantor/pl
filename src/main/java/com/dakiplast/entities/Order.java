@@ -1,7 +1,9 @@
 package com.dakiplast.entities;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,13 +12,19 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.dakiplast.entities.interfaces.IOrder;
 import com.dakiplast.enums.OrderStatus;
+import com.google.gson.Gson;
 
 @Entity
 @Table(name = "orders")
+@NamedQueries({
+	@NamedQuery(name = "Order.findAll", query = "SELECT o from Order o")
+})
 public class Order implements Serializable, IOrder {
 
 	private static final long serialVersionUID = 1L;
@@ -35,8 +43,8 @@ public class Order implements Serializable, IOrder {
 	@Column(name = "client_id")
 	private Long clientId;
 
-	@Column(name = "worker_id")
-	private Long workerId;
+	@Column(name = "worker_ids")
+	private String workerIds;
 	
 	@Column(name = "saldo")
 	private Long saldo;
@@ -80,14 +88,6 @@ public class Order implements Serializable, IOrder {
 		this.clientId = clientId;
 	}
 
-	public Long getWorkerId() {
-		return workerId;
-	}
-
-	public void setWorkerId(Long workerId) {
-		this.workerId = workerId;
-	}
-
 	public Long getSaldo() {
 		return saldo;
 	}
@@ -110,5 +110,18 @@ public class Order implements Serializable, IOrder {
 
 	public void setStatus(OrderStatus status) {
 		this.status = status;
+	}
+
+	public String getWorkerIdsJson() {
+		return workerIds;
+	}
+
+	public void setWorkerIdsJson(String workerIds) {
+		this.workerIds = workerIds;
+	}
+	
+	public List<Long> getWorkerIds() {
+		Long[] listIds = new Gson().fromJson(this.workerIds, Long[].class);
+		return Arrays.asList(listIds);
 	}
 }

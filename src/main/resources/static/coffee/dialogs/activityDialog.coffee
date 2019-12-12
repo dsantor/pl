@@ -58,26 +58,12 @@ class @ActivityDialog extends AbstractDialog
                 item.person = actionLog.client.firstName + ' ' + actionLog.client.lastName
             
             item.action = actionLog.type
-            item.time = @_getTime(actionLog.time)
+            item.time = ComponentsUtils.getTimeFromMillis(actionLog.time)
 
             items.push(item)
         
         return items
         
-    _getTime: (time) ->
-        date = new Date(time)
-        year = date.getFullYear()
-        month = date.getMonth()
-        day  = date.getDate()
-
-        hour = date.getHours()
-        minutes = date.getMinutes()
-        seconds = date.getSeconds()
-
-        return "#{day}-#{month}-#{year} (#{hour}:#{minutes}:#{seconds})"
-
-
-
     _activityLogSuccess: (data) ->
         @actionLogs = data.data
         

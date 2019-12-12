@@ -7,5 +7,6 @@ public interface IOrderMosquitoRepeller {
     public Long getWidth();
     public Long getHeight();
     public Long getPrice();
+    public Long getQuantity();
 	public Long getOrderId();
 }

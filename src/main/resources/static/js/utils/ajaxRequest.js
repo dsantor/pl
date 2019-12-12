@@ -11,6 +11,7 @@
         success: function(data) {
           if (data.error && callbackError) {
             callbackError.call(callbackContext, data);
+            return;
           }
           if (callBackFunction) {
             return callBackFunction.call(callbackContext, data);
@@ -22,7 +23,7 @@
             return;
           }
           if (callbackError) {
-            return callbackError.call(callbackContext, 500, "Internal server error");
+            callbackError.call(callbackContext, 500, "Internal server error");
           }
         }
       });

@@ -25,3 +25,6 @@ class @AbstractPage
 
     _loadingPage: () ->
         @container.html(ComponentsUtils.loadingPage()) 
+
+
+    _clickEventHandler: (event) ->

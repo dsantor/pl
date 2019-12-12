@@ -10,7 +10,7 @@ public class DoorRequest {
 	private Long height;
 	private Long innerWidth;
 	private Long price;
-	private Long count;
+	private Long quantity;
 	private Long id;
 	
 	public String getSort() {
@@ -55,11 +55,11 @@ public class DoorRequest {
 	public void setInnerWidth(Long innerWidth) {
 		this.innerWidth = innerWidth;
 	}
-	public Long getCount() {
-		return count;
+	public Long getQuantity() {
+		return quantity;
 	}
-	public void setCount(Long count) {
-		this.count = count;
+	public void setQuantity(Long quantity) {
+		this.quantity = quantity;
 	}
 	public Long getId() {
 		return id;

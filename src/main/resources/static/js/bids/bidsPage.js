@@ -7,10 +7,12 @@
       this.clients = [];
       this.newClient = null;
       this.worker = null;
-      this.workers = [];
+      this.workerIds = [];
+      this.allWorkers = [];
       this.bidCurrentId = 1;
       this.container = $('.js--page--container');
       this.allowedSaveBidsButton = false;
+      this.oldClientIsChosen = true;
       this._renderChoseBidHTML();
       WorkerService.getAll(null, this, this._loadWorkersSuccess, this._loadWorkersError);
       if (this.clientId) {
@@ -22,10 +24,23 @@
       this.overviewContainer = this.container.find('.overview--container');
       this.autoSuggestInputs = this.container.find('.js--autosuggest--input');
       this.workerInput = this.container.find('.js--worker--input');
+      this.workersChosenContainer = this.container.find('.js--workers--chosen');
       this.workerSuggestionsContainer = this.container.find('.js--worker--suggestions');
       this.clientInput = this.container.find('.js--client--input');
       this.clientSuggestionsContainer = this.container.find('.js--client--suggestions');
       this.saveOrderErrorMessage = this.container.find('.js--order--error--message');
+      this.newClientContainer = this.container.find('.js--radio--button--new--client--container');
+      this.oldClientContainer = this.container.find('.js--radio--button--old--client--container');
+      this.oldClientButton = this.container.find('.js--radio--button--old--client');
+      this.newClientButton = this.container.find('.js--radio--button--new--client');
+      this.orderStatus = this.container.find('.js--order--status');
+      this.firstName = this.container.find('.js--firstName');
+      this.lastName = this.container.find('.js--lastName');
+      this.street = this.container.find('.js--street');
+      this.buildNumber = this.container.find('.js--buildNumber');
+      this.city = this.container.find('.js--city');
+      this.phoneNumber = this.container.find('.js--phoneNumber');
+      this.email = this.container.find('.js--email');
       this.buildDate = this.container.find('.js--build--date');
       this.clickEvent = this._clickEventHandler.bind(this);
       this.container.on('click', this.clickEvent);
@@ -61,16 +76,25 @@
       this.clientInput = null;
       this.clientSuggestionsContainer = null;
       this.buildDate = null;
+      this.orderStatus = null;
       this.container.html('');
       this.clientId = null;
       this.client = null;
       this.clients = null;
       this.newClient = null;
       this.worker = null;
-      this.workers = null;
+      this.workerIds = null;
       this.bidCurrentId = null;
       this.cartList = null;
-      return this.allowedSaveBidsButton = null;
+      this.allowedSaveBidsButton = null;
+      this.oldClientIsChosen = null;
+      this.firstName = null;
+      this.lastName = null;
+      this.street = null;
+      this.buildNumber = null;
+      this.city = null;
+      this.phoneNumber = null;
+      return this.email = null;
     };
 
     BidsPage.prototype.getPageTitle = function() {
@@ -79,7 +103,7 @@
 
     BidsPage.prototype._renderChoseBidHTML = function() {
       var bodyHTML;
-      bodyHTML = "<div class='container bids--container bids-container' data-page='bids'> <nav class='nav header justify-content-end pt-3'> <span class='nav-link span-a js--chose--bids nav--bids active'>Odaberi proizvod</span> <span class='nav-link span-a js--bids--overview nav--overview nav--empty'>Pregled porudzbine</span> <span class='nav-link span-a " + (this._createClientButtonClass()) + " js--chose--client nav--client'>Unesi klijenta</span> <span class='nav-link span-a js--bids--order nav--order'>Poruči</span> </nav> <div class='col-7 m-auto w-100 pt-3 flex flex-column bidsPage' data-page='bids'> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--door'> <img class='item-order pointer' draggable=false src='/images/door.png'> </div> <label>Vrata</label> </div> <div class='item-order text-center'> <div class='js--create--threshold'> <img class='item-order pointer' draggable=false src='/images/threshold.png'> </div> <label>Prag</label> </div> <div class='item-order text-center'> <div class='js--create--mosquito--repeller'> <img class='item-order pointer' draggable=false src='/images/mosquitoRepeller.png'> </div> <label>Komarnik</label> </div> </div> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--window'> <img class='item-order pointer' draggable=false src='/images/window.png'> </div> <label>Prozor</label> </div> <div class='item-order text-center'> <div class='js--create--shutter'> <img class='item-order pointer' draggable=false src='/images/shutter.png'> </div> <label>Roletne</label> </div> </div> </div> <div class='bidsClient' data-page='client'> <div class='col-7 m-auto h-75 pt-5 flex'> <div class='form-group w-50'> <div class='container'> <label class='js--radio--button--old--client switch-section active'>Postojeci klijent</label> <div class='js--radio--button--old--client--container'> <input type='text' class='form-control js--autosuggest--input js--client--input' placeholder='klijent'> <div class='suggestion-container js--client--suggestions hide'> </div> </div> </div> </div> </div> <div class='col-7 m-auto h-75 pt-5 flex'> <div class='container'> <label class='js--radio--button--new--client switch-section'>Kreiraj klijenta</label> </div> </div> <div class='col-7 m-auto h-75 flex js--radio--button--new--client--container disabled'> <div class='container w-50'> <div class='form-group'> <label>Email</label> <input type='email' class='form-control js--email' placeholder='email'/> </div> <div class='form-group'> <label>Ime*</label> <input type='text' class='form-control js--firstName' placeholder='ime'/> </div> <div class='form-group'> <label>Prezime*</label> <input type='text' class='form-control js--lastName' placeholder='prezime'/> </div> <div class='form-group'> <label>Ulica</label> <input type='text' class='form-control js--street' placeholder='ulica'/> </div> </div> <div class='container w-50'> <div class='form-group'> <label>Broj stana</label> <input type='text' class='form-control js--buildNumber' placeholder='broj kuce/stana'/> </div> <div class='form-group'> <label>Grad</label> <input type='text' class='form-control js--city' placeholder='grad'/> </div> <div class='form-group'> <label>Telefon*</label> <input type='tel' class='form-control js--phoneNumber' placeholder='telefon'/> </div> </div> </div> </div> <div class='pt-3 flex flex-column overview--container bidsOverview' data-page='overview'></div> <div class='pt-3 flex flex-column bidsEmptyState' data-page='empty'> " + (BidSectionsHTML.emptyState()) + " </div> <div class='col-7 m-auto p-5 flex bidsOrder' data-page='order'> <div class='container container-padding w-50'> <div class='form-group'> <label>Datum ugradnje</label> <input type='date' class='form-control js--build--date'> </div> <div class='form-group'> <label>Radnik</label> <input type='text' class='form-control js--autosuggest--input js--worker--input' placeholder='radnik'> <div class='suggestion-container js--worker--suggestions hide'> </div> </div> <div class='form-group'> <button class='btn btn-lg btn-primary btn-block js--save--order'>Poruči</button> <span class='text-danger js--order--error--message hide'> </span> </div> </div> </div> </div>";
+      bodyHTML = "<div class='container bids--container bids-container' data-page='bids'> <nav class='nav header justify-content-end pt-3'> <span class='nav-link span-a js--chose--bids nav--bids active'>Odaberi proizvod</span> <span class='nav-link span-a js--bids--overview nav--overview nav--empty'>Pregled porudzbine</span> <span class='nav-link span-a " + (this._createClientButtonClass()) + " js--chose--client nav--client'>Unesi klijenta</span> <span class='nav-link span-a js--bids--order nav--order'>Poruči</span> </nav> <div class='col-7 m-auto w-100 pt-3 flex flex-column bidsPage' data-page='bids'> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--door'> <img class='item-order pointer' draggable=false src='/images/door.png'> </div> <label>Vrata</label> </div> <div class='item-order text-center'> <div class='js--create--threshold'> <img class='item-order pointer' draggable=false src='/images/threshold.png'> </div> <label>Prag</label> </div> <div class='item-order text-center'> <div class='js--create--mosquito--repeller'> <img class='item-order pointer' draggable=false src='/images/mosquitoRepeller.png'> </div> <label>Komarnik</label> </div> </div> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--window'> <img class='item-order pointer' draggable=false src='/images/window.png'> </div> <label>Prozor</label> </div> <div class='item-order text-center'> <div class='js--create--shutter'> <img class='item-order pointer' draggable=false src='/images/shutter.png'> </div> <label>Roletne</label> </div> </div> </div> <div class='bidsClient' data-page='client'> <div class='col-7 m-auto h-75 pt-5 flex'> <div class='form-group w-50'> <div class='container'> <label class='js--radio--button--old--client switch-section active'>Postojeci klijent</label> <div class='js--radio--button--old--client--container'> <input type='text' class='form-control js--autosuggest--input js--client--input' placeholder='klijent' autocomplete='false' aria-autocomplete='mrs'> <div class='suggestion-container js--client--suggestions hide'> </div> </div> </div> </div> </div> <div class='col-7 m-auto h-75 pt-5 flex'> <div class='container'> <label class='js--radio--button--new--client switch-section'>Kreiraj klijenta</label> </div> </div> <div class='col-7 m-auto h-75 flex js--radio--button--new--client--container disabled'> <div class='container w-50'> <div class='form-group'> <label>Email</label> <input type='email' class='form-control js--email' placeholder='email'/> </div> <div class='form-group'> <label>Ime*</label> <input type='text' class='form-control js--firstName' placeholder='ime'/> </div> <div class='form-group'> <label>Prezime*</label> <input type='text' class='form-control js--lastName' placeholder='prezime'/> </div> <div class='form-group'> <label>Ulica</label> <input type='text' class='form-control js--street' placeholder='ulica'/> </div> </div> <div class='container w-50'> <div class='form-group'> <label>Broj stana</label> <input type='text' class='form-control js--buildNumber' placeholder='broj kuce/stana'/> </div> <div class='form-group'> <label>Grad</label> <input type='text' class='form-control js--city' placeholder='grad'/> </div> <div class='form-group'> <label>Telefon*</label> <input type='tel' class='form-control js--phoneNumber' placeholder='telefon'/> </div> </div> </div> </div> <div class='pt-3 flex flex-column overview--container bidsOverview' data-page='overview'></div> <div class='pt-3 flex flex-column bidsEmptyState' data-page='empty'> " + (BidSectionsHTML.emptyState()) + " </div> <div class='col-7 m-auto p-5 flex bidsOrder' data-page='order'> <div class='container container-padding w-50'> <div class='form-group'> <label>Datum ugradnje</label> <input type='date' class='form-control js--build--date'> </div> <div class='form-group'> <label>Status porudzbine</label> <select class='js--order--status'> <option value='WAITING' selected>Na čekanju</option> <option value='ACCEPTED'>Prihvaćen</option> <option value='DECLINED'>Odbijen</option> </select> </div> <div class='form-group'> <label>Radnik</label> <input type='text' class='form-control js--autosuggest--input js--worker--input' placeholder='radnik'> <div class='suggestion-container js--worker--suggestions hide'> </div> <div class='mt-3 js--workers--chosen'> </div> </div> <div style='color:red;'>Allow user to chose status of order</div> <div class='form-group'> <button class='btn btn-lg btn-primary btn-block js--save--order'>Poruči</button> <span class='text-danger js--order--error--message hide'> </span> </div> </div> </div> </div>";
       return this.container.html(bodyHTML);
     };
 
@@ -123,9 +147,6 @@
         this._activePage('order');
         return;
       }
-      if (closest(target, '.js--save--bids')) {
-        return;
-      }
       if (closest(target, '.js--remove--bid')) {
         this._removeBid(target);
         return;
@@ -147,17 +168,31 @@
         return;
       }
       if (closest(target, '.js--radio--button--old--client')) {
-        $('.js--radio--button--old--client--container').removeClass('disabled');
-        $('.js--radio--button--new--client--container').addClass('disabled');
-        $('.js--radio--button--new--client').removeClass('active');
-        $('.js--radio--button--old--client').addClass('active');
+        this._setNewClientContainer(false);
         return;
       }
       if (closest(target, '.js--radio--button--new--client')) {
-        $('.js--radio--button--new--client--container').removeClass('disabled');
-        $('.js--radio--button--old--client--container').addClass('disabled');
-        $('.js--radio--button--old--client').removeClass('active');
-        $('.js--radio--button--new--client').addClass('active');
+        this._setNewClientContainer(true);
+        return;
+      }
+      if (closest(target, '.remove--worker')) {
+        this._removeWorkerFromSelectedList(target);
+      }
+    };
+
+    BidsPage.prototype._setNewClientContainer = function(newClient) {
+      if (newClient) {
+        this.newClientContainer.removeClass('disabled');
+        this.oldClientContainer.addClass('disabled');
+        this.oldClientButton.removeClass('active');
+        this.newClientButton.addClass('active');
+        return this.oldClientIsChosen = false;
+      } else {
+        this.oldClientContainer.removeClass('disabled');
+        this.newClientContainer.addClass('disabled');
+        this.newClientButton.removeClass('active');
+        this.oldClientButton.addClass('active');
+        return this.oldClientIsChosen = true;
       }
     };
 
@@ -181,7 +216,7 @@
         return;
       }
       workers = [];
-      ref = this.workers;
+      ref = this.allWorkers;
       for (i = 0, len = ref.length; i < len; i++) {
         w = ref[i];
         input = input.toLowerCase();
@@ -205,13 +240,14 @@
     };
 
     BidsPage.prototype._clientAutoSuggestion = function() {
-      var client, clients, firstName, html, i, input, j, lastName, len, len1, ref;
+      var client, clients, firstName, html, i, input, j, k, lastName, len, len1, len2, phoneNumber, phoneNumbers, ref;
       input = this.clientInput.val();
       if (input.length < 2) {
         this.clientSuggestionsContainer.addClass('hide');
         return;
       }
       clients = [];
+      phoneNumbers = [];
       ref = this.clients;
       for (i = 0, len = ref.length; i < len; i++) {
         client = ref[i];
@@ -220,14 +256,24 @@
         lastName = client.lastName.toLowerCase();
         if (firstName.startsWith(input) || lastName.startsWith(input)) {
           clients.push(client);
+        } else if (client.phoneNumber.startsWith(input)) {
+          phoneNumbers.push(client);
         }
       }
+      html = '';
       if (clients.length > 0) {
-        html = '';
         for (j = 0, len1 = clients.length; j < len1; j++) {
           client = clients[j];
           html += "<span class='suggestion-item' data-client-id='" + client.id + "'>" + client.firstName + " " + client.lastName + "</span>";
         }
+      }
+      if (phoneNumbers.length > 0) {
+        for (k = 0, len2 = phoneNumbers.length; k < len2; k++) {
+          phoneNumber = phoneNumbers[k];
+          html += "<span class='suggestion-item' data-client-id='" + phoneNumber.id + "'>" + phoneNumber.phoneNumber + "</span>";
+        }
+      }
+      if (clients.length > 0 || phoneNumbers.length > 0) {
         this.clientSuggestionsContainer.html(html);
         return this.clientSuggestionsContainer.removeClass('hide');
       } else {
@@ -398,7 +444,7 @@
     };
 
     BidsPage.prototype._loadWorkersSuccess = function(response) {
-      return this.workers = response.data;
+      return this.allWorkers = response.data;
     };
 
     BidsPage.prototype._loadWorkersError = function(response) {
@@ -406,18 +452,44 @@
     };
 
     BidsPage.prototype._selectWorkerFromAutoSuggestion = function(target) {
-      var i, id, len, ref, worker;
+      var addHtml, i, id, len, ref, worker, workerHTML;
       id = Number(target.attr('data-worker-id'));
-      ref = this.workers;
+      addHtml = false;
+      ref = this.allWorkers;
       for (i = 0, len = ref.length; i < len; i++) {
         worker = ref[i];
         if (worker.id === id) {
-          this.worker = worker;
+          if (!this.workerIds.includes(id)) {
+            this.workerIds.push(worker.id);
+            addHtml = true;
+          }
           break;
         }
       }
-      this.workerInput.val(this.worker.firstName + ' ' + this.worker.lastName);
+      if (addHtml) {
+        workerHTML = "<div class='w-100 br-8 nav-link nav-tabs border remove--worker--container' data-worker-id='" + id + "'> <span>" + (worker.firstName + ' ' + worker.lastName.charAt(0)) + "</span> <span class='remove-icon close remove--worker'> </span> </div>";
+        this.workersChosenContainer.append(workerHTML);
+      }
+      this.workerInput.val('');
       return this.workerSuggestionsContainer.addClass('hide');
+    };
+
+    BidsPage.prototype._removeWorkerFromSelectedList = function(target) {
+      var i, id, len, ref, results, worker;
+      id = Number(target.closest('.remove--worker--container').attr('data-worker-id'));
+      ref = this.allWorkers;
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        worker = ref[i];
+        if (worker.id === id) {
+          this.allWorkers.splice(worker, 1);
+          $(".remove--worker--container[data-worker-id='" + id + "']").remove();
+          break;
+        } else {
+          results.push(void 0);
+        }
+      }
+      return results;
     };
 
     BidsPage.prototype._selectClientFromAutoSuggestion = function(target) {
@@ -444,17 +516,62 @@
     };
 
     BidsPage.prototype._saveOrder = function() {
-      var buildDate, data, keys;
+      var buildDate, buildNumber, city, clientId, data, email, firstName, keys, lastName, newClient, phoneNumber, street, valid;
       keys = Object.keys(this.cartList);
       if (keys.length === 0) {
         this.saveOrderErrorMessage.html('Korpa je prazna!').removeClass('hide');
         return;
       }
-      if (this.client === null) {
-        this.saveOrderErrorMessage.html('Klijent nije odabran!').removeClass('hide');
-        return;
+      clientId = null;
+      newClient = null;
+      if (this.oldClientIsChosen) {
+        if (this.client === null) {
+          this.saveOrderErrorMessage.html('Klijent nije odabran!').removeClass('hide');
+          return;
+        }
+        clientId = this.client.id;
+      } else {
+        valid = true;
+        firstName = this.firstName.val().trim();
+        lastName = this.lastName.val().trim();
+        street = this.street.val().trim();
+        buildNumber = this.buildNumber.val().trim();
+        city = this.city.val().trim();
+        phoneNumber = this.phoneNumber.val().trim();
+        email = this.email.val().trim();
+        if (firstName === '') {
+          this.firstName.addClass(ComponentsUtils.CSS_INVALID_INPUT);
+          valid = false;
+        } else {
+          this.firstName.removeClass(ComponentsUtils.CSS_INVALID_INPUT);
+        }
+        if (lastName === '') {
+          this.lastName.addClass(ComponentsUtils.CSS_INVALID_INPUT);
+          valid = false;
+        } else {
+          this.lastName.removeClass(ComponentsUtils.CSS_INVALID_INPUT);
+        }
+        if (Validation.phone(phoneNumber)) {
+          this.phoneNumber.removeClass(ComponentsUtils.CSS_INVALID_INPUT);
+        } else {
+          valid = false;
+          this.phoneNumber.addClass(ComponentsUtils.CSS_INVALID_INPUT);
+        }
+        if (!valid) {
+          return;
+        } else {
+          newClient = {
+            firstName: firstName,
+            lastName: lastName,
+            street: street,
+            buildNumber: buildNumber,
+            city: city,
+            phoneNumber: phoneNumber,
+            email: email
+          };
+        }
       }
-      if (this.worker === null) {
+      if (this.workerIds.length === 0) {
         this.saveOrderErrorMessage.html('Radnik nije odabran!').removeClass('hide');
         return;
       }
@@ -470,17 +587,18 @@
         mosquitos: this.cartList[MosquitoRepellerBidDialog.BID_TYPE],
         windows: this.cartList[WindowBidDialog.BID_TYPE],
         shutters: this.cartList[ShutterBidDialog.BID_TYPE],
-        clientId: this.client.id,
-        createClient: this.newClient,
-        workerId: this.worker.id,
+        clientId: clientId,
+        createClient: newClient,
+        workerIds: this.workerIds,
         buildDate: buildDate,
-        oldClientIsChosen: true
+        oldClientIsChosen: this.oldClientIsChosen,
+        orderStatus: this.orderStatus.val()
       };
-      return OrderService.create(data, null, this, this._s, this._s);
+      return OrderService.create(data, null, this, this._orderSavedSuccess, this._loadWorkersError);
     };
 
-    BidsPage.prototype._s = function(d) {
-      return console.log(d);
+    BidsPage.prototype._orderSavedSuccess = function(response) {
+      return console.log(response);
     };
 
     return BidsPage;

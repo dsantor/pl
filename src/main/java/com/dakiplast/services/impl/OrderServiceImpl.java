@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.dakiplast.entities.interfaces.IClient;
 import com.dakiplast.entities.interfaces.IOrder;
-import com.dakiplast.entities.interfaces.IWorker;
+import com.dakiplast.enums.OrderStatus;
 import com.dakiplast.repository.OrderRepository;
 import com.dakiplast.requests.ClientRequest;
 import com.dakiplast.requests.DoorRequest;
@@ -20,6 +20,7 @@ import com.dakiplast.requests.WindowRequest;
 import com.dakiplast.services.ClientService;
 import com.dakiplast.services.OrderService;
 import com.dakiplast.services.WorkerService;
+import com.google.gson.Gson;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -41,10 +42,10 @@ public class OrderServiceImpl implements OrderService {
 			List<ShutterRequest> shutters 	  = orderRequest.getShutters();
 			Long clientId 					  = orderRequest.getClientId();
 			ClientRequest clientRequest 	  = orderRequest.getCreateClient();
-			Long workerId 				      = orderRequest.getWorkerId();
+			List<Long> workerIds		      = orderRequest.getWorkerIds();
 			Long buildDateMillis 			  = orderRequest.getBuildDate();
 			boolean oldClientIsChosen		  = orderRequest.isOldClientIsChosen();
-			
+			OrderStatus	status 				  = orderRequest.getOrderStatus();
 			IClient client;
 			
 			if (oldClientIsChosen && clientId == null) {
@@ -69,20 +70,22 @@ public class OrderServiceImpl implements OrderService {
 				}
 			}
 			
-			if (workerId == null) {
+			if (workerIds == null || workerIds.isEmpty()) {
 				return null;
 			}
 			
-			IWorker worker = workerService.getById(workerId);
-			if (worker == null) {
-				return null;
-			}
+//			IWorker worker = workerService.getById(workerId);
+//			if (worker == null) {
+//				return null;
+//			}
 			
 			if (buildDateMillis == null) {
 				return null;
 			}
-			
-			IOrder order = orderRepository.create(createdBy, Calendar.getInstance(), clientId, workerId, 1000L, 0L);
+			Gson gson = new Gson();
+			String workerIdsJson = gson.toJson(workerIds);
+			IOrder order = orderRepository.create(createdBy, Calendar.getInstance(), clientId, workerIdsJson, 0L, 0L, status);
+			Long saldo = 0L;
 			// TODO: order id
 			Long orderId = order.getId();
 			if (doors != null) {
@@ -94,8 +97,9 @@ public class OrderServiceImpl implements OrderService {
 				Long height;
 				Long innerWidth;
 				Long price;
+				Long quantity;
 				for (DoorRequest door: doors) {
-					if (door.getCount() < 1) {
+					if (door.getQuantity() < 1) {
 						continue;
 					}
 					
@@ -106,11 +110,10 @@ public class OrderServiceImpl implements OrderService {
 					width = door.getWidth();
 					height = door.getHeight();
 					innerWidth = door.getInnerWidth();
-					price = door.getPrice();
-					
-					for(int i=0; i<door.getCount(); i++) {
-						orderRepository.createOrderDoor(sort, type, openSide, glass, width, height, innerWidth, price, orderId);
-					}
+					quantity = door.getQuantity();
+					price = door.getPrice() * quantity;
+					saldo += price;
+					orderRepository.createOrderDoor(sort, type, openSide, glass, width, height, innerWidth, price, quantity, orderId);
 				}
 			}
 			
@@ -120,19 +123,19 @@ public class OrderServiceImpl implements OrderService {
 				Long height;
 				Long innerWidth;
 				Long price;
+				Long quantity;
 				for (ThresholdRequest threshold: thresholds) {
-					if (threshold.getCount() < 1) {
+					if (threshold.getQuantity() < 1) {
 						continue;
 					}
 					sort = threshold.getSort();
 					width = threshold.getWidth();
 					height = threshold.getHeight();
 					innerWidth = threshold.getInnerWidth();
-					price = threshold.getPrice();
-					
-					for(int i=0; i<threshold.getCount(); i++) {
-						orderRepository.createOrderThreshold(sort, width, height, innerWidth, price, orderId);
-					}
+					quantity = threshold.getQuantity();
+					price = threshold.getPrice() * quantity;
+					saldo += price;
+					orderRepository.createOrderThreshold(sort, width, height, innerWidth, price, quantity, orderId);
 				}
 			}
 			if (mosquitos != null) {
@@ -141,9 +144,10 @@ public class OrderServiceImpl implements OrderService {
 				String openSide;
 				Long width;
 				Long height;
+				Long quantity;
 				Long price;
 				for (MosquitoRequest mosquito: mosquitos) {
-					if (mosquito.getCount() < 1) {
+					if (mosquito.getQuantity() < 1) {
 						continue;
 					}
 					sort = mosquito.getSort().trim();
@@ -151,11 +155,10 @@ public class OrderServiceImpl implements OrderService {
 					openSide = mosquito.getOpenSide();
 					width = mosquito.getWidth();
 					height = mosquito.getHeight();
-					price = mosquito.getPrice();
-					
-					for(int i=0; i<mosquito.getCount(); i++) {
-						orderRepository.createOrderMosquitoRepeller(sort, type, openSide, width, height, price, orderId);
-					}
+					quantity = mosquito.getQuantity();
+					price = mosquito.getPrice() * quantity;
+					saldo += price;
+					orderRepository.createOrderMosquitoRepeller(sort, type, openSide, width, height, price, quantity, orderId);
 				}
 			}
 			
@@ -168,8 +171,9 @@ public class OrderServiceImpl implements OrderService {
 				Long height;
 				Long innerWidth;
 				Long price;
+				Long quantity;
 				for (WindowRequest window: windows) {
-					if (window.getCount() < 1) {
+					if (window.getQuantity() < 1) {
 						continue;
 					}
 					
@@ -180,19 +184,18 @@ public class OrderServiceImpl implements OrderService {
 					width = window.getWidth();
 					height = window.getHeight();
 					innerWidth = window.getInnerWidth();
-					price = window.getPrice();
-					
-					for(int i=0; i<window.getCount(); i++) {
-						orderRepository.createOrderWindow(sort, openSide, glass, tipper, width, height, innerWidth, price, orderId);
-					}
+					quantity = window.getQuantity();
+					price = window.getPrice() * quantity;;
+					saldo += price;
+					orderRepository.createOrderWindow(sort, openSide, glass, tipper, width, height, innerWidth, price, quantity, orderId);
 				}
 			}
 			
 			if (shutters != null) {
 				String sort, box, boxType, openSide;
-				Long width, height, price;
+				Long width, height, price, quantity;
 				for (ShutterRequest shutter: shutters) {
-					if (shutter.getCount() < 1) {
+					if (shutter.getQuantity() < 1) {
 						continue;
 					}
 					
@@ -202,16 +205,15 @@ public class OrderServiceImpl implements OrderService {
 					openSide = shutter.getOpenSide();
 					width = shutter.getWidth();
 					height = shutter.getHeight();
+					quantity = shutter.getQuantity();
 					price = shutter.getPrice();
-					
-					for (int i=0; i<shutter.getCount(); i++) {
-						orderRepository.createOrderShutter(sort, box, boxType, openSide, width, height, price, orderId);
-					}
+					saldo += price;
+					orderRepository.createOrderShutter(sort, box, boxType, openSide, width, height, price, quantity, orderId);
 				}
 			}
 			
-			
-			return null;
+			orderRepository.setSaldo(orderId, saldo);
+			return order;
 		}
 
 		@Override
@@ -220,11 +222,11 @@ public class OrderServiceImpl implements OrderService {
 			return null;
 		}
 
-		@Override
-		public IOrder getAll() {
-			// TODO Auto-generated method stub
-			return null;
-		}
+//		@Override
+//		public List<IOrder> getAll() {
+////			return orderRepository.getAll();
+//			return null;
+//		}
 
 		@Override
 		public IOrder setAccepted(Long orderId) {
@@ -242,6 +244,11 @@ public class OrderServiceImpl implements OrderService {
 		public IOrder setFinished(Long orderId) {
 			// TODO Auto-generated method stub
 			return null;
+		}
+
+		@Override
+		public List<IOrder> getAll() {
+			return orderRepository.getAll();
 		}
 		
 	

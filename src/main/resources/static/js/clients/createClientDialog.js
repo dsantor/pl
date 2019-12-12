@@ -51,10 +51,8 @@
     };
 
     CreateClientDialog.prototype.positiveAction = function() {
-      var buildNumber, city, data, email, firstName, lastName, mobileValid, phoneNumber, phoneValid, street, valid;
+      var buildNumber, city, data, email, firstName, lastName, phoneNumber, street, valid;
       valid = true;
-      phoneValid = true;
-      mobileValid = true;
       firstName = this.firstName.val().trim();
       lastName = this.lastName.val().trim();
       street = this.street.val().trim();

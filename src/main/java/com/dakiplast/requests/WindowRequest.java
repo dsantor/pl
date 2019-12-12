@@ -9,7 +9,7 @@ public class WindowRequest {
     private Long height;
     private Long innerWidth;    
     private Long price;
-    private Long count;
+    private Long quantity;
 
     public String getSort() {
 		return sort;
@@ -59,10 +59,10 @@ public class WindowRequest {
 	public void setPrice(Long price) {
 		this.price = price;
 	}
-	public Long getCount() {
-		return count;
+	public Long getQuantity() {
+		return quantity;
 	}
-	public void setCount(Long count) {
-		this.count = count;
+	public void setQuantity(Long quantity) {
+		this.quantity = quantity;
 	}
 }

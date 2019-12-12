@@ -9,8 +9,10 @@
         '#workers': 'workers',
         '#worker': 'workers',
         '#clients': "clients",
-        "#bids": 'bids',
-        '#client': 'clients'
+        '#client': 'clients',
+        '#orders': 'orders',
+        '#order': 'orders',
+        "#bids": 'bids'
       };
       this.currentPage = null;
       this.pageTitle = $('.js--page--title');
@@ -68,6 +70,12 @@
           break;
         case '#bids':
           this.currentPage = new BidsPage(hash.value);
+          break;
+        case '#orders':
+          this.currentPage = new OrdersPage();
+          break;
+        case '#order':
+          this.currentPage = new OrderPage(hash.value);
           break;
         default:
           this._redirectToErrorPage();

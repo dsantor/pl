@@ -78,8 +78,6 @@
 
     positiveAction: () ->
         valid       = true
-        phoneValid  = true
-        mobileValid = true
         
         firstName    = @firstName.val().trim()
         lastName     = @lastName.val().trim()

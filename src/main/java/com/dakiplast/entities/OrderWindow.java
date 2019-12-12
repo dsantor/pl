@@ -46,6 +46,9 @@ public class OrderWindow implements Serializable, IOrderWindow {
 	@Column(name = "price")
     private Long price;
 	
+	@Column(name = "quantity")
+    private Long quantity;
+	
 	@Column(name = "order_id")
 	private Long orderId;
 
@@ -127,5 +130,13 @@ public class OrderWindow implements Serializable, IOrderWindow {
 
 	public void setPrice(Long price) {
 		this.price = price;
+	}
+
+	public Long getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Long quantity) {
+		this.quantity = quantity;
 	}
 }
