@@ -14,7 +14,7 @@
     }
 
     UserPage.prototype.getPageTitle = function() {
-      return 'Users';
+      return 'Korisnici';
     };
 
     UserPage.prototype._getUsersSuccess = function(response) {

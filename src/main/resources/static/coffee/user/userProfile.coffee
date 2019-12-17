@@ -24,7 +24,7 @@ class @UserProfile
 
 
     getPageTitle: () ->
-        return 'Profile'
+        return 'Profil'
 
     
     destroy: () ->

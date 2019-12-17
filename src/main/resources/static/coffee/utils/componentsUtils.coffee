@@ -119,22 +119,23 @@ class @ComponentsUtils
         return "#{day}-#{month}-#{year} (#{hour}:#{minutes}:#{seconds})"
 
     
-    @selectFromAutoSuggestion: (target, array, dataAttribute, input, container) ->
-        id = Number(target.attr('data-user-id'))
+    @selectFromAutoSuggestion: (target, input, dataAttribute, array, container) ->
+        id = Number(target.attr(dataAttribute))
         for a in array
             if a.id == id
-                input.attr('data-user-id', id)
+                input.attr(dataAttribute, id)
                 input.val(a.firstName + ' ' + a.lastName)
                 container.addClass('hide')
                 break
 
-    @handleAutoSuggestion: (input, dataAttribute, array, container) ->
+    @handleAutoSuggestion: (input, dataAttribute, array, container, includePhoneNumber = false) ->
         inputValue = input.val()
         input.removeAttr(dataAttribute)
         if inputValue.length < 1
             container.addClass('hide')
             return
 
+        phoneNumberArray = []
         helpArray = []
         for a in array
             inputValue = inputValue.toLowerCase()
@@ -142,11 +143,23 @@ class @ComponentsUtils
             lastName = a.lastName.toLowerCase()
             if firstName.startsWith(inputValue) or lastName.startsWith(inputValue)
                 helpArray.push(a)
+            if includePhoneNumber and a.phoneNumber.startsWith(inputValue)
+                phoneNumberArray.push(a)
+
+        if helpArray.length == 0 and phoneNumberArray.length == 0
+            container.addClass('hide') 
+            return
+
+        container.html('')
         if helpArray.length > 0
             html = ''
             for a in helpArray
-                html += "<span class='suggestion-item' data-user-id='#{a.id}'>#{a.firstName} #{a.lastName}</span>"
-            container.html(html)
-            container.removeClass('hide')
-        else 
-            container.addClass('hide')
+                html += "<span class='suggestion-item' #{dataAttribute}='#{a.id}'>#{a.firstName} #{a.lastName}</span>"
+            container.append(html)
+        
+        if phoneNumberArray.length > 0
+            html = ''
+            for a in phoneNumberArray
+                html += "<span class='suggestion-item' #{dataAttribute}='#{a.id}'>#{a.phoneNumber}</span>"
+            container.append(html)
+        container.removeClass('hide')

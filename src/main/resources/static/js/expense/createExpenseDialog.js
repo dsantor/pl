@@ -127,7 +127,7 @@
     };
 
     CreateExpenseDialog.prototype._selectUserFromAutoSuggestion = function(target) {
-      return ComponentsUtils.selectFromAutoSuggestion(target, this.users, 'data-user-id', this.moneyGivenBy, this.userAutoSuggestions);
+      return ComponentsUtils.selectFromAutoSuggestion(target, this.moneyGivenBy, 'data-user-id', this.users, this.userAutoSuggestions);
     };
 
     CreateExpenseDialog.prototype._handlerUserSuggestion = function() {

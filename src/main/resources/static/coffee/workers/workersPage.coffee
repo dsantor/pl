@@ -15,7 +15,7 @@ class @WorkersPage extends AbstractPage
         @createWorkerDialog = null
 
         if @_workerASInputEvent            
-            @workerASInput.off 'keydown', @_workerASInputEvent
+            @workerASInput.off 'keyup', @_workerASInputEvent
             @_workerASInputEvent = null
             @workerASInput = null
             @workerSuggestionsContainer = null
@@ -48,6 +48,10 @@ class @WorkersPage extends AbstractPage
 
         if closest(target, '.js--filter--reset')
             @_resetFilter()
+            return
+
+        @workerSuggestionsContainer.addClass('hide')
+
 
     _workersLoadedSuccess: (response) ->
         @workers = response.data
@@ -56,7 +60,7 @@ class @WorkersPage extends AbstractPage
         @workerASInput = @container.find('.js--worker--as')
         @workerSuggestionsContainer = @container.find('.js--worker--suggestions')
         @_workerASInputEvent = @_workerASInputEventHandler.bind(this)
-        @workerASInput.on 'keydown', @_workerASInputEvent
+        @workerASInput.on 'keyup', @_workerASInputEvent
 
         @workerStatus = @container.find('.js--filter--status')
         
@@ -151,35 +155,10 @@ class @WorkersPage extends AbstractPage
                     </div>
                 </div>"
     _workerASInputEventHandler: (event) ->
-        input = @workerASInput.val()
-        @workerASInput.removeAttr('data-worker-id')
-        if input.length < 1
-            @workerSuggestionsContainer.addClass('hide')
-            return
-
-        workers = []
-        for w in @workers
-            input = input.toLowerCase()
-            firstName = w.firstName.toLowerCase()
-            lastName = w.lastName.toLowerCase()
-            if firstName.startsWith(input) or lastName.startsWith(input)
-                workers.push(w)
-        if workers.length > 0
-            html = ''
-            for worker in workers
-                html += "<span class='suggestion-item' data-worker-id='#{worker.id}'>#{worker.firstName} #{worker.lastName}</span>"
-            @workerSuggestionsContainer.html(html)
-            @workerSuggestionsContainer.removeClass('hide')
-        else 
-            @workerSuggestionsContainer.addClass('hide')
-
+        ComponentsUtils.handleAutoSuggestion(@workerASInput, 'data-worker-id', @workers, @workerSuggestionsContainer, true)
     
     _choseWorkerFromAutoSuggestion: (target) ->
-        id = Number(target.attr('data-worker-id'))
-        worker = @workers.find((worker) -> worker.id == id)
-        @workerASInput.val(worker.firstName + ' ' + worker.lastName)
-        @workerASInput.attr('data-worker-id', id)
-        @workerSuggestionsContainer.addClass('hide')
+        ComponentsUtils.selectFromAutoSuggestion(target, @workerASInput, 'data-worker-id', @workers, @workerSuggestionsContainer)
         @_applyFilter()
     
 

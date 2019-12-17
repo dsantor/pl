@@ -48,14 +48,14 @@
       return day + "-" + month + "-" + year + " (" + hour + ":" + minutes + ":" + seconds + ")";
     };
 
-    ComponentsUtils.selectFromAutoSuggestion = function(target, array, dataAttribute, input, container) {
+    ComponentsUtils.selectFromAutoSuggestion = function(target, input, dataAttribute, array, container) {
       var a, i, id, len, results;
-      id = Number(target.attr('data-user-id'));
+      id = Number(target.attr(dataAttribute));
       results = [];
       for (i = 0, len = array.length; i < len; i++) {
         a = array[i];
         if (a.id === id) {
-          input.attr('data-user-id', id);
+          input.attr(dataAttribute, id);
           input.val(a.firstName + ' ' + a.lastName);
           container.addClass('hide');
           break;
@@ -66,14 +66,18 @@
       return results;
     };
 
-    ComponentsUtils.handleAutoSuggestion = function(input, dataAttribute, array, container) {
-      var a, firstName, helpArray, html, i, inputValue, j, lastName, len, len1;
+    ComponentsUtils.handleAutoSuggestion = function(input, dataAttribute, array, container, includePhoneNumber) {
+      var a, firstName, helpArray, html, i, inputValue, j, k, lastName, len, len1, len2, phoneNumberArray;
+      if (includePhoneNumber == null) {
+        includePhoneNumber = false;
+      }
       inputValue = input.val();
       input.removeAttr(dataAttribute);
       if (inputValue.length < 1) {
         container.addClass('hide');
         return;
       }
+      phoneNumberArray = [];
       helpArray = [];
       for (i = 0, len = array.length; i < len; i++) {
         a = array[i];
@@ -83,18 +87,32 @@
         if (firstName.startsWith(inputValue) || lastName.startsWith(inputValue)) {
           helpArray.push(a);
         }
+        if (includePhoneNumber && a.phoneNumber.startsWith(inputValue)) {
+          phoneNumberArray.push(a);
+        }
       }
+      if (helpArray.length === 0 && phoneNumberArray.length === 0) {
+        container.addClass('hide');
+        return;
+      }
+      container.html('');
       if (helpArray.length > 0) {
         html = '';
         for (j = 0, len1 = helpArray.length; j < len1; j++) {
           a = helpArray[j];
-          html += "<span class='suggestion-item' data-user-id='" + a.id + "'>" + a.firstName + " " + a.lastName + "</span>";
+          html += "<span class='suggestion-item' " + dataAttribute + "='" + a.id + "'>" + a.firstName + " " + a.lastName + "</span>";
         }
-        container.html(html);
-        return container.removeClass('hide');
-      } else {
-        return container.addClass('hide');
+        container.append(html);
       }
+      if (phoneNumberArray.length > 0) {
+        html = '';
+        for (k = 0, len2 = phoneNumberArray.length; k < len2; k++) {
+          a = phoneNumberArray[k];
+          html += "<span class='suggestion-item' " + dataAttribute + "='" + a.id + "'>" + a.phoneNumber + "</span>";
+        }
+        container.append(html);
+      }
+      return container.removeClass('hide');
     };
 
     return ComponentsUtils;

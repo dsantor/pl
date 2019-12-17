@@ -135,7 +135,7 @@ class @CreateExpenseDialog extends AbstractDialog
             return
 
     _selectUserFromAutoSuggestion: (target) ->
-        ComponentsUtils.selectFromAutoSuggestion(target, @users, 'data-user-id', @moneyGivenBy, @userAutoSuggestions)
+        ComponentsUtils.selectFromAutoSuggestion(target,  @moneyGivenBy, 'data-user-id', @users, @userAutoSuggestions)
 
     _handlerUserSuggestion: () ->
         ComponentsUtils.handleAutoSuggestion(@moneyGivenBy, 'data-user-id', @users, @userAutoSuggestions)

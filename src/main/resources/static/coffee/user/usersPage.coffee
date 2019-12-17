@@ -19,7 +19,7 @@ class @UserPage #extends @AbstractPage
         @activityDialog = new ActivityDialog()
 
     getPageTitle: () ->
-        return 'Users'
+        return 'Korisnici'
 
     _getUsersSuccess: (response) ->
         @users = response.data

@@ -20,7 +20,7 @@
     }
 
     UserProfile.prototype.getPageTitle = function() {
-      return 'Profile';
+      return 'Profil';
     };
 
     UserProfile.prototype.destroy = function() {

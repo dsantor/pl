@@ -20,7 +20,7 @@
       this.createWorkerDialog.destroy();
       this.createWorkerDialog = null;
       if (this._workerASInputEvent) {
-        this.workerASInput.off('keydown', this._workerASInputEvent);
+        this.workerASInput.off('keyup', this._workerASInputEvent);
         this._workerASInputEvent = null;
         this.workerASInput = null;
         this.workerSuggestionsContainer = null;
@@ -55,8 +55,10 @@
         return;
       }
       if (closest(target, '.js--filter--reset')) {
-        return this._resetFilter();
+        this._resetFilter();
+        return;
       }
+      return this.workerSuggestionsContainer.addClass('hide');
     };
 
     WorkersPage.prototype._workersLoadedSuccess = function(response) {
@@ -65,7 +67,7 @@
       this.workerASInput = this.container.find('.js--worker--as');
       this.workerSuggestionsContainer = this.container.find('.js--worker--suggestions');
       this._workerASInputEvent = this._workerASInputEventHandler.bind(this);
-      this.workerASInput.on('keydown', this._workerASInputEvent);
+      this.workerASInput.on('keyup', this._workerASInputEvent);
       this.workerStatus = this.container.find('.js--filter--status');
       return this.workerStatus.on('change', this._workerStatusEvent);
     };
@@ -109,46 +111,11 @@
     };
 
     WorkersPage.prototype._workerASInputEventHandler = function(event) {
-      var firstName, html, i, input, j, lastName, len, len1, ref, w, worker, workers;
-      input = this.workerASInput.val();
-      this.workerASInput.removeAttr('data-worker-id');
-      if (input.length < 1) {
-        this.workerSuggestionsContainer.addClass('hide');
-        return;
-      }
-      workers = [];
-      ref = this.workers;
-      for (i = 0, len = ref.length; i < len; i++) {
-        w = ref[i];
-        input = input.toLowerCase();
-        firstName = w.firstName.toLowerCase();
-        lastName = w.lastName.toLowerCase();
-        if (firstName.startsWith(input) || lastName.startsWith(input)) {
-          workers.push(w);
-        }
-      }
-      if (workers.length > 0) {
-        html = '';
-        for (j = 0, len1 = workers.length; j < len1; j++) {
-          worker = workers[j];
-          html += "<span class='suggestion-item' data-worker-id='" + worker.id + "'>" + worker.firstName + " " + worker.lastName + "</span>";
-        }
-        this.workerSuggestionsContainer.html(html);
-        return this.workerSuggestionsContainer.removeClass('hide');
-      } else {
-        return this.workerSuggestionsContainer.addClass('hide');
-      }
+      return ComponentsUtils.handleAutoSuggestion(this.workerASInput, 'data-worker-id', this.workers, this.workerSuggestionsContainer, true);
     };
 
     WorkersPage.prototype._choseWorkerFromAutoSuggestion = function(target) {
-      var id, worker;
-      id = Number(target.attr('data-worker-id'));
-      worker = this.workers.find(function(worker) {
-        return worker.id === id;
-      });
-      this.workerASInput.val(worker.firstName + ' ' + worker.lastName);
-      this.workerASInput.attr('data-worker-id', id);
-      this.workerSuggestionsContainer.addClass('hide');
+      ComponentsUtils.selectFromAutoSuggestion(target, this.workerASInput, 'data-worker-id', this.workers, this.workerSuggestionsContainer);
       return this._applyFilter();
     };
 
