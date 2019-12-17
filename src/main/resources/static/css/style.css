@@ -10537,8 +10537,7 @@ html {
   position: fixed;
 }
 
-.scroll-body {
-  overflow: auto;
+.page-body {
   height: 100%;
   width: 100%;
   display: block;
