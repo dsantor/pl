@@ -9,6 +9,9 @@ class @WorkersPage extends AbstractPage
         @workersContainer = @container.find('.js--container--workers')
         @_workerStatusEvent = @_workerStatusEventHandler.bind(this)
 
+        @createdNewWorkerEvent = @_createdNewWorkerEventHandler.bind(this)
+        EventUtils.bindCreatedNewWorker(@createdNewWorkerEvent)
+
     destroy: () ->
         super()
         @createWorkerDialog.destroy()
@@ -24,6 +27,9 @@ class @WorkersPage extends AbstractPage
             @_workerStatus.off 'change', @_workerStatusEvent
             @_workerStatusEvent = null
             @_workerStatus = null
+
+        EventUtils.unbindCreatedNewWorker(@workerStatusEvent)
+        @workerStatusEvent = null
 
     getPageTitle: () ->
         return "Radnici"
@@ -62,9 +68,7 @@ class @WorkersPage extends AbstractPage
         @_workerASInputEvent = @_workerASInputEventHandler.bind(this)
         @workerASInput.on 'keyup', @_workerASInputEvent
 
-        @workerStatus = @container.find('.js--filter--status')
-        
-        
+        @workerStatus = @container.find('.js--filter--status')        
         @workerStatus.on 'change', @_workerStatusEvent
 
     _customHTML:(workers) ->
@@ -194,4 +198,8 @@ class @WorkersPage extends AbstractPage
         @workerASInput.val('')
         @workerASInput.removeAttr('data-worker-id')
         @workerStatus.val('active')
+        @_renderWorkersHTML(@workers)
+    
+    _createdNewWorkerEventHandler: (event, worker) ->
+        @workers.push(worker)
         @_renderWorkersHTML(@workers)

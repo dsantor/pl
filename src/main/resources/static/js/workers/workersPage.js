@@ -13,6 +13,8 @@
       this.createWorkerDialog = new CreateWorkerDialog();
       this.workersContainer = this.container.find('.js--container--workers');
       this._workerStatusEvent = this._workerStatusEventHandler.bind(this);
+      this.createdNewWorkerEvent = this._createdNewWorkerEventHandler.bind(this);
+      EventUtils.bindCreatedNewWorker(this.createdNewWorkerEvent);
     }
 
     WorkersPage.prototype.destroy = function() {
@@ -28,8 +30,10 @@
       if (this._workerStatus) {
         this._workerStatus.off('change', this._workerStatusEvent);
         this._workerStatusEvent = null;
-        return this._workerStatus = null;
+        this._workerStatus = null;
       }
+      EventUtils.unbindCreatedNewWorker(this.workerStatusEvent);
+      return this.workerStatusEvent = null;
     };
 
     WorkersPage.prototype.getPageTitle = function() {
@@ -164,6 +168,11 @@
       this.workerASInput.val('');
       this.workerASInput.removeAttr('data-worker-id');
       this.workerStatus.val('active');
+      return this._renderWorkersHTML(this.workers);
+    };
+
+    WorkersPage.prototype._createdNewWorkerEventHandler = function(event, worker) {
+      this.workers.push(worker);
       return this._renderWorkersHTML(this.workers);
     };
 
