@@ -159,7 +159,7 @@ class @WorkersPage extends AbstractPage
                     </div>
                 </div>"
     _workerASInputEventHandler: (event) ->
-        ComponentsUtils.handleAutoSuggestion(@workerASInput, 'data-worker-id', @workers, @workerSuggestionsContainer, true)
+        ComponentsUtils.handleAutoSuggestion(@workerASInput, 'data-worker-id', @workers, @workerSuggestionsContainer, true, this, @_resetFilter)
     
     _choseWorkerFromAutoSuggestion: (target) ->
         ComponentsUtils.selectFromAutoSuggestion(target, @workerASInput, 'data-worker-id', @workers, @workerSuggestionsContainer)

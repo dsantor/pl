@@ -66,7 +66,7 @@
       return results;
     };
 
-    ComponentsUtils.handleAutoSuggestion = function(input, dataAttribute, array, container, includePhoneNumber) {
+    ComponentsUtils.handleAutoSuggestion = function(input, dataAttribute, array, container, includePhoneNumber, callbackContect, emptyInputCallbackFunction) {
       var a, firstName, helpArray, html, i, inputValue, j, k, lastName, len, len1, len2, phoneNumberArray;
       if (includePhoneNumber == null) {
         includePhoneNumber = false;
@@ -75,6 +75,9 @@
       input.removeAttr(dataAttribute);
       if (inputValue.length < 1) {
         container.addClass('hide');
+        if (emptyInputCallbackFunction) {
+          emptyInputCallbackFunction.call(callbackContect);
+        }
         return;
       }
       phoneNumberArray = [];

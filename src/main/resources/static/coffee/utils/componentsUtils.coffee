@@ -128,11 +128,12 @@ class @ComponentsUtils
                 container.addClass('hide')
                 break
 
-    @handleAutoSuggestion: (input, dataAttribute, array, container, includePhoneNumber = false) ->
+    @handleAutoSuggestion: (input, dataAttribute, array, container, includePhoneNumber = false, callbackContect, emptyInputCallbackFunction) ->
         inputValue = input.val()
         input.removeAttr(dataAttribute)
         if inputValue.length < 1
             container.addClass('hide')
+            if emptyInputCallbackFunction then emptyInputCallbackFunction.call(callbackContect)
             return
 
         phoneNumberArray = []

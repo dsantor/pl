@@ -115,7 +115,7 @@
     };
 
     WorkersPage.prototype._workerASInputEventHandler = function(event) {
-      return ComponentsUtils.handleAutoSuggestion(this.workerASInput, 'data-worker-id', this.workers, this.workerSuggestionsContainer, true);
+      return ComponentsUtils.handleAutoSuggestion(this.workerASInput, 'data-worker-id', this.workers, this.workerSuggestionsContainer, true, this, this._resetFilter);
     };
 
     WorkersPage.prototype._choseWorkerFromAutoSuggestion = function(target) {
