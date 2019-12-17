@@ -8,14 +8,28 @@
 
     function WorkersPage() {
       WorkersPage.__super__.constructor.call(this);
+      this.pageHTML();
       WorkerService.getAll(null, this, this._workersLoadedSuccess, this._workersLoadedError);
       this.createWorkerDialog = new CreateWorkerDialog();
+      this.workersContainer = this.container.find('.js--container--workers');
+      this._workerStatusEvent = this._workerStatusEventHandler.bind(this);
     }
 
     WorkersPage.prototype.destroy = function() {
       WorkersPage.__super__.destroy.call(this);
       this.createWorkerDialog.destroy();
-      return this.createWorkerDialog = null;
+      this.createWorkerDialog = null;
+      if (this._workerASInputEvent) {
+        this.workerASInput.off('keydown', this._workerASInputEvent);
+        this._workerASInputEvent = null;
+        this.workerASInput = null;
+        this.workerSuggestionsContainer = null;
+      }
+      if (this._workerStatus) {
+        this._workerStatus.off('change', this._workerStatusEvent);
+        this._workerStatusEvent = null;
+        return this._workerStatus = null;
+      }
     };
 
     WorkersPage.prototype.getPageTitle = function() {
@@ -30,49 +44,160 @@
       }
       if (closest(target, '.js--show--worker')) {
         id = target.attr('data-worker-id');
-        return window.location.hash = 'worker/' + id;
+        window.location.hash = 'worker/' + id;
+      }
+      if (closest(target, '.js--filters--button')) {
+        $('.js--filters--content').toggleClass('show');
+        return;
+      }
+      if (closest(target, '.js--worker--suggestions')) {
+        this._choseWorkerFromAutoSuggestion(target);
+        return;
+      }
+      if (closest(target, '.js--filter--reset')) {
+        return this._resetFilter();
       }
     };
 
     WorkersPage.prototype._workersLoadedSuccess = function(response) {
-      this.users = response.data;
-      return this.pageHTML();
+      this.workers = response.data;
+      this._renderWorkersHTML(this.workers);
+      this.workerASInput = this.container.find('.js--worker--as');
+      this.workerSuggestionsContainer = this.container.find('.js--worker--suggestions');
+      this._workerASInputEvent = this._workerASInputEventHandler.bind(this);
+      this.workerASInput.on('keydown', this._workerASInputEvent);
+      this.workerStatus = this.container.find('.js--filter--status');
+      return this.workerStatus.on('change', this._workerStatusEvent);
     };
 
-    WorkersPage.prototype._customHTML = function() {
-      var adminOptionsHtml, i, len, ref, rowHtml, tableHtml, u, userIcon;
-      adminOptionsHtml = "";
-      if (window.loggedUserInfo.isAdmin) {
-        adminOptionsHtml = "<nav class='nav justify-content-end pt-3'> <span class='nav-link span-a js--create--worker'>Dodaj radnika</span> </nav> <th class='table-text w-10'>Profil</th>";
+    WorkersPage.prototype._customHTML = function(workers) {
+      var tableHtml;
+      tableHtml = "<div> <nav class='nav justify-content-end pt-3'> <span class='nav-link span-a js--create--worker'>Dodaj radnika</span> </nav> " + (this._getFiltersHTML()) + " <div class='js--container--workers'> </div> </div>";
+      return tableHtml;
+    };
+
+    WorkersPage.prototype._renderWorkersHTML = function(workers) {
+      var i, len, rowHtml, tableHtml, userIcon, w;
+      if (workers.length === 0) {
+        this.workersContainer.html(this.emptyState());
+        return;
       }
-      tableHtml = "<div> <table class='table mb-0'> <tr> " + adminOptionsHtml + " <th class='table-text w-20'>Ime</th> <th class='table-text w-20'>Prezime</th> <th class='table-text w-20'>Telefon</th> <th class='table-text w-30'>Email</th> </tr> </table> <table class='table table-striped'>";
+      tableHtml = "<table class='table mb-0'> <tr> <th class='table-text w-10'>Profil</th> <th class='table-text w-20'>Ime</th> <th class='table-text w-20'>Prezime</th> <th class='table-text w-20'>Telefon</th> <th class='table-text w-30'>Email</th> </tr> </table> <table class='table table-striped'>";
       rowHtml = "";
-      ref = this.users;
-      for (i = 0, len = ref.length; i < len; i++) {
-        u = ref[i];
-        if (window.loggedUserInfo.isAdmin) {
-          if (u.deleted) {
-            userIcon = 'blocked-user-icon';
-          } else {
-            userIcon = 'user-icon';
-          }
-          adminOptionsHtml = "<td class='table-text w-10'><span class='" + userIcon + " js--show--worker' data-worker-id=" + u.id + "></span></td>";
+      for (i = 0, len = workers.length; i < len; i++) {
+        w = workers[i];
+        if (w.deleted) {
+          userIcon = 'blocked-user-icon';
+        } else {
+          userIcon = 'user-icon';
         }
-        rowHtml = "<tr class='js--user--row' data-worker-id=" + u.id + "> " + adminOptionsHtml + " <td class='table-text w-20'>" + (u.firstName || '/') + "</td> <td class='table-text w-20'>" + (u.lastName || '/') + "</td> <td class='table-text w-20'>" + (u.phoneNumber || '/') + "</td> <td class='table-text w-30'>" + (u.email || '/') + "</td> </tr>";
+        rowHtml = "<tr class='js--user--row' data-worker-id=" + w.id + "> <td class='table-text w-10'><span class='" + userIcon + " js--show--worker' data-worker-id=" + w.id + "></span></td> <td class='table-text w-20'>" + (w.firstName || '/') + "</td> <td class='table-text w-20'>" + (w.lastName || '/') + "</td> <td class='table-text w-20'>" + (w.phoneNumber || '/') + "</td> <td class='table-text w-30'>" + (w.email || '/') + "</td> </tr>";
         tableHtml += rowHtml;
       }
-      tableHtml += "</table></div>";
-      return tableHtml;
+      tableHtml += "</table>";
+      return this.workersContainer.html(tableHtml);
     };
 
     WorkersPage.prototype._workersLoadedError = function(response) {};
 
-    WorkersPage.prototype._pageHTML = function() {
-      return this.emptyState();
-    };
-
     WorkersPage.prototype.emptyState = function() {
       return ComponentsUtils.emptyState('Nema unetih radnika :(', "<input type='button' class='btn btn-primary d-block js--create--worker' value='Dodaj radnika'/>");
+    };
+
+    WorkersPage.prototype._getFiltersHTML = function() {
+      return "<div class='card-header card bp-4'> <h2 class='mb-0 text-center'> <span  class='span-a btn pointer m-auto js--filters--button' data-toggle='collapse' data-target='#collapseOne'>Filteri</span> </h2> </div> <div id='collapseOne' class='collapse card js--filters--content'> <div class='card-body w-75 m-auto flex'> <div class='flex-column w-100'> <div class='flex flex-row justify-content-around pb-3'> <div class='flex flex-row w-40'> <label class='mr-2 w-25 d-inline-block'>Pretraži</label> <div class='pos-rel w-100'> <input type='text' class='form-control w-100 input-icon-icon-24 js--worker--as'/> <i class='input-icon-24 search-icon cursor-initial'></i> <div class='suggestion-container js--worker--suggestions pos-abs hide'></div> </div> </div> <div class='flex flex-row w-40'> <label class='mr-2 wh-10'>Status</label> <select class='js--filter--status'> <option selected value='active'>Zaposlen</option> <option value='deactive'>Otpušten</option> <option value='all'>Svi</option> </select> </div> </div> <div class='w-100 flex justify-content-center'> <input type='button' class='btn btn-primary js--filter--reset' value='Restart filter'/> </div> </div> </div> </div> </div> </div>";
+    };
+
+    WorkersPage.prototype._workerASInputEventHandler = function(event) {
+      var firstName, html, i, input, j, lastName, len, len1, ref, w, worker, workers;
+      input = this.workerASInput.val();
+      this.workerASInput.removeAttr('data-worker-id');
+      if (input.length < 1) {
+        this.workerSuggestionsContainer.addClass('hide');
+        return;
+      }
+      workers = [];
+      ref = this.workers;
+      for (i = 0, len = ref.length; i < len; i++) {
+        w = ref[i];
+        input = input.toLowerCase();
+        firstName = w.firstName.toLowerCase();
+        lastName = w.lastName.toLowerCase();
+        if (firstName.startsWith(input) || lastName.startsWith(input)) {
+          workers.push(w);
+        }
+      }
+      if (workers.length > 0) {
+        html = '';
+        for (j = 0, len1 = workers.length; j < len1; j++) {
+          worker = workers[j];
+          html += "<span class='suggestion-item' data-worker-id='" + worker.id + "'>" + worker.firstName + " " + worker.lastName + "</span>";
+        }
+        this.workerSuggestionsContainer.html(html);
+        return this.workerSuggestionsContainer.removeClass('hide');
+      } else {
+        return this.workerSuggestionsContainer.addClass('hide');
+      }
+    };
+
+    WorkersPage.prototype._choseWorkerFromAutoSuggestion = function(target) {
+      var id, worker;
+      id = Number(target.attr('data-worker-id'));
+      worker = this.workers.find(function(worker) {
+        return worker.id === id;
+      });
+      this.workerASInput.val(worker.firstName + ' ' + worker.lastName);
+      this.workerASInput.attr('data-worker-id', id);
+      this.workerSuggestionsContainer.addClass('hide');
+      return this._applyFilter();
+    };
+
+    WorkersPage.prototype._workerStatusEventHandler = function(event) {
+      return this._applyFilter();
+    };
+
+    WorkersPage.prototype._applyFilter = function() {
+      var filteredWorkers, i, id, j, k, len, len1, len2, ref, ref1, status, worker, workers;
+      status = this.workerStatus.val();
+      workers = [];
+      if (status === 'all') {
+        workers = this.workers;
+      } else if (status === 'active') {
+        ref = this.workers;
+        for (i = 0, len = ref.length; i < len; i++) {
+          worker = ref[i];
+          if (!worker.deleted) {
+            workers.push(worker);
+          }
+        }
+      } else {
+        ref1 = this.workers;
+        for (j = 0, len1 = ref1.length; j < len1; j++) {
+          worker = ref1[j];
+          if (worker.deleted) {
+            workers.push(worker);
+          }
+        }
+      }
+      id = Number(this.workerASInput.attr('data-worker-id'));
+      if (!isNaN(id)) {
+        filteredWorkers = [];
+        for (k = 0, len2 = workers.length; k < len2; k++) {
+          worker = workers[k];
+          if (worker.id === id) {
+            filteredWorkers.push(worker);
+          }
+        }
+        workers = filteredWorkers;
+      }
+      return this._renderWorkersHTML(workers);
+    };
+
+    WorkersPage.prototype._resetFilter = function() {
+      this.workerASInput.val('');
+      this.workerASInput.removeAttr('data-worker-id');
+      this.workerStatus.val('active');
+      return this._renderWorkersHTML(this.workers);
     };
 
     return WorkersPage;

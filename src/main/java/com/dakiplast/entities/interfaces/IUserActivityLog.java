@@ -9,6 +9,7 @@ public interface IUserActivityLog {
 	Long getActionUserId();
 	Long getClientId();
 	Long getUserId();
+	Long getWorkerId();
 	UserActivityLogType getType();
 	Calendar getTime();
 }

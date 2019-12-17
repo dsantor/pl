@@ -6,11 +6,11 @@ class @ComponentsUtils
     window.closest = (target, closestTo) ->
         return target.closest(closestTo).length > 0
 
-    window.ajaxCallbackError = (response) ->
+    window.ajaxCallbackPrintMessage = (response) ->
         console.log response.message
         
     @userDetailsHTML: () ->
-         return "<div class='col-7 h-75 pt-5 flex'>
+        return "<div class='col-7 h-75 pt-5 flex'>
                     <div class='container w-50'>
                         <div class='profile-image h-336'>
                         </div>
@@ -117,3 +117,36 @@ class @ComponentsUtils
         seconds = date.getSeconds()
 
         return "#{day}-#{month}-#{year} (#{hour}:#{minutes}:#{seconds})"
+
+    
+    @selectFromAutoSuggestion: (target, array, dataAttribute, input, container) ->
+        id = Number(target.attr('data-user-id'))
+        for a in array
+            if a.id == id
+                input.attr('data-user-id', id)
+                input.val(a.firstName + ' ' + a.lastName)
+                container.addClass('hide')
+                break
+
+    @handleAutoSuggestion: (input, dataAttribute, array, container) ->
+        inputValue = input.val()
+        input.removeAttr(dataAttribute)
+        if inputValue.length < 1
+            container.addClass('hide')
+            return
+
+        helpArray = []
+        for a in array
+            inputValue = inputValue.toLowerCase()
+            firstName = a.firstName.toLowerCase()
+            lastName = a.lastName.toLowerCase()
+            if firstName.startsWith(inputValue) or lastName.startsWith(inputValue)
+                helpArray.push(a)
+        if helpArray.length > 0
+            html = ''
+            for a in helpArray
+                html += "<span class='suggestion-item' data-user-id='#{a.id}'>#{a.firstName} #{a.lastName}</span>"
+            container.html(html)
+            container.removeClass('hide')
+        else 
+            container.addClass('hide')

@@ -44,7 +44,7 @@ public class WorkersController {
 		return new BaseResponse(iWorker, false, null);
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping("get/{id}")
 	public BaseResponse get(@PathVariable ("id") Long id) {
 		IWorker worker = workerService.getById(id);
 		if (worker == null) {

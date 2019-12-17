@@ -51,7 +51,7 @@
       return console.log(error);
     };
 
-    ShowClientDialog.prototype._pageClientEventHandler = function(event) {
+    ShowClientDialog.prototype._pageClickEventHandler = function(event) {
       var target;
       target = $(event.target);
       if (ComponentsUtils.closest(target, '.js--create--bids')) {

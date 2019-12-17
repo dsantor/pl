@@ -13,7 +13,7 @@
       return target.closest(closestTo).length > 0;
     };
 
-    window.ajaxCallbackError = function(response) {
+    window.ajaxCallbackPrintMessage = function(response) {
       return console.log(response.message);
     };
 
@@ -46,6 +46,55 @@
       minutes = date.getMinutes();
       seconds = date.getSeconds();
       return day + "-" + month + "-" + year + " (" + hour + ":" + minutes + ":" + seconds + ")";
+    };
+
+    ComponentsUtils.selectFromAutoSuggestion = function(target, array, dataAttribute, input, container) {
+      var a, i, id, len, results;
+      id = Number(target.attr('data-user-id'));
+      results = [];
+      for (i = 0, len = array.length; i < len; i++) {
+        a = array[i];
+        if (a.id === id) {
+          input.attr('data-user-id', id);
+          input.val(a.firstName + ' ' + a.lastName);
+          container.addClass('hide');
+          break;
+        } else {
+          results.push(void 0);
+        }
+      }
+      return results;
+    };
+
+    ComponentsUtils.handleAutoSuggestion = function(input, dataAttribute, array, container) {
+      var a, firstName, helpArray, html, i, inputValue, j, lastName, len, len1;
+      inputValue = input.val();
+      input.removeAttr(dataAttribute);
+      if (inputValue.length < 1) {
+        container.addClass('hide');
+        return;
+      }
+      helpArray = [];
+      for (i = 0, len = array.length; i < len; i++) {
+        a = array[i];
+        inputValue = inputValue.toLowerCase();
+        firstName = a.firstName.toLowerCase();
+        lastName = a.lastName.toLowerCase();
+        if (firstName.startsWith(inputValue) || lastName.startsWith(inputValue)) {
+          helpArray.push(a);
+        }
+      }
+      if (helpArray.length > 0) {
+        html = '';
+        for (j = 0, len1 = helpArray.length; j < len1; j++) {
+          a = helpArray[j];
+          html += "<span class='suggestion-item' data-user-id='" + a.id + "'>" + a.firstName + " " + a.lastName + "</span>";
+        }
+        container.html(html);
+        return container.removeClass('hide');
+      } else {
+        return container.addClass('hide');
+      }
     };
 
     return ComponentsUtils;

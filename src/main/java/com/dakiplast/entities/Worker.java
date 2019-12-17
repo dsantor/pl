@@ -145,4 +145,8 @@ public class Worker implements Serializable, IWorker {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
+	
+	public String getFullName() {
+		return this.firstName + ' ' + this.lastName;
+	}
 }

@@ -45,6 +45,9 @@ public class UserActivityLog implements Serializable, IUserActivityLog {
 	@Column(name = "client_id")
 	private Long clientId;
 	
+	@Column(name = "worker_id")
+	private Long workerId;
+	
 	@Column(name = "time")
 	private Calendar time;
 
@@ -95,5 +98,12 @@ public class UserActivityLog implements Serializable, IUserActivityLog {
 	public void setClientId(Long clientId) {
 		this.clientId = clientId;
 	}
-	
+
+	public Long getWorkerId() {
+		return workerId;
+	}
+
+	public void setWorkerId(Long workerId) {
+		this.workerId = workerId;
+	}
 }

@@ -57,6 +57,9 @@ class @ActivityDialog extends AbstractDialog
             if actionLog.client
                 item.person = actionLog.client.firstName + ' ' + actionLog.client.lastName
             
+            if actionLog.worker
+                item.person = actionLog.worker.firstName + ' ' + actionLog.worker.lastName
+
             item.action = actionLog.type
             item.time = ComponentsUtils.getTimeFromMillis(actionLog.time)
 
@@ -73,5 +76,4 @@ class @ActivityDialog extends AbstractDialog
         @customHTML()
 
     _activityLogError: (data) ->
-        console.log data.message
         @loadedActivity = false

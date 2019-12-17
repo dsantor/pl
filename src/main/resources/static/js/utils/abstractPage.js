@@ -18,15 +18,15 @@
       return 'Daki plast';
     };
 
-    AbstractPage.prototype.pageHTML = function() {
-      return this.container.html(this._customHTML());
+    AbstractPage.prototype.pageHTML = function(data) {
+      return this.container.html(this._customHTML(data));
     };
 
     AbstractPage.prototype.emptyState = function() {
       return '';
     };
 
-    AbstractPage.prototype._customHTML = function() {
+    AbstractPage.prototype._customHTML = function(data) {
       return '';
     };
 

@@ -58,7 +58,7 @@
       var target;
       target = $(event.target);
       if (closest(target, '.js--back--button')) {
-        window.location.hash = 'users';
+        window.history.back();
         return;
       }
       if (closest(target, '.js--reset--password')) {
@@ -87,9 +87,9 @@
 
     UserDetailsDialog.prototype._toggleBlockUserText = function() {
       var text;
-      text = 'Odblokiraj';
+      text = 'Aktiviraj';
       if (this.user.active) {
-        text = 'Blokiraj';
+        text = 'Deaktiviraj';
       }
       return text;
     };

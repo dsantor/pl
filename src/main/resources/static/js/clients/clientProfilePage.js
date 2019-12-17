@@ -28,7 +28,7 @@
         return;
       }
       if (closest(target, '.js--back--button')) {
-        window.location.hash = 'clients';
+        window.history.back();
       }
     };
 

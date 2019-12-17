@@ -1,6 +1,6 @@
-class @OrderService
+class @ExpenseService
 
-    @apiUrl = '../api/order'
+    @apiUrl = '../api/expense'
     @create: (data, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
         url = @apiUrl + '/create'
         AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError)

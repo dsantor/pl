@@ -7,7 +7,7 @@ import com.dakiplast.enums.UserActivityLogType;
 
 public interface UserActivityLogRepository {
 
-	IUserActivityLog createUserActivityLog(Long actionUserId, Long userId, Long clientId, UserActivityLogType type);
+	IUserActivityLog createUserActivityLog(Long actionUserId, Long userId, Long clientId, Long workerId, UserActivityLogType type);
 	
 	List<IUserActivityLog> getAllActivitiesForUser(Long actionUserId);
 	

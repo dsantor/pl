@@ -80,7 +80,7 @@
       return ShutterBidDialog.__super__.negativeAction.call(this);
     };
 
-    ShutterBidDialog.prototype._pageClientEventHandler = function(event) {
+    ShutterBidDialog.prototype._pageClickEventHandler = function(event) {
       var target;
       target = $(event.target);
       if (closest(target, '.js--box')) {

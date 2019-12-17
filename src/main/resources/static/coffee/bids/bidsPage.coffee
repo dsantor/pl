@@ -169,7 +169,7 @@ class @BidsPage
                                     <div class='container'>
                                         <label class='js--radio--button--old--client switch-section active'>Postojeci klijent</label>
                                         <div class='js--radio--button--old--client--container'>
-                                            <input type='text' class='form-control js--autosuggest--input js--client--input' placeholder='klijent' autocomplete='false' aria-autocomplete='mrs'>
+                                            <input type='text' class='form-control js--autosuggest--input js--client--input' placeholder='klijent'>
                                             <div class='suggestion-container js--client--suggestions hide'>
                                             </div>    
                                         </div>
@@ -241,6 +241,7 @@ class @BidsPage
                                 </div>
                                 <div class='form-group'>
                                     <label>Radnik</label>
+                                     <input type='text' hidden='hidden'>
                                     <input type='text' class='form-control js--autosuggest--input js--worker--input' placeholder='radnik'>
                                     <div class='suggestion-container js--worker--suggestions hide'>
                                     </div>
@@ -356,7 +357,7 @@ class @BidsPage
 
     _workerAutoSuggestion: () ->
         input = @workerInput.val()
-        if input.length < 2
+        if input.length < 1
             @workerSuggestionsContainer.addClass('hide')
             return
 
@@ -378,7 +379,7 @@ class @BidsPage
 
     _clientAutoSuggestion: () ->
         input = @clientInput.val()
-        if input.length < 2
+        if input.length < 1
          @clientSuggestionsContainer.addClass('hide')
          return
 

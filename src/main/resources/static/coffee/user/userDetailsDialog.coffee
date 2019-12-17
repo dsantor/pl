@@ -49,7 +49,8 @@ class @UserDetailsDialog extends AbstractPage
         target = $(event.target)
 
         if closest(target, '.js--back--button')
-            window.location.hash = 'users'
+            window.history.back()
+            # window.location.hash = 'users'
             return
         
         if closest(target, '.js--reset--password')
@@ -72,9 +73,9 @@ class @UserDetailsDialog extends AbstractPage
         FloatingMessage.error(response.message)
 
     _toggleBlockUserText: () ->
-        text = 'Odblokiraj'
+        text = 'Aktiviraj'
         if @user.active
-            text = 'Blokiraj'
+            text = 'Deaktiviraj'
         return text
 
     _toggleBlockUser: () ->

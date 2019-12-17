@@ -97,7 +97,7 @@
       return '';
     };
 
-    AbstractDialog.prototype._pageClientEventHandler = function(event) {};
+    AbstractDialog.prototype._pageClickEventHandler = function(event) {};
 
     AbstractDialog.prototype._clickEventHandler = function(event) {
       var element, target;
@@ -112,7 +112,7 @@
         this.positiveAction();
         return;
       }
-      return this._pageClientEventHandler(event);
+      return this._pageClickEventHandler(event);
     };
 
     return AbstractDialog;

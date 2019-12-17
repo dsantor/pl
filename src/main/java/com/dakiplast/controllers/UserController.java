@@ -109,7 +109,7 @@ public class UserController {
 			
 			// Save activity
 			if (createdUser != null) {
-				userActivityLogService.create(loggedUserId, createdUser.getId(), null, UserActivityLogType.CREATED_USER);
+				userActivityLogService.create(loggedUserId, createdUser.getId(), null, null, UserActivityLogType.CREATED_USER);
 			}
 			
 			return new BaseResponse(createdUser, false, "Uspešno sačuvane izmene.");

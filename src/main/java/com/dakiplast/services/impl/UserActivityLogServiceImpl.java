@@ -8,14 +8,17 @@ import org.springframework.stereotype.Service;
 
 import com.dakiplast.entities.dto.UserActivityLogDto;
 import com.dakiplast.entities.dto.UserDto;
+import com.dakiplast.entities.dto.WorkerDto;
 import com.dakiplast.entities.interfaces.IClient;
 import com.dakiplast.entities.interfaces.IUser;
 import com.dakiplast.entities.interfaces.IUserActivityLog;
+import com.dakiplast.entities.interfaces.IWorker;
 import com.dakiplast.enums.UserActivityLogType;
 import com.dakiplast.repository.UserActivityLogRepository;
 import com.dakiplast.services.ClientService;
 import com.dakiplast.services.UserActivityLogService;
 import com.dakiplast.services.UserService;
+import com.dakiplast.services.WorkerService;
 
 @Service
 public class UserActivityLogServiceImpl implements UserActivityLogService {
@@ -26,10 +29,12 @@ public class UserActivityLogServiceImpl implements UserActivityLogService {
 	private UserService userService;
 	@Autowired
 	private ClientService clientService;
+	@Autowired
+	private WorkerService workerService;
 	
 	@Override
-	public IUserActivityLog create(Long actionUserId, Long userId, Long clientId, UserActivityLogType type) {
-		return userActivityLogRepository.createUserActivityLog(actionUserId, userId, clientId, type);
+	public IUserActivityLog create(Long actionUserId, Long userId, Long clientId, Long workerId, UserActivityLogType type) {
+		return userActivityLogRepository.createUserActivityLog(actionUserId, userId, clientId, workerId, type);
 	}
 	@Override
 	public List<IUserActivityLog> getAllActivitiesForUser(Long actionUserId) {
@@ -79,6 +84,13 @@ public class UserActivityLogServiceImpl implements UserActivityLogService {
 			actionLogDto.setClient(client);
 		}
 		
+		Long workerId = actionLog.getWorkerId();
+		if (workerId != null) {
+			IWorker worker = workerService.getById(workerId);
+			WorkerDto workerDto = WorkerDto.convertToDto(worker);
+			actionLogDto.setWorker(workerDto);
+		}
+		
 		UserDto actionUserDto = new UserDto();
 		actionUserDto.mapToUserDto(actionUser);
 		actionLogDto.setActionUser(actionUserDto);
@@ -90,15 +102,15 @@ public class UserActivityLogServiceImpl implements UserActivityLogService {
 	}
 	@Override
 	public void setDefaultPassword(Long loggedUserId, Long userId) {
-		userActivityLogRepository.createUserActivityLog(loggedUserId, userId, null, UserActivityLogType.RESET_PASSWORD);
+		userActivityLogRepository.createUserActivityLog(loggedUserId, userId, null, null, UserActivityLogType.RESET_PASSWORD);
 	}
 	@Override
 	public void unblockUser(Long loggedUserId, Long userId) {
-		userActivityLogRepository.createUserActivityLog(loggedUserId, userId, null, UserActivityLogType.UNBLOCK_USER);
+		userActivityLogRepository.createUserActivityLog(loggedUserId, userId, null, null, UserActivityLogType.UNBLOCK_USER);
 	}
 	@Override
 	public void blockUser(Long loggedUserId, Long userId) {
-		userActivityLogRepository.createUserActivityLog(loggedUserId, userId, null, UserActivityLogType.BLOCK_USER);
+		userActivityLogRepository.createUserActivityLog(loggedUserId, userId, null, null, UserActivityLogType.BLOCK_USER);
 	}
 	
 	

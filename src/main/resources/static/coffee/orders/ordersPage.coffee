@@ -2,7 +2,7 @@ class @OrdersPage extends AbstractPage
 
     constructor: () ->
         super()
-        OrderService.getAll(null, this, @_ordersLoadedSuccess, ajaxCallbackError)
+        OrderService.getAll(null, this, @_ordersLoadedSuccess, ajaxCallbackPrintMessage)
 
     destroy: () ->
         # super()
@@ -22,7 +22,6 @@ class @OrdersPage extends AbstractPage
         tableHtml = ''
         innerHTML = ''
         for order in @orders
-            orderId = Number(order.id)
             innerHTML += "<tr>
                             <td class='table-text w-20'>
                                 <a class='text-decoration-none' href='#order/#{order.id}'>

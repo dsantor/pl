@@ -7,8 +7,58 @@
     extend(WorkerPage, superClass);
 
     function WorkerPage(workerId) {
-      console.log(workerId);
+      WorkerPage.__super__.constructor.call(this);
+      WorkerService.get(workerId, null, this, this._loadedWorker, ajaxCallbackPrintMessage);
+      this.createExpenseDialog = new CreateExpenseDialog();
     }
+
+    WorkerPage.prototype.destroy = function() {
+      return WorkerPage.__super__.destroy.call(this);
+    };
+
+    WorkerPage.prototype._clickEventHandler = function(event) {
+      var target;
+      target = $(event.target);
+      if (closest(target, '.js--back--button')) {
+        window.history.back();
+        return;
+      }
+      if (closest(target, '.js--block--user')) {
+        this._toggleBlockUser();
+        return;
+      }
+      if (closest(target, '.js--create--expense')) {
+        this.createExpenseDialog.show(this);
+      }
+    };
+
+    WorkerPage.prototype._loadedWorker = function(response) {
+      this.worker = response.data;
+      return this.pageHTML();
+    };
+
+    WorkerPage.prototype._toggleBlockUserText = function() {
+      var text;
+      text = 'Deaktiviraj';
+      if (this.worker.deleted) {
+        text = 'Aktiviraj';
+      }
+      return text;
+    };
+
+    WorkerPage.prototype._customHTML = function() {
+      var html, innerHTML;
+      if (this.worker) {
+        innerHTML = this._toggleBlockUserText();
+        html = "<nav class='nav justify-content-end header pt-3'> <span class='nav-link span-a back-button js--back--button'>Nazad</span> <span class='nav-link span-a js--block--user'>" + innerHTML + "</span> <span class='nav-link span-a js--user--activity'>Aktivnosti</span> <span class='nav-link span-a js--create--expense'>Kreiraj rashod</span> </nav>";
+        html += ComponentsUtils.userDetailsFilledHTML(this.worker);
+        return html;
+      } else {
+        return ComponentsUtils.emptyState('Korisnik nije pronadjen :(');
+      }
+    };
+
+    WorkerPage.prototype._toggleBlockUser = function() {};
 
     return WorkerPage;
 

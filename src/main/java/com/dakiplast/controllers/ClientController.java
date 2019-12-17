@@ -45,7 +45,7 @@ public class ClientController {
 			return new BaseResponse(null, true, ErrorsEnum.PRIVILEGES_ERROR.getMessage());
 		}
 		IClient client = clientService.create(clientRequest, loggedUserId);
-		userActivityLogService.create(loggedUserId, null, client.getId(), UserActivityLogType.CREATED_CLIENT);
+		userActivityLogService.create(loggedUserId, null, client.getId(), null, UserActivityLogType.CREATED_CLIENT);
 		return new BaseResponse(client, false, null);
 	}
 	

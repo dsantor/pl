@@ -11,6 +11,12 @@
       return AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError);
     };
 
+    WorkerService.get = function(workerId, onTheFlyData, callbackContext, callBackFunction, callbackError) {
+      var url;
+      url = this.apiUrl + '/get/' + workerId;
+      return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
+    };
+
     WorkerService.getAll = function(onTheFlyData, callbackContext, callBackFunction, callbackError) {
       var url;
       url = this.apiUrl + '/all';

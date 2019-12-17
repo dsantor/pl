@@ -64,7 +64,7 @@ class @ShutterBidDialog extends AbstractDialog
     negativeAction: () ->
         super()
 
-    _pageClientEventHandler: (event) ->
+    _pageClickEventHandler: (event) ->
         target = $(event.target)
 
         if closest(target, '.js--box')

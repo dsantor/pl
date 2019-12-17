@@ -1,13 +1,15 @@
 package com.dakiplast.entities.dto;
 
 import java.util.List;
+import java.util.Map;
 
 import com.dakiplast.entities.interfaces.IOrder;
 
 public class OrderDto {
 
 	private Long id;
-	private Long createdBy;
+	private Long createdById;
+	private String createdByName;
 	private Long createdAtMillis;
 	private Long clientId;
 	private String clientName;
@@ -16,18 +18,13 @@ public class OrderDto {
 	private Long saldo;
 	private Long paid;
 	private String status;
+	private Map<Long, String> workersMap;
 
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
-	}
-	public Long getCreatedBy() {
-		return createdBy;
-	}
-	public void setCreatedBy(Long createdBy) {
-		this.createdBy = createdBy;
 	}
 	public Long getClientId() {
 		return clientId;
@@ -78,10 +75,29 @@ public class OrderDto {
 	public void setWorkerNames(List<String> workerNames) {
 		this.workerNames = workerNames;
 	}
-	public static OrderDto convertToDto(IOrder order, String clientName, List<String> workerNames) {
+	public Long getCreatedById() {
+		return createdById;
+	}
+	public void setCreatedById(Long createdById) {
+		this.createdById = createdById;
+	}
+	public Map<Long, String> getWorkersMap() {
+		return workersMap;
+	}
+	public void setWorkersMap(Map<Long, String> workersMap) {
+		this.workersMap = workersMap;
+	}
+	public String getCreatedByName() {
+		return createdByName;
+	}
+	public void setCreatedByName(String createdByName) {
+		this.createdByName = createdByName;
+	}
+	public static OrderDto convertToDto(IOrder order, String createByName, String clientName, List<String> workerNames, Map<Long, String> workersMap) {
 		OrderDto orderDto = new OrderDto();
 		orderDto.setId(order.getId());
-		orderDto.setCreatedBy(order.getCreatedBy());
+		orderDto.setCreatedById(order.getCreatedBy());
+		orderDto.setCreatedByName(createByName);
 		orderDto.setCreatedAtMillis(order.getCreatedAt().getTimeInMillis());
 		orderDto.setClientId(order.getClientId());
 		orderDto.setClientName(clientName);
@@ -90,6 +106,7 @@ public class OrderDto {
 		orderDto.setSaldo(order.getSaldo());
 		orderDto.setPaid(order.getPaid());
 		orderDto.setStatus(order.getStatus().getValue());
+		orderDto.setWorkersMap(workersMap);
 		return orderDto;
 	}
 }

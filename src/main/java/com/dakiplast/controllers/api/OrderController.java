@@ -1,7 +1,9 @@
 package com.dakiplast.controllers.api;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dakiplast.entities.dto.OrderDto;
-import com.dakiplast.entities.dto.OrdersDto;
 import com.dakiplast.entities.interfaces.IClient;
 import com.dakiplast.entities.interfaces.IOrder;
 import com.dakiplast.entities.interfaces.IUser;
@@ -62,28 +63,30 @@ public class OrderController {
 		}
 		
 		IOrder order = orderService.create(orderRequest, loggedUserId);
-		userActivityLogService.create(loggedUserId, null, order.getClientId(), UserActivityLogType.CREATED_ORDER);
+		userActivityLogService.create(loggedUserId, null, order.getClientId(), null, UserActivityLogType.CREATED_ORDER);
 		return new BaseResponse(order, false, null);
 	}
 	
 	@GetMapping("/getAll")
 	public BaseResponse getAll(HttpServletRequest request) {
 		List<IOrder> orders = orderService.getAll();
-//		OrdersDto ordersDto = new OrdersDto();
 		IWorker worker;
 		IClient client;
 		String clientName;
 		List<OrderDto> ordersDto = new ArrayList<>();
 		List<String> workerNames = new ArrayList<>();
+		Map<Long, String> workersMap = new HashMap<>();
 		for (IOrder order: orders) {
 			for(Long workerId: order.getWorkerIds()) {
 				worker = workerService.getById(workerId);
-				workerNames.add(worker.getFirstName() + " " + worker.getLastName().charAt(0)+'.');
+				workersMap.put(workerId, worker.getFirstName() + " " + worker.getLastName());
+				workerNames.add(worker.getFirstName() + " " + worker.getLastName());
 			}
 			
+			IUser user = userService.getById(order.getCreatedBy());
 			client = clientService.getClientById(order.getClientId());
-			clientName = client.getFirstName() + " " + client.getLastName().charAt(0)+'.';
-			ordersDto.add(OrderDto.convertToDto(order, clientName, workerNames));
+			clientName = client.getFirstName() + " " + client.getLastName();
+			ordersDto.add(OrderDto.convertToDto(order, user.getFullName(), clientName, workerNames, workersMap));
 		}
 		return new BaseResponse(ordersDto, false, null);
 	}
@@ -91,6 +94,21 @@ public class OrderController {
 
 	@GetMapping("/get/{orderId}")
 	public BaseResponse getById(@PathVariable ("orderId") Long orderId) {
-		return null;
+		IOrder order = orderService.getById(orderId);
+		IWorker worker;
+		List<String> workerNames = new ArrayList<>();
+		Map<Long, String> workersMap = new HashMap<>();
+		
+		for(Long workerId: order.getWorkerIds()) {
+			worker = workerService.getById(workerId);
+			workersMap.put(workerId, worker.getFirstName() + " " + worker.getLastName());
+			workerNames.add(worker.getFirstName() + " " + worker.getLastName());
+		}
+	
+		IClient client = clientService.getClientById(order.getClientId());
+		IUser user = userService.getById(order.getCreatedBy());
+		String clientName = client.getFirstName() + " " + client.getLastName();
+		OrderDto orderDto = OrderDto.convertToDto(order,user.getFullName(), clientName, workerNames, workersMap);
+		return new BaseResponse(orderDto, false, null);
 	}
 }

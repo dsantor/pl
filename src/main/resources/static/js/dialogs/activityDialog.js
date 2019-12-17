@@ -58,6 +58,9 @@
         if (actionLog.client) {
           item.person = actionLog.client.firstName + ' ' + actionLog.client.lastName;
         }
+        if (actionLog.worker) {
+          item.person = actionLog.worker.firstName + ' ' + actionLog.worker.lastName;
+        }
         item.action = actionLog.type;
         item.time = ComponentsUtils.getTimeFromMillis(actionLog.time);
         items.push(item);
@@ -75,7 +78,6 @@
     };
 
     ActivityDialog.prototype._activityLogError = function(data) {
-      console.log(data.message);
       return this.loadedActivity = false;
     };
 

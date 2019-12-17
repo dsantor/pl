@@ -86,7 +86,7 @@ class @AbstractDialog
     _emptyStateHTML: () ->
         return ''
 
-    _pageClientEventHandler: (event) ->
+    _pageClickEventHandler: (event) ->
         return
 
     _clickEventHandler: (event) ->
@@ -102,4 +102,4 @@ class @AbstractDialog
             @positiveAction()
             return
         
-        @_pageClientEventHandler(event)
+        @_pageClickEventHandler(event)

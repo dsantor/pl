@@ -35,7 +35,7 @@ class @ShowClientDialog extends AbstractDialog
     _loadedClientError: (error) ->
         console.log error
 
-    _pageClientEventHandler: (event) ->
+    _pageClickEventHandler: (event) ->
         target = $(event.target) 
 
         if ComponentsUtils.closest(target, '.js--create--bids')

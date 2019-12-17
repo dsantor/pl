@@ -9,6 +9,7 @@ public class UserActivityLogDto {
 	private UserDto actionUser;
 	private UserDto user;
 	private IClient client;
+	private WorkerDto worker;
 	private String type; 
 	private Calendar time;
 	
@@ -41,5 +42,11 @@ public class UserActivityLogDto {
 	}
 	public void setTime(Calendar time) {
 		this.time = time;
+	}
+	public WorkerDto getWorker() {
+		return worker;
+	}
+	public void setWorker(WorkerDto worker) {
+		this.worker = worker;
 	}
 }

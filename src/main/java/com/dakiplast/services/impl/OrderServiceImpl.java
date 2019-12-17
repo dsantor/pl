@@ -218,15 +218,8 @@ public class OrderServiceImpl implements OrderService {
 
 		@Override
 		public IOrder getById(Long orderId) {
-			// TODO Auto-generated method stub
-			return null;
+			return orderRepository.getById(orderId);
 		}
-
-//		@Override
-//		public List<IOrder> getAll() {
-////			return orderRepository.getAll();
-//			return null;
-//		}
 
 		@Override
 		public IOrder setAccepted(Long orderId) {

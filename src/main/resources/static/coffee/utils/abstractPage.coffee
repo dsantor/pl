@@ -14,13 +14,13 @@ class @AbstractPage
     getPageTitle: () ->
         return 'Daki plast'
         
-    pageHTML: () ->
-        @container.html(@_customHTML())
+    pageHTML: (data) ->
+        @container.html(@_customHTML(data))
 
     emptyState: () ->
         return ''
         
-    _customHTML: () ->
+    _customHTML: (data) ->
         return ''
 
     _loadingPage: () ->

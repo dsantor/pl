@@ -26,12 +26,13 @@ public class UserActivityLogRepositoryImpl implements UserActivityLogRepository 
 	
 	@Override
 	public IUserActivityLog createUserActivityLog(Long actionUserId, Long userId, Long clientId,
-			UserActivityLogType type) {
+			Long workerId, UserActivityLogType type) {
 		
 		UserActivityLog entity = new UserActivityLog();
 		entity.setActionUserId(actionUserId);
 		entity.setUserId(userId);
 		entity.setClientId(clientId);
+		entity.setWorkerId(workerId);
 		entity.setType(type);
 		entity.setTime(Calendar.getInstance());
 		
