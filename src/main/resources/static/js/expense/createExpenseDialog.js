@@ -84,26 +84,6 @@
       return valid;
     };
 
-    CreateExpenseDialog.prototype._validateInput = function(input) {
-      var valid;
-      valid = true;
-      if (this._valueOf(input.val())) {
-        input.removeClass(ComponentsUtils.CSS_INVALID_INPUT);
-      } else {
-        valid = false;
-        input.addClass(ComponentsUtils.CSS_INVALID_INPUT);
-      }
-      return valid;
-    };
-
-    CreateExpenseDialog.prototype._valueOf = function(value) {
-      value = value.trim();
-      if (!value || value === '---') {
-        return null;
-      }
-      return value;
-    };
-
     CreateExpenseDialog.prototype._customHTML = function() {
       return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <div class='form-group'> <div class='pos-rel'> <label>Novac uručio*</label> <input type='text' class='form-control js--money--given--by' placeholder='ime i prezime'/> <div class='pos-rel'> <div class='suggestion-container js--user--suggestions pos-abs hide'></div> </div> </div> </div> <div class='form-group'> <label>Namena*</label> <textarea class='form-control js--purpose' placeholder='Novac namenjen za...'/> </div> <div class='form-group'> <label>Suma*</label> <input type='number' class='form-control js--sum' placeholder='din'/> </div> <div class='form-group'> <label>Novac uručen*</label> <input type='date' class='form-control js--money--given--at'/> </div> </div> </div>";
     };

@@ -14,9 +14,13 @@ class @OrdersPage extends AbstractPage
 
     _ordersLoadedSuccess: (response) ->
         @orders = response.data
-        console.log @orders
-        @pageHTML()
+        if @orders.length > 0
+            @pageHTML()
+        else
+            @emptyState()
         
+    _emptyState: () ->
+        return ComponentsUtils.emptyState('Nema porudžbenica :(')
 
     _customHTML: () ->
         tableHtml = ''

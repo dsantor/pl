@@ -115,6 +115,25 @@
       return this._pageClickEventHandler(event);
     };
 
+    AbstractDialog.prototype._valueOf = function(value) {
+      if (!value || value.startsWith('-')) {
+        return null;
+      }
+      return value.trim();
+    };
+
+    AbstractDialog.prototype._validateInput = function(input) {
+      var valid;
+      valid = true;
+      if (this._valueOf(input.val())) {
+        input.removeClass(ComponentsUtils.CSS_INVALID_INPUT);
+      } else {
+        valid = false;
+        input.addClass(ComponentsUtils.CSS_INVALID_INPUT);
+      }
+      return valid;
+    };
+
     return AbstractDialog;
 
   })();

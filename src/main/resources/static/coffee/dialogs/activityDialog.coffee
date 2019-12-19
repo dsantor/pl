@@ -42,7 +42,7 @@ class @ActivityDialog extends AbstractDialog
         return tableHtml
 
     _emptyStateHTML: () ->
-        return "<div class'container js--page--container'>
+        return "<div class='container js--page--container'>
                     <div class='col-5 m-auto h-75 pt-5 text-center'>Nema zabeleženih aktivnosti</div>
                 </div>"
 

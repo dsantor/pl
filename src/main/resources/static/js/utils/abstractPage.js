@@ -3,7 +3,6 @@
   this.AbstractPage = (function() {
     function AbstractPage() {
       this.container = $('.js--page--container');
-      this._loadingPage();
       this.clickEvent = this._clickEventHandler.bind(this);
       this.container.on('click', this.clickEvent);
     }
@@ -22,8 +21,12 @@
       return this.container.html(this._customHTML(data));
     };
 
-    AbstractPage.prototype.emptyState = function() {
+    AbstractPage.prototype._emptyState = function() {
       return '';
+    };
+
+    AbstractPage.prototype.emptyState = function() {
+      return this.container.html(this._emptyState());
     };
 
     AbstractPage.prototype._customHTML = function(data) {

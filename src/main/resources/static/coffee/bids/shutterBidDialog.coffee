@@ -12,10 +12,11 @@ class @ShutterBidDialog extends AbstractDialog
         @box      = @container.find('.js--box')
         @boxType  = @container.find('.js--box--type')
         @openSide = @container.find('.js--open--side')
-        @count    = @container.find('.js--count')
+        @quantity = @container.find('.js--quantity')
         @width    = @container.find('.js--width')
         @height   = @container.find('.js--height')
         @quantity = @container.find('.js--quantity')
+        @price    = @container.find('js--price')
         @id       = null
 
         @additionBoxOptions = @container.find('.js--box--type--option')
@@ -26,9 +27,10 @@ class @ShutterBidDialog extends AbstractDialog
             @box.val(updateItem.box or '---')
             @boxType.val(updateItem.boxType or '---')
             @openSide.val(updateItem.openSide or '---')
-            @count.val(updateItem.count or '')
+            @quantity.val(updateItem.quantity or '')
             @width.val(updateItem.width or '')
             @height.val(updateItem.height or '')
+            @price.val(updateItem.price or '')
             @quantity.val(updateItem.quantity or '')
             @id = updateItem.id
 
@@ -47,10 +49,10 @@ class @ShutterBidDialog extends AbstractDialog
         @box      = null
         @boxType  = null
         @openSide = null
-        @count    = null
         @width    = null
         @height   = null
         @quantity = null
+        @price    = null
 
         super()
 
@@ -82,26 +84,11 @@ class @ShutterBidDialog extends AbstractDialog
             box        : @_valueOf(@box.val())
             boxType    : boxType
             openSide   : @_valueOf(@openSide.val())
-            count      : @_valueOf(@count.val())
             width      : @_valueOf(@width.val())
             height     : @_valueOf(@height.val())
             quantity   : @_valueOf(@quantity.val())
+            price      : @_valueOf(@price.val())
         }   
-
-    _valueOf: (value) ->
-        if not value or value is '---'
-            return null
-        return value.trim()
-
-
-    _validateInput: (input) ->
-        valid = true
-        if @_valueOf(input.val())
-            input.removeClass(ComponentsUtils.CSS_INVALID_INPUT)
-        else
-            valid = false
-            input.addClass(ComponentsUtils.CSS_INVALID_INPUT)
-        return valid
 
     _validateForm: () ->
         valid = true
@@ -118,6 +105,17 @@ class @ShutterBidDialog extends AbstractDialog
         validInput = @_validateInput(@openSide)
         valid &= validInput
 
+        validInput = @_validateInput(@width)
+        valid &= validInput
+
+        validInput = @_validateInput(@height)
+        valid &= validInput
+
+        validInput = @_validateInput(@price)
+        valid &= validInput
+
+        validInput = @_validateInput(@quantity)
+        valid &= validInput
         return valid
 
     _checkBoxTypeOptions: (element) ->
@@ -168,22 +166,22 @@ class @ShutterBidDialog extends AbstractDialog
                         </div>
                         <div class='form-group'>
                             <label>Kolicina*</label>
-                            <input type='number' min='1' class='form-control js--count' value='1'>
+                            <input type='number' min='1' class='form-control js--quantity' value='1'>
                         </div>
                         <div class='form-group'>
                             <label>Cena*</label>
-                            <input type='number' min='1' class='form-control js--quantity' placeholder='din'>
+                            <input type='number' min='1' class='form-control js--price' placeholder='din'>
                         </div>
                         <div class='form-group'>
                             <br> <hr>
                             <h5>Dimenzije</h5>     
                             <br>
                             <div class='form-group form-inline'>
-                                <label class='mr-2 wh-10 left-label'>Sirina</label>
+                                <label class='mr-2 wc-10 left-label'>Sirina</label>
                                 <input type='number' class='form-control js--width' placeholder='cm'>
                             </div>
                             <div class='form-group form-inline'>
-                                <label class='mr-2 wh-10 left-label'>Visina</label>
+                                <label class='mr-2 wc-10 left-label'>Visina</label>
                                 <input type='number' class='form-control js--height' placeholder='cm'>
                             </div>
                         </div>

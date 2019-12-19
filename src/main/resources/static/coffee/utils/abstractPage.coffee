@@ -2,7 +2,6 @@ class @AbstractPage
 
     constructor: () ->
         @container = $('.js--page--container')
-        @_loadingPage()
         @clickEvent = @_clickEventHandler.bind(this)
         @container.on 'click', @clickEvent
 
@@ -17,8 +16,11 @@ class @AbstractPage
     pageHTML: (data) ->
         @container.html(@_customHTML(data))
 
-    emptyState: () ->
+    _emptyState: () ->
         return ''
+        
+    emptyState: () ->
+        @container.html(@_emptyState())
         
     _customHTML: (data) ->
         return ''

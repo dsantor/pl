@@ -43,7 +43,7 @@
     };
 
     ActivityDialog.prototype._emptyStateHTML = function() {
-      return "<div class'container js--page--container'> <div class='col-5 m-auto h-75 pt-5 text-center'>Nema zabeleženih aktivnosti</div> </div>";
+      return "<div class='container js--page--container'> <div class='col-5 m-auto h-75 pt-5 text-center'>Nema zabeleženih aktivnosti</div> </div>";
     };
 
     ActivityDialog.prototype._prettyPrint = function(actionLogs) {

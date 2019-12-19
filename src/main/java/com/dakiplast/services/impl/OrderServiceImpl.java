@@ -46,6 +46,8 @@ public class OrderServiceImpl implements OrderService {
 			Long buildDateMillis 			  = orderRequest.getBuildDate();
 			boolean oldClientIsChosen		  = orderRequest.isOldClientIsChosen();
 			OrderStatus	status 				  = orderRequest.getOrderStatus();
+			Long downPlayment				  = orderRequest.getDownPlayment();
+			
 			IClient client;
 			
 			if (oldClientIsChosen && clientId == null) {
@@ -74,6 +76,9 @@ public class OrderServiceImpl implements OrderService {
 				return null;
 			}
 			
+			if (downPlayment < 0) {
+				return null;
+			}
 //			IWorker worker = workerService.getById(workerId);
 //			if (worker == null) {
 //				return null;
@@ -84,7 +89,7 @@ public class OrderServiceImpl implements OrderService {
 			}
 			Gson gson = new Gson();
 			String workerIdsJson = gson.toJson(workerIds);
-			IOrder order = orderRepository.create(createdBy, Calendar.getInstance(), clientId, workerIdsJson, 0L, 0L, status);
+			IOrder order = orderRepository.create(createdBy, Calendar.getInstance(), clientId, workerIdsJson, 0L, downPlayment, status);
 			Long saldo = 0L;
 			// TODO: order id
 			Long orderId = order.getId();
@@ -111,7 +116,7 @@ public class OrderServiceImpl implements OrderService {
 					height = door.getHeight();
 					innerWidth = door.getInnerWidth();
 					quantity = door.getQuantity();
-					price = door.getPrice() * quantity;
+					price = door.getPrice();
 					saldo += price;
 					orderRepository.createOrderDoor(sort, type, openSide, glass, width, height, innerWidth, price, quantity, orderId);
 				}
@@ -133,7 +138,7 @@ public class OrderServiceImpl implements OrderService {
 					height = threshold.getHeight();
 					innerWidth = threshold.getInnerWidth();
 					quantity = threshold.getQuantity();
-					price = threshold.getPrice() * quantity;
+					price = threshold.getPrice();
 					saldo += price;
 					orderRepository.createOrderThreshold(sort, width, height, innerWidth, price, quantity, orderId);
 				}
@@ -156,7 +161,7 @@ public class OrderServiceImpl implements OrderService {
 					width = mosquito.getWidth();
 					height = mosquito.getHeight();
 					quantity = mosquito.getQuantity();
-					price = mosquito.getPrice() * quantity;
+					price = mosquito.getPrice();
 					saldo += price;
 					orderRepository.createOrderMosquitoRepeller(sort, type, openSide, width, height, price, quantity, orderId);
 				}
@@ -185,7 +190,7 @@ public class OrderServiceImpl implements OrderService {
 					height = window.getHeight();
 					innerWidth = window.getInnerWidth();
 					quantity = window.getQuantity();
-					price = window.getPrice() * quantity;;
+					price = window.getPrice();
 					saldo += price;
 					orderRepository.createOrderWindow(sort, openSide, glass, tipper, width, height, innerWidth, price, quantity, orderId);
 				}

@@ -21,8 +21,15 @@
 
     OrdersPage.prototype._ordersLoadedSuccess = function(response) {
       this.orders = response.data;
-      console.log(this.orders);
-      return this.pageHTML();
+      if (this.orders.length > 0) {
+        return this.pageHTML();
+      } else {
+        return this.emptyState();
+      }
+    };
+
+    OrdersPage.prototype._emptyState = function() {
+      return ComponentsUtils.emptyState('Nema porudžbenica :(');
     };
 
     OrdersPage.prototype._customHTML = function() {

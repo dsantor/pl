@@ -39,6 +39,7 @@ class @BidsPage
         @oldClientButton    = @container.find('.js--radio--button--old--client')
         @newClientButton    = @container.find('.js--radio--button--new--client')
         @orderStatus        = @container.find('.js--order--status')
+        @orderDownPlayment  = @container.find('.js--down--payment')
 
         @firstName    = @container.find('.js--firstName')
         @lastName     = @container.find('.js--lastName')
@@ -94,6 +95,7 @@ class @BidsPage
         @clientSuggestionsContainer = null
         @buildDate                  = null
         @orderStatus                = null
+        @orderDownPlayment          = null
 
         @container.html('')
         @clientId              = null
@@ -232,14 +234,6 @@ class @BidsPage
                                     <input type='date' class='form-control js--build--date'>
                                 </div>
                                 <div class='form-group'>
-                                    <label>Status porudzbine</label>
-                                    <select class='js--order--status'>
-                                        <option value='WAITING' selected>Na čekanju</option>
-                                        <option value='ACCEPTED'>Prihvaćen</option>
-                                        <option value='DECLINED'>Odbijen</option>
-                                    </select>
-                                </div>
-                                <div class='form-group'>
                                     <label>Radnik</label>
                                      <input type='text' hidden='hidden'>
                                     <input type='text' class='form-control js--autosuggest--input js--worker--input' placeholder='radnik'>
@@ -248,7 +242,18 @@ class @BidsPage
                                     <div class='mt-3 js--workers--chosen'>
                                     </div>
                                 </div>
-                                <div style='color:red;'>Allow user to chose status of order</div>
+                                <div class='form-group'>
+                                    <label>Status porudzbine</label>
+                                    <select class='js--order--status'>
+                                        <option value='WAITING' selected>Na čekanju</option>
+                                        <option value='ACCEPTED'>Prihvaćen</option>
+                                        <option value='DECLINED'>Odbijen</option>
+                                    </select>
+                                </div>
+                                <div class='form-group'>
+                                    <label>Kapara</label>
+                                    <input type='number' class='form-control js--down--payment' placeholder='din'/>
+                                </div>
                                 <div class='form-group'>
                                     <button class='btn btn-lg btn-primary btn-block js--save--order'>Poruči</button>
                                     <span class='text-danger js--order--error--message hide'>
@@ -653,6 +658,13 @@ class @BidsPage
             @saveOrderErrorMessage.html('Vreme ugradnje nije odabrano!').removeClass('hide')
             return
         
+        orderDownPlayment = @orderDownPlayment.val()
+        if orderDownPlayment is ''
+            orderDownPlayment = 0
+        else if orderDownPlayment < 0
+            @saveOrderErrorMessage.html('Kapara ne moze biti negativna!').removeClass('hide')
+            return
+
         @saveOrderErrorMessage.addClass('hide')
 
         buildDate = new Date(@buildDate.val()).getTime()
@@ -668,6 +680,7 @@ class @BidsPage
             buildDate         : buildDate
             oldClientIsChosen : @oldClientIsChosen
             orderStatus       : @orderStatus.val()
+            downPlayment      : orderDownPlayment
         }
 
         OrderService.create(data, null, this, @_orderSavedSuccess, @_loadWorkersError)

@@ -82,25 +82,6 @@
       };
     };
 
-    DoorBidDialog.prototype._valueOf = function(value) {
-      if (!value || value === '---') {
-        return null;
-      }
-      return value.trim();
-    };
-
-    DoorBidDialog.prototype._validateInput = function(input) {
-      var valid;
-      valid = true;
-      if (this._valueOf(input.val())) {
-        input.removeClass(ComponentsUtils.CSS_INVALID_INPUT);
-      } else {
-        valid = false;
-        input.addClass(ComponentsUtils.CSS_INVALID_INPUT);
-      }
-      return valid;
-    };
-
     DoorBidDialog.prototype._validateForm = function() {
       var valid, validInput;
       valid = true;
@@ -112,11 +93,21 @@
       valid &= validInput;
       validInput = this._validateInput(this.glass);
       valid &= validInput;
+      validInput = this._validateInput(this.width);
+      valid &= validInput;
+      validInput = this._validateInput(this.height);
+      valid &= validInput;
+      validInput = this._validateInput(this.innerWidth);
+      valid &= validInput;
+      validInput = this._validateInput(this.price);
+      valid &= validInput;
+      validInput = this._validateInput(this.quantity);
+      valid &= validInput;
       return valid;
     };
 
     DoorBidDialog.prototype._customHTML = function() {
-      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta vrata*</label> <select class='select--input js--sort'> <option selected>---</option> <option>Ulazna</option> <option>Sobna</option> <option>Jednokrilna balkonska</option> <option>Dvokrilna balkonska</option> <option>Garažna</option> <option>segmentna garazna</option> <option>Rolo</option> </select> </div> <div class='form-group'> <label>Tip vrata*</label> <select class='select--input js--type'> <option selected>---</option> <option>Sa staklom</option> <option>Pun panel</option> <option>Panel/staklo</option> <option>Dekorativni modeli</option> </select> </div> <div class='form-group'> <label>Strana otvora*</label> <select class='select--input js--open--side'> <option selected>---</option> <option>Levi otvor</option> <option>Desni otvor</option> </select> </div> <div class='form-group'> <label>Staklo*</label> <select class='select--input js--glass'> <option selected>---</option> <option>Providno</option> <option>Griz</option> <option>Delta</option> <option>Vitraz</option> </select> </div> <div class='form-group'> <label>Kolicina*</label> <input type='number' min='1' class='form-control js--quantity' value='1'> </div> <div class='form-group'> <label>Cena*</label> <input type='number' min='1' class='form-control js--price' placeholder='din'> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Sirina*</label> <input type='number' min='0' class='form-control js--width' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Visina*</label> <input type='number' min='0' class='form-control js--height' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wh-10 left-label'>Unutrasnja sirina*</label> <input type='number' min='0' class='form-control js--inner-width' placeholder='cm'> </div> </div> </div> </div>";
+      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta vrata*</label> <select class='select--input js--sort'> <option selected>---</option> <option>Ulazna</option> <option>Sobna</option> <option>Jednokrilna balkonska</option> <option>Dvokrilna balkonska</option> <option>Garažna</option> <option>segmentna garazna</option> <option>Rolo</option> </select> </div> <div class='form-group'> <label>Tip vrata*</label> <select class='select--input js--type'> <option selected>---</option> <option>Sa staklom</option> <option>Pun panel</option> <option>Panel/staklo</option> <option>Dekorativni modeli</option> </select> </div> <div class='form-group'> <label>Strana otvora*</label> <select class='select--input js--open--side'> <option selected>---</option> <option>Levi otvor</option> <option>Desni otvor</option> </select> </div> <div class='form-group'> <label>Staklo*</label> <select class='select--input js--glass'> <option selected>---</option> <option>Providno</option> <option>Griz</option> <option>Delta</option> <option>Vitraz</option> </select> </div> <div class='form-group'> <label>Kolicina*</label> <input type='number' min='1' class='form-control js--quantity' value='1'> </div> <div class='form-group'> <label>Cena*</label> <input type='number' min='1' class='form-control js--price' placeholder='din'> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wc-10 left-label'>Sirina*</label> <input type='number' min='0' class='form-control js--width' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wc-10 left-label'>Visina*</label> <input type='number' min='0' class='form-control js--height' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wc-10 left-label'>Unutrasnja sirina*</label> <input type='number' min='0' class='form-control js--inner-width' placeholder='cm'> </div> </div> </div> </div>";
     };
 
     return DoorBidDialog;

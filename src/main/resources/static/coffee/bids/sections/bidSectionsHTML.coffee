@@ -1,7 +1,7 @@
 class @BidSectionsHTML
 
     @emptyState: () ->
-        return "<div class='col-5 m-auto h-75 pt-5 text-center'>Nema porudžbina u korpi :(</div>"
+        return "<div class='col-5 m-auto h-75 pt-5 text-center'>Korpa je prazna :(</div>"
         
     @doorSectionHTML: (items) ->
         innerHtml = ""
@@ -9,71 +9,65 @@ class @BidSectionsHTML
             dimension = '/'
             if item.width and item.height and item.innerWidth
                 dimension = item.width + 'x' + item.height + 'x' + item.innerWidth
-            innerHtml += "<tr class='js--bid--row' data-bid-id=#{item.id} data-bid-type=#{item.bidType}>
-                            <td class='table-text w-15'>#{item.sort}</td>
-                            <td class='table-text w-15'>#{item.type}</td>
-                            <td class='table-text w-10'>#{item.openSide}</td>
-                            <td class='table-text w-10'>#{item.glass}</td>
-                            <td class='table-text w-10'>#{dimension}</td>
-                            <td class='table-text w-10'>#{item.count}</td>
-                            <td class='table-text w-10'>
+            innerHtml += "<div class='flex-table js--bid--row' data-bid-id=#{item.id} data-bid-type=#{item.bidType}>
+                            <div class='flex-table-cell w-20'>#{item.sort}</div>
+                            <div class='flex-table-cell w-20'>#{item.type}</div>
+                            <div class='flex-table-cell w-10'>#{item.openSide}</div>
+                            <div class='flex-table-cell w-10'>#{item.glass}</div>
+                            <div class='flex-table-cell w-10'>#{dimension}</div>
+                            <div class='flex-table-cell w-10'>#{item.quantity}</div>
+                            <div class='flex-table-cell w-10'>
                                 <span class='edit-icon js--edit--bid' data-bid-id=#{item.id}></span>
-                            </td>
-                            <td class='table-text w-10'>
+                            </div>
+                            <div class='flex-table-cell w-10'>
                                 <span class='remove-icon js--remove--bid' data-bid-id=#{item.id}></span>
-                            </td>
-                         </tr>"
+                            </div>
+                         </div>"
 
         html = "<div class='container js--section--door'><h4>Vrata</h4></div>
-                <table class='table mb-0'>
-                    <tr>
-                        <th class='table-text w-15'>Vrsta</th>
-                        <th class='table-text w-15'>Tip</th>
-                        <th class='table-text w-10'>Otvor</th>
-                        <th class='table-text w-10'>Staklo</th>
-                        <th class='table-text w-10'>Dimenzije</th>
-                        <th class='table-text w-10'>Količina</th>
-                        <th class='table-text w-10'>Izmeni</th>
-                        <th class='table-text w-10'>Obriši</th>
-                    </tr>
-                </table>
-                <table class='table table-striped'>
-                    #{innerHtml}
-                </table>"
+                <div class='flex-table'>
+                    <div class='flex-table-cell w-20'>Vrsta</div>
+                    <div class='flex-table-cell w-20'>Tip</div>
+                    <div class='flex-table-cell w-10'>Otvor</div>
+                    <div class='flex-table-cell w-10'>Staklo</div>
+                    <div class='flex-table-cell w-10'>Dimenzije</div>
+                    <div class='flex-table-cell w-10'>Količina</div>
+                    <div class='flex-table-cell w-10'>Izmeni</div>
+                    <div class='flex-table-cell w-10'>Obriši</div>
+                </div>
+                #{innerHtml}
+                </div>"
         return html
 
     @thresholdSectionHTML: (items) ->
         innerHtml = ''
         for item in items
-            innerHtml += "<tr class='js--bid--row' data-bid-id=#{item.id} data-bid-type=#{item.bidType}>
-                            <td class='table-text w-20'>#{item.sort}</td>
-                            <td class='table-text w-20'>#{item.width or '/'}</td>
-                            <td class='table-text w-10'>#{item.height or '/'}</td>
-                            <td class='table-text w-20'>#{item.innerWidth or '/'}</td>
-                            <td class='table-text w-10'>#{item.count}</td>
-                            <td class='table-text w-10'>
+            innerHtml += "<div class='flex-table js--bid--row' data-bid-id=#{item.id} data-bid-type=#{item.bidType}>
+                            <div class='flex-table-cell w-20'>#{item.sort}</div>
+                            <div class='flex-table-cell w-20'>#{item.width or '/'}</div>
+                            <div class='flex-table-cell w-10'>#{item.height or '/'}</div>
+                            <div class='flex-table-cell w-20'>#{item.innerWidth or '/'}</div>
+                            <div class='flex-table-cell w-10'>#{item.quantity}</div>
+                            <div class='flex-table-cell w-10'>
                                 <span class='edit-icon js--edit--bid' data-bid-id=#{item.id}></span>
-                            </td>
-                            <td class='table-text w-10'>
+                            </div>
+                            <div class='flex-table-cell w-10'>
                                 <span class='remove-icon js--remove--bid' data-bid-id=#{item.id}></span>
-                            </td>
-                         </tr>"
+                            </div>
+                         </div>"
 
-        html = "<div class='container js--section--threshold'><h4>Prag</h4></div>
-                <table class='table mb-0'>
-                    <tr>
-                        <th class='table-text w-20'>Vrsta</th>
-                        <th class='table-text w-20'>Širina</th>
-                        <th class='table-text w-10'>Visina</th>
-                        <th class='table-text w-20'>Unutrašnja širina</th>
-                        <th class='table-text w-10'>Količina</th>
-                        <th class='table-text w-10'>Promeni</th>
-                        <th class='table-text w-10'>Obriši</th>
-                    </tr>
-                </table>
-                <table class='table table-striped'>
-                    #{innerHtml}
-                </table>"
+        html = "<div class='container js--section--divreshold'><h4>Prag</h4></div>
+                <div class='flex-table'>
+                    <div class='flex-table-cell w-20'>Vrsta</div>
+                    <div class='flex-table-cell w-20'>Širina</div>
+                    <div class='flex-table-cell w-10'>Visina</div>
+                    <div class='flex-table-cell w-20'>Unudivašnja širina</div>
+                    <div class='flex-table-cell w-10'>Količina</div>
+                    <div class='flex-table-cell w-10'>Promeni</div>
+                    <div class='flex-table-cell w-10'>Obriši</div>
+                </div>
+                #{innerHtml}
+                </div>"
         return html
 
     @mosquitoRepellerSectionHTML: (items) ->
@@ -82,35 +76,32 @@ class @BidSectionsHTML
             dimension = '/'
             if item.width and item.height and item.innerWidth
                 dimension = item.width + 'x' + item.height + 'x' + item.innerWidth
-            innerHtml += "<tr class='js--bid--row' data-bid-id=#{item.id} data-bid-type=#{item.bidType}>
-                            <td class='table-text w-20'>#{item.sort}</td>
-                            <td class='table-text w-20'>#{item.type}</td>
-                            <td class='table-text w-20'>#{item.openSide}</td>
-                            <td class='table-text w-10'>#{dimension}</td>
-                            <td class='table-text w-10'>#{item.count}</td>
-                            <td class='table-text w-10'>
+            innerHtml += "<div class='flex-table js--bid--row' data-bid-id=#{item.id} data-bid-type=#{item.bidType}>
+                            <div class='flex-table-cell w-20'>#{item.sort}</div>
+                            <div class='flex-table-cell w-20'>#{item.type}</div>
+                            <div class='flex-table-cell w-20'>#{item.openSide}</div>
+                            <div class='flex-table-cell w-10'>#{dimension}</div>
+                            <div class='flex-table-cell w-10'>#{item.quantity}</div>
+                            <div class='flex-table-cell w-10'>
                                 <span class='edit-icon js--edit--bid' data-bid-id=#{item.id}></span>
-                            </td>
-                            <td class='table-text w-10'>
+                            </div>
+                            <div class='flex-table-cell w-10'>
                                 <span class='remove-icon js--remove--bid' data-bid-id=#{item.id}></span>
-                            </td>
-                         </tr>"
+                            </div>
+                         </div>"
 
         html = "<div class='container js--section--mosquito--repeller'><h4>Komarnik</h4></div>
-                <table class='table mb-0'>
-                    <tr>
-                        <th class='table-text w-20'>Vrsta</th>
-                        <th class='table-text w-20'>Tip</th>
-                        <th class='table-text w-20'>Otvor</th>
-                        <th class='table-text w-10'>Dimenzije</th>
-                        <th class='table-text w-10'>Količina</th>
-                        <th class='table-text w-10'>Izmeni</th>
-                        <th class='table-text w-10'>Obriši</th>
-                    </tr>
-                </table>
-                <table class='table table-striped pt-3'>
+                <div class='flex-table'>
+                    <div class='flex-table-cell w-20'>Vrsta</div>
+                    <div class='flex-table-cell w-20'>Tip</div>
+                    <div class='flex-table-cell w-20'>Otvor</div>
+                    <div class='flex-table-cell w-10'>Dimenzije</div>
+                    <div class='flex-table-cell w-10'>Količina</div>
+                    <div class='flex-table-cell w-10'>Izmeni</div>
+                    <div class='flex-table-cell w-10'>Obriši</div>
+                </div>
                 #{innerHtml}
-                </table>"
+                </div>"
         return html
 
 
@@ -120,37 +111,34 @@ class @BidSectionsHTML
             dimension = '/'
             if item.width and item.height and item.innerWidth
                 dimension = item.width + 'x' + item.height + 'x' + item.innerWidth
-            innerHtml += "<tr class='js--bid--row' data-bid-id=#{item.id} data-bid-type=#{item.bidType}>
-                            <td class='table-text w-20'>#{item.sort}</td>
-                            <td class='table-text w-15'>#{item.openSide}</td>
-                            <td class='table-text w-15'>#{item.glass}</td>
-                            <td class='table-text w-10'>#{item.tipper}</td>
-                            <td class='table-text w-10'>#{dimension}</td>
-                            <td class='table-text w-10'>#{item.count}</td>
-                            <td class='table-text w-10'>
+            innerHtml += "<div class='flex-table js--bid--row' data-bid-id=#{item.id} data-bid-type=#{item.bidType}>
+                            <div class='flex-table-cell w-20'>#{item.sort}</div>
+                            <div class='flex-table-cell w-15'>#{item.openSide}</div>
+                            <div class='flex-table-cell w-15'>#{item.glass}</div>
+                            <div class='flex-table-cell w-10'>#{item.tipper}</div>
+                            <div class='flex-table-cell w-10'>#{dimension}</div>
+                            <div class='flex-table-cell w-10'>#{item.quantity}</div>
+                            <div class='flex-table-cell w-10'>
                                 <span class='edit-icon js--edit--bid' data-bid-id=#{item.id}></span>
-                            </td>
-                            <td class='table-text w-10'>
+                            </div>
+                            <div class='flex-table-cell w-10'>
                                 <span class='remove-icon js--remove--bid' data-bid-id=#{item.id}></span>
-                            </td>
-                         </tr>"
+                            </div>
+                         </div>"
 
         html = "<div class='container js--section--window'><h4>Prozor</h4></div>
-                <table class='table mb-0'>
-                    <tr>
-                        <th class='table-text w-20'>Vrsta</th>
-                        <th class='table-text w-15'>Otvor</th>
-                        <th class='table-text w-15'>Staklo</th>
-                        <th class='table-text w-10'>Kipanje</th>
-                        <th class='table-text w-10'>Dimenzije</th>
-                        <th class='table-text w-10'>Količina</th>
-                        <th class='table-text w-10'>Izmeni</th>
-                        <th class='table-text w-10'>Obriši</th>
-                    </tr>
-                </table>
-                <table class='table table-striped'>
+                <div class='flex-table'>
+                    <div class='flex-table-cell w-20'>Vrsta</div>
+                    <div class='flex-table-cell w-15'>Otvor</div>
+                    <div class='flex-table-cell w-15'>Staklo</div>
+                    <div class='flex-table-cell w-10'>Kipanje</div>
+                    <div class='flex-table-cell w-10'>Dimenzije</div>
+                    <div class='flex-table-cell w-10'>Količina</div>
+                    <div class='flex-table-cell w-10'>Izmeni</div>
+                    <div class='flex-table-cell w-10'>Obriši</div>
+                </div>
                 #{innerHtml}
-                </table>"
+                </div>"
         return html
     
     @shutterSectionHTML: (items) ->
@@ -159,35 +147,32 @@ class @BidSectionsHTML
             dimension = '/'
             if item.width and item.height
                 dimension = item.width + 'x' + item.height
-            innerHtml += "<tr class='js--bid--row' data-bid-id=#{item.id} data-bid-type=#{item.bidType}>
-                            <td class='table-text w-15'>#{item.sort}</td>
-                            <td class='table-text w-15'>#{item.box}</td>
-                            <td class='table-text w-20'>#{item.boxType or '/'}</td>
-                            <td class='table-text w-10'>#{item.openSide}</td>
-                            <td class='table-text w-10'>#{dimension}</td>
-                            <td class='table-text w-10'>#{item.count}</td>
-                            <td class='table-text w-10'>
+            innerHtml += "<div class='flex-table js--bid--row' data-bid-id=#{item.id} data-bid-type=#{item.bidType}>
+                            <div class='flex-table-cell w-15'>#{item.sort}</div>
+                            <div class='flex-table-cell w-15'>#{item.box}</div>
+                            <div class='flex-table-cell w-20'>#{item.boxType or '/'}</div>
+                            <div class='flex-table-cell w-10'>#{item.openSide}</div>
+                            <div class='flex-table-cell w-10'>#{dimension}</div>
+                            <div class='flex-table-cell w-10'>#{item.quantity}</div>
+                            <div class='flex-table-cell w-10'>
                                 <span class='edit-icon js--edit--bid' data-bid-id=#{item.id}></span>
-                            </td>
-                            <td class='table-text w-10'>
+                            </div>
+                            <div class='flex-table-cell w-10'>
                                 <span class='remove-icon js--remove--bid' data-bid-id=#{item.id}></span>
-                            </td>
-                         </tr>"
+                            </div>
+                         </div>"
 
         html = "<div class='container js--section--shutter'><h4>Prozor</h4></div>
-                <table class='table mb-0'>
-                    <tr>
-                        <th class='table-text w-15'>Vrsta</th>
-                        <th class='table-text w-15'>Kutija</th>
-                        <th class='table-text w-20'>Tip kutije</th>
-                        <th class='table-text w-10'>Otvor</th>
-                        <th class='table-text w-10'>Dimenzije</th>
-                        <th class='table-text w-10'>Količina</th>
-                        <th class='table-text w-10'>Izmeni</th>
-                        <th class='table-text w-10'>Obriši</th>
-                    </tr>
-                </table>
-                <table class='table table-striped'>
+                <div class='flex-table'>
+                    <div class='flex-table-cell w-15'>Vrsta</div>
+                    <div class='flex-table-cell w-15'>Kutija</div>
+                    <div class='flex-table-cell w-20'>Tip kutije</div>
+                    <div class='flex-table-cell w-10'>Otvor</div>
+                    <div class='flex-table-cell w-10'>Dimenzije</div>
+                    <div class='flex-table-cell w-10'>Količina</div>
+                    <div class='flex-table-cell w-10'>Izmeni</div>
+                    <div class='flex-table-cell w-10'>Obriši</div>
+                </div>
                 #{innerHtml}
-                </table>"
+                </div>"
         return html

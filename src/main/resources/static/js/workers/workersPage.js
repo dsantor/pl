@@ -12,7 +12,12 @@
       WorkerService.getAll(null, this, this._workersLoadedSuccess, this._workersLoadedError);
       this.createWorkerDialog = new CreateWorkerDialog();
       this.workersContainer = this.container.find('.js--container--workers');
-      this._workerStatusEvent = this._workerStatusEventHandler.bind(this);
+      this.filterContainer = this.container.find('.js--filter--container');
+      this.autoSuggestion = new AutoSuggestion(this, this.filterContainer, this.workersContainer, AutoSuggestion.BASE_FILTER);
+      this.workerASInput = this.container.find('.js--filter--as');
+      this.suggestionsContainer = this.container.find('.js--filter--suggestions');
+      this.workerStatus = this.container.find('.js--filter--status');
+      this.filterToggleButton = this.container.find('.js--filters--content');
       this.createdNewWorkerEvent = this._createdNewWorkerEventHandler.bind(this);
       EventUtils.bindCreatedNewWorker(this.createdNewWorkerEvent);
     }
@@ -21,19 +26,16 @@
       WorkersPage.__super__.destroy.call(this);
       this.createWorkerDialog.destroy();
       this.createWorkerDialog = null;
-      if (this._workerASInputEvent) {
-        this.workerASInput.off('keyup', this._workerASInputEvent);
-        this._workerASInputEvent = null;
-        this.workerASInput = null;
-        this.workerSuggestionsContainer = null;
-      }
-      if (this._workerStatus) {
-        this._workerStatus.off('change', this._workerStatusEvent);
-        this._workerStatusEvent = null;
-        this._workerStatus = null;
-      }
-      EventUtils.unbindCreatedNewWorker(this.workerStatusEvent);
-      return this.workerStatusEvent = null;
+      this.autoSuggestion.destroy();
+      this.autoSuggestion = null;
+      this.workersContainer = null;
+      this.filterContainer = null;
+      this.workerASInput = null;
+      this.suggestionsContainer = null;
+      this.workerStatus = null;
+      this.filterToggleButton = null;
+      EventUtils.unbindCreatedNewWorker(this.createdNewWorkerEvent);
+      return this.createdNewWorkerEvent = null;
     };
 
     WorkersPage.prototype.getPageTitle = function() {
@@ -50,35 +52,17 @@
         id = target.attr('data-worker-id');
         window.location.hash = 'worker/' + id;
       }
-      if (closest(target, '.js--filters--button')) {
-        $('.js--filters--content').toggleClass('show');
-        return;
-      }
-      if (closest(target, '.js--worker--suggestions')) {
-        this._choseWorkerFromAutoSuggestion(target);
-        return;
-      }
-      if (closest(target, '.js--filter--reset')) {
-        this._resetFilter();
-        return;
-      }
-      return this.workerSuggestionsContainer.addClass('hide');
+      return this.suggestionsContainer.addClass('hide');
     };
 
     WorkersPage.prototype._workersLoadedSuccess = function(response) {
       this.workers = response.data;
-      this._renderWorkersHTML(this.workers);
-      this.workerASInput = this.container.find('.js--worker--as');
-      this.workerSuggestionsContainer = this.container.find('.js--worker--suggestions');
-      this._workerASInputEvent = this._workerASInputEventHandler.bind(this);
-      this.workerASInput.on('keyup', this._workerASInputEvent);
-      this.workerStatus = this.container.find('.js--filter--status');
-      return this.workerStatus.on('change', this._workerStatusEvent);
+      return this._renderWorkersHTML(this.workers);
     };
 
-    WorkersPage.prototype._customHTML = function(workers) {
+    WorkersPage.prototype._customHTML = function() {
       var tableHtml;
-      tableHtml = "<div> <nav class='nav justify-content-end pt-3'> <span class='nav-link span-a js--create--worker'>Dodaj radnika</span> </nav> " + (this._getFiltersHTML()) + " <div class='js--container--workers'> </div> </div>";
+      tableHtml = "<div> <nav class='nav justify-content-end pt-3'> <span class='nav-link span-a js--create--worker'>Dodaj radnika</span> </nav> <div class='js--filter--container'> </div> <div class='js--container--workers'> " + (ComponentsUtils.loadingPage()) + " </div> </div>";
       return tableHtml;
     };
 
@@ -111,20 +95,36 @@
     };
 
     WorkersPage.prototype._getFiltersHTML = function() {
-      return "<div class='card-header card bp-4'> <h2 class='mb-0 text-center'> <span  class='span-a btn pointer m-auto js--filters--button' data-toggle='collapse' data-target='#collapseOne'>Filteri</span> </h2> </div> <div id='collapseOne' class='collapse card js--filters--content'> <div class='card-body w-75 m-auto flex'> <div class='flex-column w-100'> <div class='flex flex-row justify-content-around pb-3'> <div class='flex flex-row w-40'> <label class='mr-2 w-25 d-inline-block'>Pretraži</label> <div class='pos-rel w-100'> <input type='text' class='form-control w-100 input-icon-icon-24 js--worker--as'/> <i class='input-icon-24 search-icon cursor-initial'></i> <div class='suggestion-container js--worker--suggestions pos-abs hide'></div> </div> </div> <div class='flex flex-row w-40'> <label class='mr-2 wh-10'>Status</label> <select class='js--filter--status'> <option selected value='active'>Zaposlen</option> <option value='deactive'>Otpušten</option> <option value='all'>Svi</option> </select> </div> </div> <div class='w-100 flex justify-content-center'> <input type='button' class='btn btn-primary js--filter--reset' value='Restart filter'/> </div> </div> </div> </div> </div> </div>";
+      return ComponentsUtils.baseFilter();
     };
 
-    WorkersPage.prototype._workerASInputEventHandler = function(event) {
-      return ComponentsUtils.handleAutoSuggestion(this.workerASInput, 'data-worker-id', this.workers, this.workerSuggestionsContainer, true, this, this._resetFilter);
+    WorkersPage.prototype.AutoSuggestionKeyUpEventHander = function(event) {
+      var target;
+      target = $(event.target);
+      if (closest(target, '.js--filter--as')) {
+        return ComponentsUtils.handleAutoSuggestion(this.workerASInput, 'data-worker-id', this.workers, this.suggestionsContainer, true, this, this._resetFilter);
+      }
     };
 
-    WorkersPage.prototype._choseWorkerFromAutoSuggestion = function(target) {
-      ComponentsUtils.selectFromAutoSuggestion(target, this.workerASInput, 'data-worker-id', this.workers, this.workerSuggestionsContainer);
+    WorkersPage.prototype.AutoSuggestionChangeEventHander = function(event) {
       return this._applyFilter();
     };
 
-    WorkersPage.prototype._workerStatusEventHandler = function(event) {
-      return this._applyFilter();
+    WorkersPage.prototype.AutoSuggestionClickEventHander = function(event) {
+      var target;
+      target = $(event.target);
+      if (closest(target, '.js--filter--suggestions')) {
+        ComponentsUtils.selectFromAutoSuggestion(target, this.workerASInput, 'data-worker-id', this.workers, this.suggestionsContainer);
+        this._applyFilter();
+        return;
+      }
+      if (closest(target, '.js--filter--reset')) {
+        this._resetFilter();
+        return;
+      }
+      if (closest(target, '.js--filters--button')) {
+        this.filterToggleButton.toggleClass('show');
+      }
     };
 
     WorkersPage.prototype._applyFilter = function() {
@@ -161,13 +161,17 @@
         }
         workers = filteredWorkers;
       }
-      return this._renderWorkersHTML(workers);
+      if (workers.length === 0) {
+        return this.autoSuggestion.emptyState();
+      } else {
+        return this._renderWorkersHTML(workers);
+      }
     };
 
     WorkersPage.prototype._resetFilter = function() {
       this.workerASInput.val('');
       this.workerASInput.removeAttr('data-worker-id');
-      this.workerStatus.val('active');
+      this.workerStatus.val(this.workerStatus[0].options[0].value);
       return this._renderWorkersHTML(this.workers);
     };
 

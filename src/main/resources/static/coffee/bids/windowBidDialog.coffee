@@ -75,21 +75,6 @@ class @WindowBidDialog extends AbstractDialog
             quantity   : @_valueOf(@quantity.val())
         }   
 
-    _valueOf: (value) ->
-        if not value or value is '---'
-            return null
-        return value.trim()
-
-
-    _validateInput: (input) ->
-        valid = true
-        if @_valueOf(input.val())
-            input.removeClass(ComponentsUtils.CSS_INVALID_INPUT)
-        else
-            valid = false
-            input.addClass(ComponentsUtils.CSS_INVALID_INPUT)
-        return valid
-
     _validateForm: () ->
         valid = true
         validInput = @_validateInput(@sort)
@@ -104,6 +89,20 @@ class @WindowBidDialog extends AbstractDialog
         validInput = @_validateInput(@tipper)
         valid &= validInput
 
+        validInput = @_validateInput(@width)
+        valid &= validInput
+
+        validInput = @_validateInput(@height)
+        valid &= validInput
+
+        validInput = @_validateInput(@innerWidth)
+        valid &= validInput
+
+        validInput = @_validateInput(@price)
+        valid &= validInput
+
+        validInput = @_validateInput(@quantity)
+        valid &= validInput
         return valid
 
     _customHTML: () ->
@@ -164,15 +163,15 @@ class @WindowBidDialog extends AbstractDialog
                             <br>
                         
                             <div class='form-group form-inline'>
-                                <label class='mr-2 wh-10 left-label'>Sirina</label>
+                                <label class='mr-2 wc-10 left-label'>Sirina</label>
                                 <input type='number' class='form-control js--width' placeholder='cm'>
                             </div>
                             <div class='form-group form-inline'>
-                                <label class='mr-2 wh-10 left-label'>Visina</label>
+                                <label class='mr-2 wc-10 left-label'>Visina</label>
                                 <input type='number' class='form-control js--height' placeholder='cm'>
                             </div>
                             <div class='form-group form-inline'>
-                                <label class='mr-2 wh-10 left-label'>Unutrasnja sirina</label>
+                                <label class='mr-2 wc-10 left-label'>Unutrasnja sirina</label>
                                 <input type='number' class='form-control js--inner--width' placeholder='cm'>
                             </div>
                         </div>

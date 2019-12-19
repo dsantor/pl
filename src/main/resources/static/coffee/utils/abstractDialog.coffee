@@ -83,6 +83,7 @@ class @AbstractDialog
         
     emptyStateHTML: () ->
         @_templateHTML(@_emptyStateHTML())
+        
     _emptyStateHTML: () ->
         return ''
 
@@ -103,3 +104,18 @@ class @AbstractDialog
             return
         
         @_pageClickEventHandler(event)
+
+    _valueOf: (value) ->
+        if not value or value.startsWith('-')
+            return null
+        return value.trim()
+
+
+    _validateInput: (input) ->
+        valid = true
+        if @_valueOf(input.val())
+            input.removeClass(ComponentsUtils.CSS_INVALID_INPUT)
+        else
+            valid = false
+            input.addClass(ComponentsUtils.CSS_INVALID_INPUT)
+        return valid

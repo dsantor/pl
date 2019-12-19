@@ -10236,7 +10236,7 @@ select {
     z-index: 100; */
 }
 
-.wh-10 {
+.wc-10 {
     width: 10ch;
 }
 
@@ -10366,6 +10366,7 @@ label.left-label {
   height: 60px;
   background: url(../images/loading.gif);
   background-size: 60px;
+  cursor: default;
   margin: auto;
   margin-top: 3rem;
   background-repeat: no-repeat;
@@ -10574,17 +10575,6 @@ html {
   height: 100%;
 }
 
-.suggestion-container2 {
-  position: absolute;
-  background-color: #FFFFFF;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  /* padding: 0.375rem 0.75rem; */
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  margin-top: 10px;
-  /* padding: 8px 0; */
-  width: 100%;
-}
 .suggestion-container {
   background-color: #FFFFFF;
   border: 1px solid rgba(0, 0, 0, 0.2);
@@ -10594,6 +10584,7 @@ html {
   margin-top: 10px;
   /* padding: 8px 0; */
   width: 100%;
+  z-index: 10;
 } 
 
 /* .suggestion-item {
@@ -10742,3 +10733,41 @@ html {
 .bids-container[data-page=order] .bidsEmptyState {
   display: none !important;
 }
+
+/* TABLES */
+.flex-table {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  color: #212529;
+  border-collapse: collapse;
+  box-sizing: border-box;
+  border-spacing: 2px;
+  border-color: grey;
+}
+
+.flex-table-cell {
+  display: flex;
+  padding: 0.75rem;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flex-table:last-child {
+  margin-bottom: 1rem;
+}
+
+.flex-table:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+ }

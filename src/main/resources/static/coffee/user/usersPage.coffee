@@ -1,50 +1,60 @@
-class @UserPage #extends @AbstractPage
+class @UserPage extends AbstractPage
 
     constructor: () ->
-        @container = $('.js--page--container')
+        super()
+        @pageHTML()
+        UserService.getUsers(null, this, @_getUsersSuccess, ajaxCallbackPrintMessage)
 
-        @clickEvent = @_clickEventHandler.bind(this)
-        @container.on 'click', @clickEvent
+        @filterContainer = @container.find('.js--filter--container')
+        @usersContainer = @container.find('.js--users--container')
 
+        @autoSuggestion  = new AutoSuggestion(this, @filterContainer, @usersContainer, AutoSuggestion.BASE_FILTER)
+        @userASInput = @container.find('.js--filter--as')
+        @suggestionsContainer = @container.find('.js--filter--suggestions')
+        @userStatus = @container.find('.js--filter--status')        
+        @filterToggleButton = @container.find('.js--filters--content')
 
-        UserService.getUsers(null, this, @_getUsersSuccess, @_getUsersError)
 
         @createdNewUser = @_createdNewUser.bind(this)
         EventUtils.bindCreatedNewUser(@createdNewUser)
-
         @users = []
-    
-       
         @crateUserDialog = new CreateUserDialog()
-        @activityDialog = new ActivityDialog()
+
+    destroy: () ->
+        super()
+
+        @crateUserDialog.destroy()
+        @crateUserDialog = null
+
+        @autoSuggestion.destroy()
+        @autoSuggestion = null
+
+        @filterContainer      = null
+        @usersContainer       = null        
+        @userASInput          = null
+        @suggestionsContainer = null
+        @userStatus           = null
+        @filterToggleButton   = null
+        
+        EventUtils.unbindCreatedNewUser(@createdNewUser)
+        @createdNewUser = null
+        @users          = null
 
     getPageTitle: () ->
         return 'Korisnici'
 
     _getUsersSuccess: (response) ->
         @users = response.data
-        if @users is null or @users.length is 0
-            @_renderEmptyState()
-        else
-            @_renderUsers(@users)
+        @_renderUsersHTML(@users)
 
-    _getUsersError: (response) ->
-        console.log response.message
-
-    _renderUsers: (users) ->
-        adminOptionsHtml = ""
-        if window.loggedUserInfo.isAdmin
-            #@_renderSubmenuActions()
-            
-            adminOptionsHtml = "<nav class='nav justify-content-end pt-3'>
-                                    <span class='nav-link span-a js--create--user'>Dodaj korisnika</span>
-                                </nav>
-                    <th class='table-text w-10'>Profil</th>"
- 
+    _renderUsersHTML: (users) ->
+        if users is null or users.length is 0
+            @emptyState()
+            return
         tableHtml = "<div>
                         <table class='table mb-0'>
                             <tr>
-                                #{ adminOptionsHtml }
+                                <th class='table-text w-10'>Profil</th>
                                 <th class='table-text w-20'>Ime</th>
                                 <th class='table-text w-20'>Prezime</th>
                                 <th class='table-text w-20'>Telefon</th>
@@ -75,42 +85,26 @@ class @UserPage #extends @AbstractPage
             
             tableHtml += rowHtml
         tableHtml += "</table></div>"
+        @usersContainer.html(tableHtml)
 
-        @container.html(tableHtml)
+    _customHTML: () ->
+        return "<nav class='nav justify-content-end pt-3'>
+                    <span class='nav-link span-a js--create--user'>Dodaj korisnika</span>
+                </nav>
+                <div class='js--filter--container'></div>
+                <div class='js--users--container'>
+                    #{ComponentsUtils.loadingPage()}
+                </div>"
 
-
-    _renderEmptyState: () ->
-        html = "<div class='col-5 m-auto h-75 pt-5 text-center'>Nema registrovanih korisnika :(</div>
-        <div class='pt-3'><input type='button' class='btn btn-primary d-block js--create--user' value='Dodaj korisnika'/>
-		</div>"
-        @container.html(html)
+    emptyState: () ->
+        @usersContainer.html(@_emptyState())
+    
+    _emptyState: () ->
+        return "<div class='col-5 m-auto h-75 pt-5 text-center'>Nema registrovanih korisnika :(</div>"
 
     _showUserInfo: (id) ->
         user = @_getUserById(id)
-    show: () ->	
-
-    destroy: () ->
-        @container.off 'click', @clickEvent
-        @clickEvent = null
         
-        @crateUserDialog.destroy()
-        @crateUserDialog  = null
-        
-        EventUtils.unbindCreatedNewUser(@createdNewUser)
-        @createdNewUser = null
-
-        @container.html('')
-        @users = null
-
-
-    _renderSubmenuActions: () ->
-        if window.loggedUserInfo.isAdmin
-            html = "<nav class='nav justify-content-end pt-5 pb-3'>
-                        <a href='#create-user' class='nav-item nav-link active'>Dodaj korisnika</a>
-                    </nav>"
-            @container.append(html)
-
-
     _clickEventHandler: (e) ->
         targetElement = $(e.target)
 
@@ -122,8 +116,6 @@ class @UserPage #extends @AbstractPage
         element = targetElement.closest('.js--show--user')
         if element.length > 0 
             window.location.hash = "user/#{element.attr('data-user-id')}"
-            # user = @_getUserById(element.attr('data-user-id'))
-            # @userDetailsDialog.show(this, user)
             return
 
         element = targetElement.closest('.js--remove--user')
@@ -133,7 +125,7 @@ class @UserPage #extends @AbstractPage
     
     _removeUser: (element) ->
         userId = element.attr('data-user-id')
-        UserService.remove(userId, null, this, @_removeUserSuccess, @_removeUserError)
+        UserService.remove(userId, null, this, @_removeUserSuccess, ajaxCallbackPrintMessage)
 
 
     _removeUserSuccess: (response) ->
@@ -147,14 +139,11 @@ class @UserPage #extends @AbstractPage
         @users = users
 
         if @users.length == 0
-            @_renderEmptyState()
-
-    _removeUserError: (response) ->
-        console.error response
+            @emptyState()
 
     _createdNewUser: (event, user) ->
         @users.push(user)
-        @_renderUsers(@users)
+        @_renderUsersHTML(@users)
 
     _getUserById: (id) ->
         id = +id
@@ -164,4 +153,64 @@ class @UserPage #extends @AbstractPage
         return null
 
     userDialogClosed: () ->
-        @_renderUsers(@users)
+        @_renderUsersHTML(@users)
+
+
+
+    AutoSuggestionKeyUpEventHander: (event) ->
+        target = $(event.target)
+        if closest(target, '.js--filter--as')
+            ComponentsUtils.handleAutoSuggestion(@userASInput, 'data-user-id', @users, @suggestionsContainer, true, this, @_resetFilter)
+
+    AutoSuggestionChangeEventHander: (event) ->
+        @_applyFilter()                   
+
+    AutoSuggestionClickEventHander: (event) ->
+        target = $(event.target)
+
+        if closest(target, '.js--filter--suggestions')
+            ComponentsUtils.selectFromAutoSuggestion(target, @userASInput, 'data-user-id', @users, @suggestionsContainer)
+            @_applyFilter()
+            return
+
+        if closest(target, '.js--filter--reset')
+            @_resetFilter()
+            return
+
+        if closest(target, '.js--filters--button')
+            @filterToggleButton.toggleClass('show')
+            return
+
+    _applyFilter: () ->
+        status = @userStatus.val()
+        # @workerASInput.val('') 
+        users = []
+        if status == 'all'
+            users = @users
+        else if status == 'active'
+            for user in @users
+                if not user.deleted
+                    users.push(user)
+        else
+            for user in @users
+                if user.deleted
+                    users.push(user)
+
+        id = Number(@userASInput.attr('data-user-id'))
+        if (! isNaN(id)) 
+            filteredUsers = []
+            for user in users
+                if user.id == id 
+                    filteredUsers.push(user)
+            users = filteredUsers
+                 
+        if users.length is 0
+            @autoSuggestion.emptyState()
+        else
+            @_renderUsersHTML(users)
+
+    _resetFilter: () ->
+        @userASInput.val('')
+        @userASInput.removeAttr('data-user-id')
+        @userStatus.val(@userStatus[0].options[0].value)
+        @_renderUsersHTML(@users)

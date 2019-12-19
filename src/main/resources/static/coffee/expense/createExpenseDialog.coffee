@@ -77,21 +77,6 @@ class @CreateExpenseDialog extends AbstractDialog
 
         return valid
 
-    _validateInput: (input) ->
-        valid = true
-        if @_valueOf(input.val())
-            input.removeClass(ComponentsUtils.CSS_INVALID_INPUT)
-        else
-            valid = false
-            input.addClass(ComponentsUtils.CSS_INVALID_INPUT)
-        return valid
-    
-    _valueOf: (value) ->
-        value = value.trim()
-        if not value or value is '---'
-            return null
-        return value
-
     _customHTML: () ->
         return "<div class='col-7 m-auto p-5 flex'>
                     <div class='container container-padding w-50'>

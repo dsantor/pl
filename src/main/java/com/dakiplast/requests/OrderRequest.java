@@ -17,6 +17,7 @@ public class OrderRequest {
 	private Long buildDate;
 	private boolean oldClientIsChosen;
 	private OrderStatus orderStatus;
+	private Long downPlayment;
 	
 	public List<DoorRequest> getDoors() {
 		return doors;
@@ -83,5 +84,11 @@ public class OrderRequest {
 	}
 	public void setOrderStatus(OrderStatus orderStatus) {
 		this.orderStatus = orderStatus;
+	}
+	public Long getDownPlayment() {
+		return downPlayment;
+	}
+	public void setDownPlayment(Long downPlayment) {
+		this.downPlayment = downPlayment;
 	}
 }
