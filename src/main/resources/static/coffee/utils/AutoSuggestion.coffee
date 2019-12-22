@@ -84,8 +84,6 @@ class @AutoSuggestion
     triggerFilterStatus: (event) ->
     triggerFilterReset: (event) ->
 
-
-
     _getHTMLByFilterType: (filterType) ->
         switch filterType
             when AutoSuggestion.BASE_FILTER
