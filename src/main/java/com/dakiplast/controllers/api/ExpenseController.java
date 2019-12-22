@@ -58,10 +58,7 @@ public class ExpenseController {
 		}
 		
 		userActivityLogService.create(loggedUserId, null, null, moneyTook, UserActivityLogType.CREATED_EXPENSE);
-		IUser userWhoGaveMoney 	= userService.getById(moneyGivenBy);
-		IWorker workerMoneyTook = workerService.getById(moneyTook);
-
-		ExpenseDto expenseDto = ExpenseDto.ConvertToDto(expense, userWhoGaveMoney.getFullName(), workerMoneyTook.getFullName(), user.getFullName());
+		ExpenseDto expenseDto = expenseService.convertToDto(expense);
 				
 		return new BaseResponse(expenseDto, false, null);
 	}
@@ -69,10 +66,7 @@ public class ExpenseController {
 	@GetMapping("/get/{id}")
 	public BaseResponse get(@PathVariable ("id") Long id) {
 		IExpense expense = expenseService.get(id);
-		IUser userExpenseCreated = userService.getById(expense.getExpenseCreatedBy());
-		IUser userWhoGaveMoney 	 = userService.getById(expense.getMoneyGivenBy());
-		IWorker workerMoneyTook  = workerService.getById(expense.getMoneyTook());
-		ExpenseDto expenseDto = ExpenseDto.ConvertToDto(expense, userWhoGaveMoney.getFullName(), workerMoneyTook.getFullName(), userExpenseCreated.getFullName());
+		ExpenseDto expenseDto = expenseService.convertToDto(expense);
 		return new BaseResponse(expenseDto, false, null);
 	}
 	
@@ -82,18 +76,29 @@ public class ExpenseController {
 		List<ExpenseDto> result = new ArrayList<>(expenseList.size());
 		
 		ExpenseDto expenseDto;
-		IUser userExpenseCreated;
-		IUser userWhoGaveMoney;
-		IWorker workerMoneyTook;
 		for (IExpense expense: expenseList) {
-			userExpenseCreated = userService.getById(expense.getExpenseCreatedBy());
-			userWhoGaveMoney   = userService.getById(expense.getMoneyGivenBy());
-			workerMoneyTook    = workerService.getById(expense.getMoneyTook());
-			
-			expenseDto = ExpenseDto.ConvertToDto(expense, userWhoGaveMoney.getFullName(), workerMoneyTook.getFullName(), userExpenseCreated.getFullName());
+			expenseDto = expenseService.convertToDto(expense);
 			result.add(expenseDto);
 		}
 		
 		return new BaseResponse(result, false, null);
+	}
+	
+	@GetMapping("/getWorkerExpenses/{workerId}")
+	public BaseResponse getWorkerExpenses(@PathVariable ("workerId") Long workerId) {
+		
+		IWorker worker = workerService.getById(workerId);
+		
+		if (worker == null) {
+			return new BaseResponse(new ArrayList<>(), true, "Radnik ne postoji");
+		}
+		
+		List<IExpense> expenses = expenseService.getWorkerExpenses(workerId);
+		List<ExpenseDto> expensesDto = new ArrayList<>(expenses.size());
+		
+		for (IExpense expense: expenses) {
+			 expensesDto.add(expenseService.convertToDto(expense));
+		}
+		return new BaseResponse(expensesDto, false, null);
 	}
 }

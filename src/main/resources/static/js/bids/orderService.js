@@ -23,6 +23,12 @@
       return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
     };
 
+    OrderService.getAllClientOrders = function(clientId, onTheFlyData, callbackContext, callBackFunction, callbackError) {
+      var url;
+      url = this.apiUrl + '/getAll/' + clientId;
+      return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
+    };
+
     return OrderService;
 
   })();

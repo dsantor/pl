@@ -1,6 +1,5 @@
 package com.dakiplast.repositoryImpl;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -28,6 +27,7 @@ import com.dakiplast.repository.OrderRepository;
 
 @Repository
 @Transactional
+@SuppressWarnings("unchecked")
 public class OrderRepositoryImpl implements OrderRepository {
 
 	@Autowired
@@ -39,7 +39,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 	}
 
 	@Override
-	public IOrder create(Long createdBy, Calendar createdAt, Long clientId, String workerIdsJson, Long saldo, Long paid, OrderStatus status) {
+	public IOrder create(Long createdBy, Calendar createdAt, Calendar buildDate, Long clientId, String workerIdsJson, Long saldo, Long paid, OrderStatus status) {
 		Order entity = new Order();
 		entity.setCreatedBy(createdBy);
 		entity.setCreatedAt(createdAt);
@@ -48,6 +48,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 		entity.setSaldo(saldo);
 		entity.setPaid(paid);
 		entity.setStatus(status);
+		entity.setBuildDate(buildDate);
 		
 		entityManager.persist(entity);
 		return entity;
@@ -162,12 +163,9 @@ public class OrderRepositoryImpl implements OrderRepository {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<IOrder> getAll() {
 		Query query = entityManager.createNamedQuery("Order.findAll");
-		
-		List<IOrder> result = query.getResultList();
-		return result == null ? new ArrayList<>() : result;
+		return query.getResultList();
 	}
 
 	@Override
@@ -175,5 +173,11 @@ public class OrderRepositoryImpl implements OrderRepository {
 		Order entity = entityManager.find(Order.class, orderId);
 		entity.setSaldo(saldo);
 		entityManager.merge(entity);
+	}
+
+	@Override
+	public List<IOrder> getOrdersForClient(Long clientId) {
+		Query query = entityManager.createNamedQuery("Order.findOrdersByClientId").setParameter("clientId", clientId);
+		return query.getResultList();
 	}
 }

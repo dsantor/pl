@@ -2,6 +2,15 @@
 (function() {
   this.MainNavigation = (function() {
     function MainNavigation() {
+      this.pages = {
+        '#profile': 'profile',
+        '#user': 'users',
+        '#worker': 'workers',
+        '#client': 'clients',
+        '#order': 'orders',
+        '#bids': 'bids',
+        '#expens': 'expenses'
+      };
       this.pageAndHash = {
         '#profile': 'profile',
         '#users': 'users',
@@ -30,10 +39,18 @@
     }
 
     MainNavigation.prototype._handlePage = function() {
-      var hashValue, tab;
+      var hashValue, i, key, keys, len, tab;
       hashValue = this._extractHashValue();
       this._openPage(hashValue);
-      tab = this.pageAndHash[hashValue.page];
+      tab = '';
+      keys = Object.keys(this.pages);
+      for (i = 0, len = keys.length; i < len; i++) {
+        key = keys[i];
+        if (hashValue.page.startsWith(key)) {
+          tab = this.pages[key];
+          break;
+        }
+      }
       return this._handleNavigationButtons(tab);
     };
 
@@ -62,6 +79,9 @@
         case '#worker':
           this.currentPage = new WorkerPage(hash.value);
           break;
+        case "#client/" + hash.data:
+          this.currentPage = new OrdersPage(hash.value);
+          break;
         case '#clients':
           this.currentPage = new ClientsPage();
           break;
@@ -76,6 +96,9 @@
           break;
         case '#order':
           this.currentPage = new OrderPage(hash.value);
+          break;
+        case '#expenses':
+          this.currentPage = new ExpensesPage(hash.value);
           break;
         default:
           this._redirectToErrorPage();
@@ -109,9 +132,19 @@
     };
 
     MainNavigation.prototype._extractHashValue = function() {
-      var dash, hash, hashObject, page, value;
+      var dash, dashes, data, hash, hashObject, page, value;
       hashObject = {};
       hash = window.location.hash;
+      dashes = hash.split('/');
+      if (dashes.length > 2) {
+        data = hash.substring(hash.indexOf('/') + 1);
+        value = data.substring(0, data.indexOf('/'));
+        return {
+          page: hash,
+          data: data,
+          value: value
+        };
+      }
       dash = hash.indexOf('/');
       page = hash;
       value = null;
@@ -121,6 +154,7 @@
       }
       return {
         page: page,
+        data: '',
         value: value
       };
     };

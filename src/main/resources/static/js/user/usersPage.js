@@ -12,7 +12,7 @@
       UserService.getUsers(null, this, this._getUsersSuccess, ajaxCallbackPrintMessage);
       this.filterContainer = this.container.find('.js--filter--container');
       this.usersContainer = this.container.find('.js--users--container');
-      this.autoSuggestion = new AutoSuggestion(this, this.filterContainer, this.usersContainer, AutoSuggestion.BASE_FILTER);
+      this.autoSuggestion = new AutoSuggestion(this, this.filterContainer, AutoSuggestion.BASE_FILTER);
       this.userASInput = this.container.find('.js--filter--as');
       this.suggestionsContainer = this.container.find('.js--filter--suggestions');
       this.userStatus = this.container.find('.js--filter--status');
@@ -159,33 +159,23 @@
       return this._renderUsersHTML(this.users);
     };
 
-    UserPage.prototype.AutoSuggestionKeyUpEventHander = function(event) {
-      var target;
-      target = $(event.target);
-      if (closest(target, '.js--filter--as')) {
-        return ComponentsUtils.handleAutoSuggestion(this.userASInput, 'data-user-id', this.users, this.suggestionsContainer, true, this, this._resetFilter);
-      }
+    UserPage.prototype.triggerFilterAs = function(event) {
+      return ComponentsUtils.handleAutoSuggestion(this.userASInput, 'data-user-id', this.users, this.suggestionsContainer, true, this, this._resetFilter);
     };
 
-    UserPage.prototype.AutoSuggestionChangeEventHander = function(event) {
+    UserPage.prototype.triggerFilterStatus = function(event) {
       return this._applyFilter();
     };
 
-    UserPage.prototype.AutoSuggestionClickEventHander = function(event) {
+    UserPage.prototype.triggerFilterSuggestions = function(event) {
       var target;
       target = $(event.target);
-      if (closest(target, '.js--filter--suggestions')) {
-        ComponentsUtils.selectFromAutoSuggestion(target, this.userASInput, 'data-user-id', this.users, this.suggestionsContainer);
-        this._applyFilter();
-        return;
-      }
-      if (closest(target, '.js--filter--reset')) {
-        this._resetFilter();
-        return;
-      }
-      if (closest(target, '.js--filters--button')) {
-        this.filterToggleButton.toggleClass('show');
-      }
+      ComponentsUtils.selectFromAutoSuggestion(target, this.userASInput, 'data-user-id', this.users, this.suggestionsContainer);
+      this._applyFilter();
+    };
+
+    UserPage.prototype.triggerFilterReset = function(event) {
+      this._resetFilter();
     };
 
     UserPage.prototype._applyFilter = function() {
@@ -223,7 +213,7 @@
         users = filteredUsers;
       }
       if (users.length === 0) {
-        return this.autoSuggestion.emptyState();
+        return this.usersContainer.html(this.autoSuggestion.emptyState());
       } else {
         return this._renderUsersHTML(users);
       }

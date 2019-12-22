@@ -8,7 +8,7 @@ class @UserPage extends AbstractPage
         @filterContainer = @container.find('.js--filter--container')
         @usersContainer = @container.find('.js--users--container')
 
-        @autoSuggestion  = new AutoSuggestion(this, @filterContainer, @usersContainer, AutoSuggestion.BASE_FILTER)
+        @autoSuggestion  = new AutoSuggestion(this, @filterContainer, AutoSuggestion.BASE_FILTER)
         @userASInput = @container.find('.js--filter--as')
         @suggestionsContainer = @container.find('.js--filter--suggestions')
         @userStatus = @container.find('.js--filter--status')        
@@ -157,29 +157,21 @@ class @UserPage extends AbstractPage
 
 
 
-    AutoSuggestionKeyUpEventHander: (event) ->
-        target = $(event.target)
-        if closest(target, '.js--filter--as')
-            ComponentsUtils.handleAutoSuggestion(@userASInput, 'data-user-id', @users, @suggestionsContainer, true, this, @_resetFilter)
+    triggerFilterAs: (event) ->
+        ComponentsUtils.handleAutoSuggestion(@userASInput, 'data-user-id', @users, @suggestionsContainer, true, this, @_resetFilter)
 
-    AutoSuggestionChangeEventHander: (event) ->
+    triggerFilterStatus: (event) ->
         @_applyFilter()                   
 
-    AutoSuggestionClickEventHander: (event) ->
+    triggerFilterSuggestions: (event) ->
         target = $(event.target)
+        ComponentsUtils.selectFromAutoSuggestion(target, @userASInput, 'data-user-id', @users, @suggestionsContainer)
+        @_applyFilter()
+        return
 
-        if closest(target, '.js--filter--suggestions')
-            ComponentsUtils.selectFromAutoSuggestion(target, @userASInput, 'data-user-id', @users, @suggestionsContainer)
-            @_applyFilter()
-            return
-
-        if closest(target, '.js--filter--reset')
-            @_resetFilter()
-            return
-
-        if closest(target, '.js--filters--button')
-            @filterToggleButton.toggleClass('show')
-            return
+    triggerFilterReset: (event) ->
+        @_resetFilter()
+        return
 
     _applyFilter: () ->
         status = @userStatus.val()
@@ -205,7 +197,7 @@ class @UserPage extends AbstractPage
             users = filteredUsers
                  
         if users.length is 0
-            @autoSuggestion.emptyState()
+            @usersContainer.html(@autoSuggestion.emptyState())
         else
             @_renderUsersHTML(users)
 

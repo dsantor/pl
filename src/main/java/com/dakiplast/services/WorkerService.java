@@ -10,4 +10,5 @@ public interface WorkerService {
 	public IWorker create(WorkerRequest worker, String createdByFullName);
 	public IWorker getById(Long id);
 	public List<IWorker> getAll();
+	public boolean toggleBlockWorker(Long workerId);
 }

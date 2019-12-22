@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dakiplast.entities.interfaces.IUser;
 import com.dakiplast.entities.interfaces.IWorker;
+import com.dakiplast.enums.RolesEnum;
 import com.dakiplast.exceptions.ErrorsEnum;
 import com.dakiplast.requests.WorkerRequest;
 import com.dakiplast.responses.BaseResponse;
+import com.dakiplast.services.UserActivityLogService;
 import com.dakiplast.services.UserService;
 import com.dakiplast.services.WorkerService;
 import com.dakiplast.services.impl.SessionService;
@@ -30,6 +32,8 @@ public class WorkersController {
 	private UserService userService;
 	@Autowired
 	private WorkerService workerService;
+	@Autowired
+	private UserActivityLogService userActivityLogService;
 	
 	@PostMapping("/save")
 	public BaseResponse save(@RequestBody WorkerRequest worker, HttpServletRequest request) {
@@ -57,5 +61,31 @@ public class WorkersController {
 	public BaseResponse getAll() {
 		List<IWorker> workers = workerService.getAll();
 		return new BaseResponse(workers, false, null);
+	}
+	
+	@GetMapping("/toggleBlockUser/{workerId}")
+	public BaseResponse toggleBlockUser(@PathVariable ("workerId") Long workerId, HttpServletRequest request) {
+		Long loggedUserId = SessionService.getLoggedUserId(request);
+		IUser user = userService.getById(loggedUserId);
+		
+		boolean blocked = false;
+		if (RolesEnum.ROLE_ADMIN.equals(user.getRole())) {
+			blocked = workerService.toggleBlockWorker(workerId);			
+		} else {
+			return new BaseResponse(null, true, "Nemate privilegije za ovu akciju!");
+		}
+		
+		if (blocked) {
+			IWorker blockedUser = workerService.getById(workerId);
+			String blockText = blockedUser.isActive() ? "blokiran" : "odblokiran";
+			
+			if (blockedUser.isActive()) {
+				userActivityLogService.blockWorker(loggedUserId, workerId);
+			} else {
+				userActivityLogService.blockWorker(loggedUserId, workerId);
+			}
+			return new BaseResponse(null, false, "Uspešno " + blockText + " radnik");
+		}
+		return new BaseResponse(null, true, "Akcija nije uspešno izvršena");
 	}
 }

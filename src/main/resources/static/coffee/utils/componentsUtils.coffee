@@ -9,6 +9,12 @@ class @ComponentsUtils
     window.ajaxCallbackPrintMessage = (response) ->
         console.log response.message
         
+    window.globalSuccessMessage = (response) ->
+        FloatingMessage.success(response.message)
+
+    window.globalErrorMessage =  (response) ->
+        FloatingMessage.error(response.message)
+
     @userDetailsHTML: () ->
         return "<div class='col-7 h-75 pt-5 flex'>
                     <div class='container w-50'>
@@ -104,7 +110,7 @@ class @ComponentsUtils
                 <div class='pt-3'>#{innerHtml}</div>"
 
     @loadingPage: () ->
-        return "<div class='js--loading--page'><span class='loader-icon'></span></div>"
+        return ""
 
     @getTimeFromMillis: (millis) ->
         date = new Date(millis)
@@ -138,12 +144,14 @@ class @ComponentsUtils
 
         phoneNumberArray = []
         helpArray = []
+
         for a in array
             inputValue = inputValue.toLowerCase()
             firstName = a.firstName.toLowerCase()
             lastName = a.lastName.toLowerCase()
-            if firstName.startsWith(inputValue) or lastName.startsWith(inputValue)
+            if firstName.toLowerCase().startsWith(inputValue) or lastName.toLowerCase().startsWith(inputValue)
                 helpArray.push(a)
+
             if includePhoneNumber and a.phoneNumber.startsWith(inputValue)
                 phoneNumberArray.push(a)
 

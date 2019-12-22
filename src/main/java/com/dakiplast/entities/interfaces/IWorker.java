@@ -12,5 +12,6 @@ public interface IWorker {
 	public String getCreatedBy();
 	public Long getCreatedAt();
 	public boolean isDeleted();
+	public boolean isActive();
 	public String getFullName();
 }

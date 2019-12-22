@@ -16,7 +16,8 @@ import com.dakiplast.entities.interfaces.IExpense;
 @Entity
 @Table(name = "expense")
 @NamedQueries({
-	@NamedQuery(name = "Expense.findAll", query = "SELECT e from Expense e")
+	@NamedQuery(name = "Expense.findAll", query = "SELECT e FROM Expense e"),
+	@NamedQuery(name = "Expense.getExpensesByWorkerId", query = "SELECT e FROM Expense e where e.moneyTook = :moneyTook")
 })
 public class Expense implements Serializable, IExpense {
 

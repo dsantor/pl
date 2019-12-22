@@ -105,7 +105,7 @@
 
     BidsPage.prototype._renderChoseBidHTML = function() {
       var bodyHTML;
-      bodyHTML = "<div class='container bids--container bids-container' data-page='bids'> <nav class='nav header justify-content-end pt-3'> <span class='nav-link span-a js--chose--bids nav--bids active'>Odaberi proizvod</span> <span class='nav-link span-a js--bids--overview nav--overview nav--empty'>Pregled porudzbine</span> <span class='nav-link span-a " + (this._createClientButtonClass()) + " js--chose--client nav--client'>Unesi klijenta</span> <span class='nav-link span-a js--bids--order nav--order'>Poruči</span> </nav> <div class='col-7 m-auto w-100 pt-3 flex flex-column bidsPage' data-page='bids'> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--door'> <img class='item-order pointer' draggable=false src='/images/door.png'> </div> <label>Vrata</label> </div> <div class='item-order text-center'> <div class='js--create--threshold'> <img class='item-order pointer' draggable=false src='/images/threshold.png'> </div> <label>Prag</label> </div> <div class='item-order text-center'> <div class='js--create--mosquito--repeller'> <img class='item-order pointer' draggable=false src='/images/mosquitoRepeller.png'> </div> <label>Komarnik</label> </div> </div> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--window'> <img class='item-order pointer' draggable=false src='/images/window.png'> </div> <label>Prozor</label> </div> <div class='item-order text-center'> <div class='js--create--shutter'> <img class='item-order pointer' draggable=false src='/images/shutter.png'> </div> <label>Roletne</label> </div> </div> </div> <div class='bidsClient' data-page='client'> <div class='col-7 m-auto h-75 pt-5 flex'> <div class='form-group w-50'> <div class='container'> <label class='js--radio--button--old--client switch-section active'>Postojeci klijent</label> <div class='js--radio--button--old--client--container'> <input type='text' class='form-control js--autosuggest--input js--client--input' placeholder='klijent'> <div class='suggestion-container js--client--suggestions hide'> </div> </div> </div> </div> </div> <div class='col-7 m-auto h-75 pt-5 flex'> <div class='container'> <label class='js--radio--button--new--client switch-section'>Kreiraj klijenta</label> </div> </div> <div class='col-7 m-auto h-75 flex js--radio--button--new--client--container disabled'> <div class='container w-50'> <div class='form-group'> <label>Email</label> <input type='email' class='form-control js--email' placeholder='email'/> </div> <div class='form-group'> <label>Ime*</label> <input type='text' class='form-control js--firstName' placeholder='ime'/> </div> <div class='form-group'> <label>Prezime*</label> <input type='text' class='form-control js--lastName' placeholder='prezime'/> </div> <div class='form-group'> <label>Ulica</label> <input type='text' class='form-control js--street' placeholder='ulica'/> </div> </div> <div class='container w-50'> <div class='form-group'> <label>Broj stana</label> <input type='text' class='form-control js--buildNumber' placeholder='broj kuce/stana'/> </div> <div class='form-group'> <label>Grad</label> <input type='text' class='form-control js--city' placeholder='grad'/> </div> <div class='form-group'> <label>Telefon*</label> <input type='tel' class='form-control js--phoneNumber' placeholder='telefon'/> </div> </div> </div> </div> <div class='pt-3 flex flex-column overview--container bidsOverview' data-page='overview'></div> <div class='pt-3 flex flex-column bidsEmptyState' data-page='empty'> " + (BidSectionsHTML.emptyState()) + " </div> <div class='col-7 m-auto p-5 flex bidsOrder' data-page='order'> <div class='container container-padding w-50'> <div class='form-group'> <label>Datum ugradnje</label> <input type='date' class='form-control js--build--date'> </div> <div class='form-group'> <label>Radnik</label> <input type='text' hidden='hidden'> <input type='text' class='form-control js--autosuggest--input js--worker--input' placeholder='radnik'> <div class='suggestion-container js--worker--suggestions hide'> </div> <div class='mt-3 js--workers--chosen'> </div> </div> <div class='form-group'> <label>Status porudzbine</label> <select class='js--order--status'> <option value='WAITING' selected>Na čekanju</option> <option value='ACCEPTED'>Prihvaćen</option> <option value='DECLINED'>Odbijen</option> </select> </div> <div class='form-group'> <label>Kapara</label> <input type='number' class='form-control js--down--payment' placeholder='din'/> </div> <div class='form-group'> <button class='btn btn-lg btn-primary btn-block js--save--order'>Poruči</button> <span class='text-danger js--order--error--message hide'> </span> </div> </div> </div> </div>";
+      bodyHTML = "<div class='container bids--container bids-container' data-page='bids'> <nav class='nav header justify-content-end pt-3'> <span class='nav-link span-a js--chose--bids nav--bids active'>Odaberi proizvod</span> <span class='nav-link span-a js--bids--overview nav--overview nav--empty'>Pregled porudzbine</span> <span class='nav-link span-a " + (this._createClientButtonClass()) + " js--chose--client nav--client'>Unesi klijenta</span> <span class='nav-link span-a js--bids--order nav--order'>Poruči</span> </nav> <div class='col-7 m-auto w-100 pt-3 flex flex-column bidsPage' data-page='bids'> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--door'> <img class='item-order pointer' draggable=false src='/images/door.png'> </div> <label>Vrata</label> </div> <div class='item-order text-center'> <div class='js--create--threshold'> <img class='item-order pointer' draggable=false src='/images/threshold.png'> </div> <label>Prag</label> </div> <div class='item-order text-center'> <div class='js--create--mosquito--repeller'> <img class='item-order pointer' draggable=false src='/images/mosquitoRepeller.png'> </div> <label>Komarnik</label> </div> </div> <div class='flex flex-row justify-content-center'> <div class='item-order text-center mb-5'> <div class='js--create--window'> <img class='item-order pointer' draggable=false src='/images/window.png'> </div> <label>Prozor</label> </div> <div class='item-order text-center'> <div class='js--create--shutter'> <img class='item-order pointer' draggable=false src='/images/shutter.png'> </div> <label>Roletne</label> </div> </div> </div> <div class='bidsClient' data-page='client'> <div class='col-7 m-auto h-75 pt-5 flex'> <div class='form-group w-50'> <div class='container'> <label class='js--radio--button--old--client switch-section active'>Postojeci klijent</label> <div class='js--radio--button--old--client--container'> <input type='text' class='form-control js--autosuggest--input js--client--input' placeholder='klijent'> <div class='suggestion-container js--client--suggestions hide'> </div> </div> </div> </div> </div> <div class='col-7 m-auto h-75 pt-5 flex'> <div class='container'> <label class='js--radio--button--new--client switch-section'>Kreiraj klijenta</label> </div> </div> <div class='col-7 m-auto h-75 flex js--radio--button--new--client--container disabled'> <div class='container w-50'> <div class='form-group'> <label>Email</label> <input type='email' class='form-control js--email' placeholder='email'/> </div> <div class='form-group'> <label>Ime*</label> <input type='text' class='form-control js--firstName' placeholder='ime'/> </div> <div class='form-group'> <label>Prezime*</label> <input type='text' class='form-control js--lastName' placeholder='prezime'/> </div> <div class='form-group'> <label>Ulica</label> <input type='text' class='form-control js--street' placeholder='ulica'/> </div> </div> <div class='container w-50'> <div class='form-group'> <label>Broj stana</label> <input type='text' class='form-control js--buildNumber' placeholder='broj kuce/stana'/> </div> <div class='form-group'> <label>Grad</label> <input type='text' class='form-control js--city' placeholder='grad'/> </div> <div class='form-group'> <label>Telefon*</label> <input type='tel' class='form-control js--phoneNumber' placeholder='telefon'/> </div> </div> </div> </div> <div class='pt-3 flex flex-column overview--container bidsOverview' data-page='overview'></div> <div class='pt-3 flex flex-column bidsEmptyState' data-page='empty'> " + (BidSectionsHTML.emptyState()) + " </div> <div class='col-7 m-auto p-5 flex bidsOrder' data-page='order'> <div class='container container-padding w-50'> <div class='form-group'> <label>Datum ugradnje</label> <input type='date' class='form-control js--build--date'> </div> <div class='form-group'> <label>Radnik</label> <input type='text' hidden='hidden'> <input type='text' class='form-control js--autosuggest--input js--worker--input' placeholder='radnik'> <div class='suggestion-container js--worker--suggestions hide'> </div> <div class='mt-3 js--workers--chosen'> </div> </div> <div class='form-group'> <label>Status porudzbine</label> <select class='js--order--status'> <option value='WAITING' selected>Na čekanju</option> <option value='ACCEPTED'>Prihvaćen</option> <option value='DECLINED'>Odbijen</option> </select> </div> <div class='form-group'> <label>Kapara</label> <input type='number' class='form-control js--down--payment' value='0' placeholder='din'/> </div> <div class='form-group'> <button class='btn btn-lg btn-primary btn-block js--save--order'>Poruči</button> <span class='text-danger js--order--error--message hide'> </span> </div> </div> </div> </div>";
       return this.container.html(bodyHTML);
     };
 
@@ -454,17 +454,23 @@
     };
 
     BidsPage.prototype._selectWorkerFromAutoSuggestion = function(target) {
-      var addHtml, i, id, len, ref, worker, workerHTML;
+      var addHtml, exists, i, id, len, ref, worker, workerHTML;
       id = Number(target.attr('data-worker-id'));
       addHtml = false;
+      exists = this.workerIds.find(function(workerId) {
+        return workerId === id;
+      });
+      if (exists) {
+        this.workerInput.val('');
+        this.workerSuggestionsContainer.addClass('hide');
+        return;
+      }
       ref = this.allWorkers;
       for (i = 0, len = ref.length; i < len; i++) {
         worker = ref[i];
         if (worker.id === id) {
-          if (!this.workerIds.includes(id)) {
-            this.workerIds.push(worker.id);
-            addHtml = true;
-          }
+          this.workerIds.push(worker.id);
+          addHtml = true;
           break;
         }
       }
@@ -477,21 +483,19 @@
     };
 
     BidsPage.prototype._removeWorkerFromSelectedList = function(target) {
-      var i, id, len, ref, results, worker;
+      var i, id, len, ref, workerId, workerIds;
       id = Number(target.closest('.remove--worker--container').attr('data-worker-id'));
-      ref = this.allWorkers;
-      results = [];
+      workerIds = [];
+      ref = this.workerIds;
       for (i = 0, len = ref.length; i < len; i++) {
-        worker = ref[i];
-        if (worker.id === id) {
-          this.allWorkers.splice(worker, 1);
+        workerId = ref[i];
+        if (workerId === id) {
           $(".remove--worker--container[data-worker-id='" + id + "']").remove();
-          break;
         } else {
-          results.push(void 0);
+          workerIds.push(workerId);
         }
       }
-      return results;
+      return this.workerIds = workerIds;
     };
 
     BidsPage.prototype._selectClientFromAutoSuggestion = function(target) {

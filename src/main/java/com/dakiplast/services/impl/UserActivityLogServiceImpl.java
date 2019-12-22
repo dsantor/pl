@@ -113,6 +113,13 @@ public class UserActivityLogServiceImpl implements UserActivityLogService {
 		userActivityLogRepository.createUserActivityLog(loggedUserId, userId, null, null, UserActivityLogType.BLOCK_USER);
 	}
 	
-	
+	@Override
+	public void unblockWorker(Long loggedUserId, Long workerId) {
+		userActivityLogRepository.createUserActivityLog(loggedUserId, null, null, workerId, UserActivityLogType.UNBLOCK_WORKER);
+	}
+	@Override
+	public void blockWorker(Long loggedUserId, Long workerId) {
+		userActivityLogRepository.createUserActivityLog(loggedUserId, null, null, workerId, UserActivityLogType.BLOCK_WORKER);
+	}
 	
 }

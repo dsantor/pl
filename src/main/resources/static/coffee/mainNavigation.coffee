@@ -1,6 +1,8 @@
 class @MainNavigation
     constructor: () ->
-
+        @pages = {
+            '#profile': 'profile', '#user': 'users', '#worker': 'workers',
+            '#client': 'clients', '#order': 'orders', '#bids': 'bids', '#expens': 'expenses'}
         @pageAndHash = {
             '#profile': 'profile', '#users': 'users', '#user': 'users', 
             '#workers': 'workers', '#worker': 'workers', 
@@ -30,7 +32,12 @@ class @MainNavigation
     _handlePage: () ->
         hashValue = @_extractHashValue()
         @_openPage(hashValue)
-        tab = @pageAndHash[hashValue.page]
+        tab = ''
+        keys = Object.keys(@pages)
+        for key in keys
+            if hashValue.page.startsWith(key)
+                tab = @pages[key]
+                break
         @_handleNavigationButtons(tab)
 
     _hashChangedHandler: (event) ->
@@ -59,6 +66,9 @@ class @MainNavigation
             when '#worker'
                 @currentPage = new WorkerPage(hash.value)
                 return
+            when "#client/#{hash.data}"
+                @currentPage = new OrdersPage(hash.value)
+                return
             when '#clients'
                 @currentPage = new ClientsPage()
                 return
@@ -73,6 +83,9 @@ class @MainNavigation
                 return
             when '#order'
                 @currentPage = new OrderPage(hash.value)
+                return
+            when '#expenses'
+                @currentPage = new ExpensesPage(hash.value)
                 return
             else
                 @_redirectToErrorPage()
@@ -101,6 +114,12 @@ class @MainNavigation
     _extractHashValue: () ->
         hashObject = {}
         hash = window.location.hash
+        dashes = hash.split('/') 
+        if dashes.length > 2
+            data = hash.substring(hash.indexOf('/')+1)
+            value = data.substring(0, data.indexOf('/'))
+            return {page: hash, data: data, value: value}
+            
         dash = hash.indexOf('/')
         page = hash
         value = null
@@ -108,6 +127,6 @@ class @MainNavigation
             page = hash.substring(0, dash)
             value = hash.substring(dash + 1) 
         
-        return {page: page, value: value}
+        return {page: page, data: '', value: value}
 $(document).ready ->
     new MainNavigation()

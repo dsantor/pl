@@ -13,7 +13,8 @@ public class WorkerDto {
 	private  String phoneNumber;	
 	private  String createdBy;
 	private  Long createdAt;
-	private  boolean isDeleted;
+	private  boolean deleted;
+	private  boolean active;
 	private  String fullName;
 	
 	private WorkerDto() {}
@@ -78,17 +79,25 @@ public class WorkerDto {
 	public void setCreatedAt(Long createdAt) {
 		this.createdAt = createdAt;
 	}
-	public boolean isDeleted() {
-		return isDeleted;
-	}
-	public void setDeleted(boolean isDeleted) {
-		this.isDeleted = isDeleted;
-	}
+
 	public String getFullName() {
 		return fullName;
 	}
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+	public boolean isActive() {
+		return active;
+	}
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 	
 	public static WorkerDto convertToDto(IWorker worker) {
@@ -105,6 +114,7 @@ public class WorkerDto {
 		workerDto.setLastName(worker.getLastName());
 		workerDto.setPhoneNumber(worker.getPhoneNumber());
 		workerDto.setStreet(worker.getStreet());
+		workerDto.setActive(worker.isActive());
 		return workerDto;
 	}
 }

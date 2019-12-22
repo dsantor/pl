@@ -1,13 +1,19 @@
 package com.dakiplast.services.impl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dakiplast.entities.dto.OrderDto;
 import com.dakiplast.entities.interfaces.IClient;
 import com.dakiplast.entities.interfaces.IOrder;
+import com.dakiplast.entities.interfaces.IUser;
+import com.dakiplast.entities.interfaces.IWorker;
 import com.dakiplast.enums.OrderStatus;
 import com.dakiplast.repository.OrderRepository;
 import com.dakiplast.requests.ClientRequest;
@@ -19,6 +25,7 @@ import com.dakiplast.requests.ThresholdRequest;
 import com.dakiplast.requests.WindowRequest;
 import com.dakiplast.services.ClientService;
 import com.dakiplast.services.OrderService;
+import com.dakiplast.services.UserService;
 import com.dakiplast.services.WorkerService;
 import com.google.gson.Gson;
 
@@ -31,6 +38,8 @@ public class OrderServiceImpl implements OrderService {
 		private ClientService clientService;
 		@Autowired
 		private WorkerService workerService;
+		@Autowired
+		private UserService userService;
 		
 		@Override
 		public IOrder create(OrderRequest orderRequest, Long createdBy) {
@@ -89,7 +98,10 @@ public class OrderServiceImpl implements OrderService {
 			}
 			Gson gson = new Gson();
 			String workerIdsJson = gson.toJson(workerIds);
-			IOrder order = orderRepository.create(createdBy, Calendar.getInstance(), clientId, workerIdsJson, 0L, downPlayment, status);
+			Calendar buildDate = Calendar.getInstance();
+			buildDate.setTimeInMillis(buildDateMillis);
+			
+			IOrder order = orderRepository.create(createdBy, Calendar.getInstance(), buildDate, clientId, workerIdsJson, 0L, downPlayment, status);
 			Long saldo = 0L;
 			// TODO: order id
 			Long orderId = order.getId();
@@ -248,6 +260,52 @@ public class OrderServiceImpl implements OrderService {
 		public List<IOrder> getAll() {
 			return orderRepository.getAll();
 		}
-		
+
+		@Override
+		public List<IOrder> getOrdersForClient(Long clientId) {
+			return orderRepository.getOrdersForClient(clientId);
+		}
+
+		@Override
+		public OrderDto convertToOrderDto(IOrder order) {
+			IWorker worker;
+			IClient client;
+			String clientFullName;
+			String clientFirstName;
+			String clientLastName;
+			List<String> workerNames = new ArrayList<>();
+			Map<Long, String> workersMap = new HashMap<>();
+			
+			for(Long workerId: order.getWorkerIds()) {
+				worker = workerService.getById(workerId);
+				workersMap.put(workerId, worker.getFirstName() + " " + worker.getLastName());
+				workerNames.add(worker.getFirstName() + " " + worker.getLastName());
+			}
+			
+			IUser user = userService.getById(order.getCreatedBy());
+			client = clientService.getClientById(order.getClientId());
+			clientFullName = client.getFirstName() + " " + client.getLastName();
+			clientFirstName = client.getFirstName();
+			clientLastName = client.getLastName();
+			
+			
+			OrderDto orderDto = new OrderDto();
+			orderDto.setId(order.getId());
+			orderDto.setCreatedById(order.getCreatedBy());
+			orderDto.setCreatedByName(user.getFullName());
+			orderDto.setCreatedAtMillis(order.getCreatedAt().getTimeInMillis());
+			orderDto.setClientId(order.getClientId());
+			orderDto.setClientFullName(clientFullName);
+			orderDto.setClientFirstName(clientFirstName);
+			orderDto.setClientLastName(clientLastName);
+			orderDto.setWorkerIds(order.getWorkerIds());
+			orderDto.setWorkerNames(workerNames);
+			orderDto.setSaldo(order.getSaldo());
+			orderDto.setPaid(order.getPaid());
+			orderDto.setBuildDateMillis(order.getBuildDate().getTimeInMillis());
+			orderDto.setStatus(order.getStatus().getValue());
+			orderDto.setWorkersMap(workersMap);
+			return orderDto;
+		}		
 	
 }

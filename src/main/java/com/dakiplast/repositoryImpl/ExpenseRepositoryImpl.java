@@ -46,4 +46,10 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 		Query query = entityManager.createNamedQuery("Expense.findAll");
 		return query.getResultList();
 	}
+
+	@Override
+	public List<IExpense> getWorkerExpenses(Long workerId) {
+		Query query = entityManager.createNamedQuery("Expense.getExpensesByWorkerId").setParameter("moneyTook", workerId);
+		return query.getResultList();
+	}
 }

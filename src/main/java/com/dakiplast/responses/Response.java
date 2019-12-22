@@ -1,27 +1,25 @@
 package com.dakiplast.responses;
 
-public class BaseResponse extends Response {
+public class Response {
 
-	private Object data;
 	private boolean error;
 	private String message;
 	
-	public BaseResponse(Object data, boolean error, String message) {
-		super(error, message);
-		this.data = data;
+	public Response(boolean error, String message) {
 		this.error = error;
 		this.message = message;
 	}
-	
-	public Object getData() {
-		return data;
-	}
-
 	public boolean isError() {
 		return error;
 	}
-
+	public void setError(boolean error) {
+		this.error = error;
+	}
 	public String getMessage() {
 		return message;
 	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
 }

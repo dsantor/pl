@@ -13,11 +13,10 @@
       this.createWorkerDialog = new CreateWorkerDialog();
       this.workersContainer = this.container.find('.js--container--workers');
       this.filterContainer = this.container.find('.js--filter--container');
-      this.autoSuggestion = new AutoSuggestion(this, this.filterContainer, this.workersContainer, AutoSuggestion.BASE_FILTER);
+      this.autoSuggestion = new AutoSuggestion(this, this.filterContainer, AutoSuggestion.BASE_FILTER);
       this.workerASInput = this.container.find('.js--filter--as');
       this.suggestionsContainer = this.container.find('.js--filter--suggestions');
       this.workerStatus = this.container.find('.js--filter--status');
-      this.filterToggleButton = this.container.find('.js--filters--content');
       this.createdNewWorkerEvent = this._createdNewWorkerEventHandler.bind(this);
       EventUtils.bindCreatedNewWorker(this.createdNewWorkerEvent);
     }
@@ -33,7 +32,6 @@
       this.workerASInput = null;
       this.suggestionsContainer = null;
       this.workerStatus = null;
-      this.filterToggleButton = null;
       EventUtils.unbindCreatedNewWorker(this.createdNewWorkerEvent);
       return this.createdNewWorkerEvent = null;
     };
@@ -76,7 +74,7 @@
       rowHtml = "";
       for (i = 0, len = workers.length; i < len; i++) {
         w = workers[i];
-        if (w.deleted) {
+        if (!w.active) {
           userIcon = 'blocked-user-icon';
         } else {
           userIcon = 'user-icon';
@@ -98,33 +96,23 @@
       return ComponentsUtils.baseFilter();
     };
 
-    WorkersPage.prototype.AutoSuggestionKeyUpEventHander = function(event) {
-      var target;
-      target = $(event.target);
-      if (closest(target, '.js--filter--as')) {
-        return ComponentsUtils.handleAutoSuggestion(this.workerASInput, 'data-worker-id', this.workers, this.suggestionsContainer, true, this, this._resetFilter);
-      }
+    WorkersPage.prototype.triggerFilterAs = function(event) {
+      return ComponentsUtils.handleAutoSuggestion(this.workerASInput, 'data-worker-id', this.workers, this.suggestionsContainer, true, this, this._resetFilter);
     };
 
-    WorkersPage.prototype.AutoSuggestionChangeEventHander = function(event) {
+    WorkersPage.prototype.triggerFilterStatus = function(event) {
       return this._applyFilter();
     };
 
-    WorkersPage.prototype.AutoSuggestionClickEventHander = function(event) {
+    WorkersPage.prototype.triggerFilterSuggestions = function(event) {
       var target;
       target = $(event.target);
-      if (closest(target, '.js--filter--suggestions')) {
-        ComponentsUtils.selectFromAutoSuggestion(target, this.workerASInput, 'data-worker-id', this.workers, this.suggestionsContainer);
-        this._applyFilter();
-        return;
-      }
-      if (closest(target, '.js--filter--reset')) {
-        this._resetFilter();
-        return;
-      }
-      if (closest(target, '.js--filters--button')) {
-        this.filterToggleButton.toggleClass('show');
-      }
+      ComponentsUtils.selectFromAutoSuggestion(target, this.workerASInput, 'data-worker-id', this.workers, this.suggestionsContainer);
+      this._applyFilter();
+    };
+
+    WorkersPage.prototype.triggerFilterReset = function(event) {
+      this._resetFilter();
     };
 
     WorkersPage.prototype._applyFilter = function() {
@@ -137,7 +125,7 @@
         ref = this.workers;
         for (i = 0, len = ref.length; i < len; i++) {
           worker = ref[i];
-          if (!worker.deleted) {
+          if (worker.active) {
             workers.push(worker);
           }
         }
@@ -145,7 +133,7 @@
         ref1 = this.workers;
         for (j = 0, len1 = ref1.length; j < len1; j++) {
           worker = ref1[j];
-          if (worker.deleted) {
+          if (!worker.active) {
             workers.push(worker);
           }
         }
@@ -162,7 +150,7 @@
         workers = filteredWorkers;
       }
       if (workers.length === 0) {
-        return this.autoSuggestion.emptyState();
+        return this.workersContainer.html(this.autoSuggestion.emptyState());
       } else {
         return this._renderWorkersHTML(workers);
       }

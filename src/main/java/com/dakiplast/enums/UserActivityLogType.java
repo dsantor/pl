@@ -7,7 +7,9 @@ public enum UserActivityLogType {
 	CREATED_ORDER("Kreirana porudžbina"), 
 	BLOCK_USER("Blokiran korisnik"), 
 	UNBLOCK_USER("Odblokiran korisnik"),
-	CREATED_EXPENSE("Kreirana dažbina");
+	CREATED_EXPENSE("Kreirana dažbina"),
+	BLOCK_WORKER("Blokiran radnik"),
+	UNBLOCK_WORKER("Odblokiran korisnik");
 	
 	private String value;
 	private UserActivityLogType(String value) {

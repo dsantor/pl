@@ -23,12 +23,16 @@
         window.history.back();
         return;
       }
-      if (closest(target, '.js--block--user')) {
+      if (closest(target, '.js--block--worker')) {
         this._toggleBlockUser();
         return;
       }
       if (closest(target, '.js--create--expense')) {
         this.createExpenseDialog.show(this);
+        return;
+      }
+      if (closest(target, '.js--worker--expenses')) {
+
       }
     };
 
@@ -39,9 +43,9 @@
 
     WorkerPage.prototype._toggleBlockUserText = function() {
       var text;
-      text = 'Deaktiviraj';
-      if (this.worker.deleted) {
-        text = 'Aktiviraj';
+      text = 'Aktiviraj';
+      if (this.worker.active) {
+        text = 'Deaktiviraj';
       }
       return text;
     };
@@ -50,7 +54,7 @@
       var html, innerHTML;
       if (this.worker) {
         innerHTML = this._toggleBlockUserText();
-        html = "<nav class='nav justify-content-end header pt-3'> <span class='nav-link span-a back-button js--back--button'>Nazad</span> <span class='nav-link span-a js--block--user'>" + innerHTML + "</span> <span class='nav-link span-a js--user--activity'>Aktivnosti</span> <span class='nav-link span-a js--create--expense'>Kreiraj rashod</span> </nav>";
+        html = "<nav class='nav justify-content-end header pt-3'> <span class='nav-link span-a back-button js--back--button'>Nazad</span> <span class='nav-link span-a js--block--worker'>" + innerHTML + "</span> <span class='nav-link span-a js--worker--expenses'>Rashodi</span> <span class='nav-link span-a js--create--expense'>Kreiraj rashod</span> </nav>";
         html += ComponentsUtils.userDetailsFilledHTML(this.worker);
         return html;
       } else {
@@ -58,7 +62,11 @@
       }
     };
 
-    WorkerPage.prototype._toggleBlockUser = function() {};
+    WorkerPage.prototype._toggleBlockUser = function() {
+      this.worker.active = !this.worker.active;
+      $(".js--block--worker").html(this._toggleBlockUserText());
+      return WorkerService.toggleBlockWorker(this.worker.id, null, this, globalSuccessMessage, globalErrorMessage);
+    };
 
     return WorkerPage;
 

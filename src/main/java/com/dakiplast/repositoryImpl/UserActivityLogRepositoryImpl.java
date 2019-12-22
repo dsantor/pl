@@ -1,6 +1,5 @@
 package com.dakiplast.repositoryImpl;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -45,9 +44,7 @@ public class UserActivityLogRepositoryImpl implements UserActivityLogRepository 
 		Query query = entityManager.createNamedQuery("UserActivityLog.getAllActivitiesForUser");
 		query.setParameter("actionUserId", actionUserId);
 		
-		List<IUserActivityLog> result = query.getResultList();
-		
-		return result == null ? new ArrayList<>() : result;
+		return query.getResultList();
 	}
 
 	@Override
@@ -55,9 +52,7 @@ public class UserActivityLogRepositoryImpl implements UserActivityLogRepository 
 		Query query = entityManager.createNamedQuery("UserActivityLog.getAllActivitiesExcludingUser");
 		query.setParameter("actionUserId", actionUserId);
 		
-		List<IUserActivityLog> result = query.getResultList();
-		
-		return result == null ? new ArrayList<>() : result;
+		return query.getResultList();
 	}
 
 }

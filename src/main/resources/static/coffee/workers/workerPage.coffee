@@ -14,12 +14,15 @@ class @WorkerPage extends AbstractPage
             window.history.back()
             return
 
-        if closest(target, '.js--block--user')
+        if closest(target, '.js--block--worker')
             @_toggleBlockUser()
             return
         
         if closest(target, '.js--create--expense')
             @createExpenseDialog.show(this)
+            return
+
+        if closest( target, '.js--worker--expenses')
             return
         # treba drugacija klasa koja ce prikazati
         # sta je sve radnik do sada uradio
@@ -32,9 +35,9 @@ class @WorkerPage extends AbstractPage
         @pageHTML()
 
     _toggleBlockUserText: () ->
-        text = 'Deaktiviraj'
-        if @worker.deleted
-            text = 'Aktiviraj'
+        text = 'Aktiviraj'
+        if @worker.active
+            text = 'Deaktiviraj'
         return text
 
     _customHTML: () ->
@@ -42,8 +45,8 @@ class @WorkerPage extends AbstractPage
             innerHTML = @_toggleBlockUserText()
             html = "<nav class='nav justify-content-end header pt-3'>
                         <span class='nav-link span-a back-button js--back--button'>Nazad</span>
-                        <span class='nav-link span-a js--block--user'>#{innerHTML}</span>
-                        <span class='nav-link span-a js--user--activity'>Aktivnosti</span>
+                        <span class='nav-link span-a js--block--worker'>#{innerHTML}</span>
+                        <span class='nav-link span-a js--worker--expenses'>Rashodi</span>
                         <span class='nav-link span-a js--create--expense'>Kreiraj rashod</span>
                     </nav>"
             html += ComponentsUtils.userDetailsFilledHTML(@worker)
@@ -54,7 +57,6 @@ class @WorkerPage extends AbstractPage
 
 
     _toggleBlockUser: () ->
-        # @user.active = !@user.active
-        # @updatedUser = true
-        # $(".js--block--user").html(@_toggleBlockUserText())
-        # UserService.toggleBlockUser(@user.id, null, this, @_globalSuccessMessage, @_globalErrorMessage)
+        @worker.active = !@worker.active
+        $(".js--block--worker").html(@_toggleBlockUserText())
+        WorkerService.toggleBlockWorker(@worker.id, null, this, globalSuccessMessage, globalErrorMessage)

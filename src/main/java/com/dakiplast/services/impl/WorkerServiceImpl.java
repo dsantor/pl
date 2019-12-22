@@ -48,4 +48,9 @@ public class WorkerServiceImpl implements WorkerService {
 		return workerRepository.getAll();
 	}
 
+	@Override
+	public boolean toggleBlockWorker(Long workerId) {
+		return workerRepository.toggleBlockWorker(workerId);
+	}
+
 }

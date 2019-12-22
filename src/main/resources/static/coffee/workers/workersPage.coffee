@@ -10,11 +10,10 @@ class @WorkersPage extends AbstractPage
         @filterContainer = @container.find('.js--filter--container')
 
         # Auto suggestion        
-        @autoSuggestion = new AutoSuggestion(this, @filterContainer, @workersContainer, AutoSuggestion.BASE_FILTER)
+        @autoSuggestion = new AutoSuggestion(this, @filterContainer, AutoSuggestion.BASE_FILTER)
         @workerASInput = @container.find('.js--filter--as')
         @suggestionsContainer = @container.find('.js--filter--suggestions')
         @workerStatus = @container.find('.js--filter--status')        
-        @filterToggleButton = @container.find('.js--filters--content')
 
         @createdNewWorkerEvent = @_createdNewWorkerEventHandler.bind(this)
         EventUtils.bindCreatedNewWorker(@createdNewWorkerEvent)
@@ -32,7 +31,6 @@ class @WorkersPage extends AbstractPage
         @workerASInput        = null
         @suggestionsContainer = null
         @workerStatus         = null
-        @filterToggleButton   = null
 
         EventUtils.unbindCreatedNewWorker(@createdNewWorkerEvent)
         @createdNewWorkerEvent = null
@@ -88,7 +86,7 @@ class @WorkersPage extends AbstractPage
             <table class='table table-striped'>"
         rowHtml = ""
         for w in workers
-            if w.deleted
+            if not w.active
                 userIcon = 'blocked-user-icon'
             else
                 userIcon = 'user-icon'
@@ -112,29 +110,21 @@ class @WorkersPage extends AbstractPage
     _getFiltersHTML: () ->
         return ComponentsUtils.baseFilter()
     
-    AutoSuggestionKeyUpEventHander: (event) ->
-        target = $(event.target)
-        if closest(target, '.js--filter--as')
-            ComponentsUtils.handleAutoSuggestion(@workerASInput, 'data-worker-id', @workers, @suggestionsContainer, true, this, @_resetFilter)
+    triggerFilterAs: (event) ->
+        ComponentsUtils.handleAutoSuggestion(@workerASInput, 'data-worker-id', @workers, @suggestionsContainer, true, this, @_resetFilter)
 
-    AutoSuggestionChangeEventHander: (event) ->
+    triggerFilterStatus: (event) ->
         @_applyFilter()                   
 
-    AutoSuggestionClickEventHander: (event) ->
+    triggerFilterSuggestions: (event) ->
         target = $(event.target)
+        ComponentsUtils.selectFromAutoSuggestion(target, @workerASInput, 'data-worker-id', @workers, @suggestionsContainer)
+        @_applyFilter()
+        return
 
-        if closest(target, '.js--filter--suggestions')
-            ComponentsUtils.selectFromAutoSuggestion(target, @workerASInput, 'data-worker-id', @workers, @suggestionsContainer)
-            @_applyFilter()
-            return
-
-        if closest(target, '.js--filter--reset')
-            @_resetFilter()
-            return
-
-        if closest(target, '.js--filters--button')
-            @filterToggleButton.toggleClass('show')
-            return
+    triggerFilterReset: (event) ->
+        @_resetFilter()
+        return
 
     _applyFilter: () ->
         status = @workerStatus.val()
@@ -144,11 +134,11 @@ class @WorkersPage extends AbstractPage
             workers = @workers
         else if status == 'active'
             for worker in @workers
-                if not worker.deleted
+                if worker.active
                     workers.push(worker)
         else
             for worker in @workers
-                if worker.deleted
+                if not worker.active
                     workers.push(worker)
 
         id = Number(@workerASInput.attr('data-worker-id'))
@@ -160,7 +150,7 @@ class @WorkersPage extends AbstractPage
             workers = filteredWorkers
 
         if workers.length is 0
-            @autoSuggestion.emptyState()
+            @workersContainer.html(@autoSuggestion.emptyState())
         else 
             @_renderWorkersHTML(workers)
 

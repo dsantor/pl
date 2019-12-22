@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dakiplast.entities.dto.ExpenseDto;
 import com.dakiplast.entities.interfaces.IExpense;
 import com.dakiplast.entities.interfaces.IUser;
 import com.dakiplast.entities.interfaces.IWorker;
@@ -53,4 +54,28 @@ public class ExpenseServiceImpl implements ExpenseService {
 		return expenseRepository.getAll();
 	}
 
+	@Override
+	public List<IExpense> getWorkerExpenses(Long workerId) {
+		return expenseRepository.getWorkerExpenses(workerId);
+	}
+
+	public ExpenseDto convertToDto(IExpense expense) {
+		IUser userWhoGaveMoney 	= userService.getById(expense.getMoneyGivenBy());
+		IWorker workerMoneyTook = workerService.getById(expense.getMoneyTook());
+		
+		ExpenseDto expenseDto = new ExpenseDto();
+		
+		expenseDto.setId(expense.getId());
+		expenseDto.setMoneyGivenBy(expense.getMoneyGivenBy());
+		expenseDto.setMoneyGivenByFullName(userWhoGaveMoney.getFullName());
+		expenseDto.setMoneyTook(expense.getMoneyTook());
+		expenseDto.setMoneyTookFullName(workerMoneyTook.getFullName());
+		expenseDto.setPurpose(expense.getPurpose());
+		expenseDto.setMoneyGivenAt(expense.getMoneyGivenAt());
+		expenseDto.setExpenseCreatedAt(expense.getExpenseCreatedAt());
+		expenseDto.setExpenseCreatedBy(expense.getExpenseCreatedBy());
+		expenseDto.setExpenseCreatedByFullName(workerMoneyTook.getFullName());
+		expenseDto.setSum(expense.getSum());
+		return expenseDto;
+	}
 }

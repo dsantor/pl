@@ -82,4 +82,14 @@ public class WorkerRepositoryImpl implements WorkerRepository {
 		return null;
 	}
 
+	@Override
+	public boolean toggleBlockWorker(Long workerId) {
+		Worker worker = entityManager.find(Worker.class, workerId);
+		if (worker != null) {
+			worker.setActive(!worker.isActive());
+			return true;
+		}
+		return false;
+	}
+
 }

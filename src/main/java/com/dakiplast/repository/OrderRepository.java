@@ -15,7 +15,7 @@ public interface OrderRepository {
 
 	IOrder getById(Long orderId);
 	List<IOrder> getAll();
-	IOrder create(Long createdBy, Calendar createdAt, Long clientId, String workerIdsJson, Long saldo, Long paid, OrderStatus status);
+	IOrder create(Long createdBy, Calendar createdAt, Calendar buildDate, Long clientId, String workerIdsJson, Long saldo, Long paid, OrderStatus status);
 	IOrder declinedOrder(Long orderId);
 	IOrder acceptedOrder(Long orderId);
 	IOrder finishedOrder(Long orderId);
@@ -27,4 +27,5 @@ public interface OrderRepository {
 	IOrderMosquitoRepeller createOrderMosquitoRepeller(String sort, String type, String openSide, Long width,
 			Long height, Long price, Long quantity, Long orderId);
 	void setSaldo(Long orderId, Long saldo);
+	List<IOrder> getOrdersForClient(Long clientId);
 }

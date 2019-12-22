@@ -6,9 +6,13 @@ class @ExpenseService
         AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError)
 
     @getAll: (onTheFlyData, callbackContext, callBackFunction, callbackError) ->
-        url = @apiUrl + '/getAll'
+        url = @apiUrl + '/all'
         AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)
     
-    @get: (orderId, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
-        url = @apiUrl + '/get/' + orderId
+    @get: (expenseId, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
+        url = @apiUrl + '/get/' + expenseId
+        AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)
+
+    @getWorkerExpenses: (workerId, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
+        url = @apiUrl + '/getWorkerExpenses/' + workerId
         AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)

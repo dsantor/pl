@@ -13,5 +13,6 @@ public interface IOrder {
 	public List<Long> getWorkerIds();
 	public Long getSaldo();
 	public Long getPaid();
+	public Calendar getBuildDate();
 	public OrderStatus getStatus();
 }

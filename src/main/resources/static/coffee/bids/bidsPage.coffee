@@ -252,7 +252,7 @@ class @BidsPage
                                 </div>
                                 <div class='form-group'>
                                     <label>Kapara</label>
-                                    <input type='number' class='form-control js--down--payment' placeholder='din'/>
+                                    <input type='number' class='form-control js--down--payment' value='0' placeholder='din'/>
                                 </div>
                                 <div class='form-group'>
                                     <button class='btn btn-lg btn-primary btn-block js--save--order'>Poruči</button>
@@ -558,11 +558,15 @@ class @BidsPage
     _selectWorkerFromAutoSuggestion: (target) ->
         id = Number(target.attr('data-worker-id'))
         addHtml = false
+        exists = @workerIds.find((workerId) -> workerId == id) 
+        if exists
+            @workerInput.val('')
+            @workerSuggestionsContainer.addClass('hide')
+            return
         for worker in @allWorkers
             if worker.id is id
-                if not @workerIds.includes(id)
-                    @workerIds.push(worker.id)
-                    addHtml = true
+                @workerIds.push(worker.id)
+                addHtml = true
                 break
         if addHtml
             workerHTML = "<div class='w-100 br-8 nav-link nav-tabs border remove--worker--container' data-worker-id='#{id}'>
@@ -576,11 +580,14 @@ class @BidsPage
 
     _removeWorkerFromSelectedList: (target) ->
         id = Number(target.closest('.remove--worker--container').attr('data-worker-id'))
-        for worker in @allWorkers
-            if worker.id is id
-                @allWorkers.splice(worker, 1)
+        workerIds = []
+        for workerId in @workerIds
+            if workerId is id
                 $(".remove--worker--container[data-worker-id='#{id}']").remove()
-                break
+            else
+                workerIds.push(workerId)
+        @workerIds = workerIds
+
     _selectClientFromAutoSuggestion: (target) ->
         id = Number(target.attr('data-client-id'))
         for client in @clients

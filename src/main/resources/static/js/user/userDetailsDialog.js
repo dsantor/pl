@@ -74,15 +74,7 @@
     };
 
     UserDetailsDialog.prototype._resetPassword = function() {
-      return UserService.defaultPassword(this.user.id, null, this, this._globalSuccessMessage, this._globalErrorMessage);
-    };
-
-    UserDetailsDialog.prototype._globalSuccessMessage = function(response) {
-      return FloatingMessage.success(response.message);
-    };
-
-    UserDetailsDialog.prototype._globalErrorMessage = function(response) {
-      return FloatingMessage.error(response.message);
+      return UserService.defaultPassword(this.user.id, null, this, globalSuccessMessage, globalErrorMessage);
     };
 
     UserDetailsDialog.prototype._toggleBlockUserText = function() {
@@ -98,7 +90,7 @@
       this.user.active = !this.user.active;
       this.updatedUser = true;
       $(".js--block--user").html(this._toggleBlockUserText());
-      return UserService.toggleBlockUser(this.user.id, null, this, this._globalSuccessMessage, this._globalErrorMessage);
+      return UserService.toggleBlockUser(this.user.id, null, this, globalSuccessMessage, globalErrorMessage);
     };
 
     return UserDetailsDialog;

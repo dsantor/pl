@@ -21,4 +21,8 @@ public interface UserActivityLogService {
 	public void unblockUser(Long loggedUserId, Long userId);
 
 	public void blockUser(Long loggedUserId, Long userId);
+	
+	public void unblockWorker(Long loggedUserId, Long workerId);
+
+	public void blockWorker(Long loggedUserId, Long workerId);
 }

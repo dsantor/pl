@@ -1,4 +1,4 @@
-package com.dakiplast.controllers;
+package com.dakiplast.controllers.api;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,13 +6,12 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.dakiplast.entities.User;
 import com.dakiplast.entities.dto.UserDto;
@@ -26,7 +25,7 @@ import com.dakiplast.services.UserService;
 import com.dakiplast.services.impl.SessionService;
 import com.dakiplast.utils.Validation;
 
-@Controller
+@RestController
 @RequestMapping("/api/user")
 public class UserController {
 	
@@ -36,7 +35,7 @@ public class UserController {
 	private UserActivityLogService userActivityLogService; 
 	
 	@GetMapping("/{id}")
-	public @ResponseBody BaseResponse getUser(@PathVariable ("id") Long id) {
+	public BaseResponse getUser(@PathVariable ("id") Long id) {
 		
 		IUser user = userService.getById(id);
 		if (user != null) {
@@ -51,7 +50,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/all")
-	public @ResponseBody BaseResponse getUsers(HttpServletRequest request) {
+	public BaseResponse getUsers(HttpServletRequest request) {
 		Long userId = SessionService.getLoggedUserId(request);
 		List<User> users = userService.getUsersExcludeUser(userId);
 		
@@ -67,7 +66,7 @@ public class UserController {
 	
 	
 	@PostMapping("/update")
-	public @ResponseBody BaseResponse update(@RequestBody UserRequest user, HttpServletRequest request) {
+	public BaseResponse update(@RequestBody UserRequest user, HttpServletRequest request) {
 		
 		Long userId = SessionService.getLoggedUserId(request);
 		
@@ -81,7 +80,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/save")
-	public @ResponseBody BaseResponse save(@RequestBody UserRequest user, HttpServletRequest request) {
+	public BaseResponse save(@RequestBody UserRequest user, HttpServletRequest request) {
 		
 		Long loggedUserId = SessionService.getLoggedUserId(request);
 		IUser loggedUser = userService.getById(loggedUserId);
@@ -120,7 +119,7 @@ public class UserController {
 	}
 
 	@GetMapping("/remove/{userId}")
-	public @ResponseBody BaseResponse remove(@PathVariable ("userId") Long userId, HttpServletRequest request) {
+	public BaseResponse remove(@PathVariable ("userId") Long userId, HttpServletRequest request) {
 		
 		Long loggedUserId = SessionService.getLoggedUserId(request);
 		IUser user = userService.getById(loggedUserId);
@@ -138,7 +137,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/defaultPassword/{userId}")
-	public @ResponseBody BaseResponse defaultPassword(@PathVariable ("userId") Long userId, HttpServletRequest request) {
+	public BaseResponse defaultPassword(@PathVariable ("userId") Long userId, HttpServletRequest request) {
 		Long loggedUserId = SessionService.getLoggedUserId(request);
 		IUser user = userService.getById(loggedUserId);
 		
@@ -157,7 +156,7 @@ public class UserController {
 	}
 
 	@GetMapping("/toggleBlockUser/{userId}")
-	public @ResponseBody BaseResponse toggleBlockUser(@PathVariable ("userId") Long userId, HttpServletRequest request) {
+	public BaseResponse toggleBlockUser(@PathVariable ("userId") Long userId, HttpServletRequest request) {
 		Long loggedUserId = SessionService.getLoggedUserId(request);
 		IUser user = userService.getById(loggedUserId);
 		

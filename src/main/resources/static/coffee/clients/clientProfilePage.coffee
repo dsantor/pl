@@ -1,24 +1,17 @@
-class @ClientProfilePage
+class @ClientProfilePage extends AbstractPage
 
     constructor: (clientId) ->
-        @container = $('.js--page--container')
-
+        super()
         # clientId = @_getClientIdFromURL()
         @clientId = Number(clientId)
         @client = null
         ClientService.get(clientId, null, this, @_loadedClient, @_loadedClientError)
 
-        @clickEvent = @_clickEventHandler.bind(this)
-        @container.on 'click', @clickEvent
-
     getPageTitle: () ->
         return 'Klijent profil'
         
     destroy: () ->
-        @container.html('')
-
-        @container.off 'click', @clickEvent
-        @clickEvent = null
+        super()
 
     _clickEventHandler: (event) ->
         target = $(event.target)
@@ -29,6 +22,10 @@ class @ClientProfilePage
         if closest(target, '.js--back--button')
             window.history.back()
             # window.location.hash = 'clients'
+            return
+        
+        if closest(target, '.js--show--orders')
+            window.location.hash = "client/#{@clientId}/orders"
             return
             
     _getClientIdFromURL: () ->
@@ -46,6 +43,7 @@ class @ClientProfilePage
                 <nav class='nav header justify-content-end pt-3'>
                     <span class='nav-link span-a back-button js--back--button'>Nazad</span>
                     <span class='nav-link span-a js--change--color'>Promeni oznaku</span>
+                    <span class='nav-link span-a js--show--orders'>Porudžbine</span>
                     <span class='nav-link span-a js--create--bids'>Kreiraj porudzbinu</span>
                 </nav>
                 <div class='col-7 h-75 pt-5 flex'>

@@ -3,16 +3,17 @@ package com.dakiplast.entities.dto;
 import java.util.List;
 import java.util.Map;
 
-import com.dakiplast.entities.interfaces.IOrder;
-
 public class OrderDto {
 
 	private Long id;
 	private Long createdById;
 	private String createdByName;
 	private Long createdAtMillis;
+	private Long buildDateMillis;
 	private Long clientId;
-	private String clientName;
+	private String clientFullName;
+	private String clientFirstName;
+	private String clientLastName;
 	private List<Long> workerIds;
 	private List<String> workerNames;
 	private Long saldo;
@@ -56,13 +57,6 @@ public class OrderDto {
 	public void setCreatedAtMillis(Long createdAtMillis) {
 		this.createdAtMillis = createdAtMillis;
 	}
-	
-	public String getClientName() {
-		return clientName;
-	}
-	public void setClientName(String clientName) {
-		this.clientName = clientName;
-	}
 	public List<Long> getWorkerIds() {
 		return workerIds;
 	}
@@ -93,20 +87,28 @@ public class OrderDto {
 	public void setCreatedByName(String createdByName) {
 		this.createdByName = createdByName;
 	}
-	public static OrderDto convertToDto(IOrder order, String createByName, String clientName, List<String> workerNames, Map<Long, String> workersMap) {
-		OrderDto orderDto = new OrderDto();
-		orderDto.setId(order.getId());
-		orderDto.setCreatedById(order.getCreatedBy());
-		orderDto.setCreatedByName(createByName);
-		orderDto.setCreatedAtMillis(order.getCreatedAt().getTimeInMillis());
-		orderDto.setClientId(order.getClientId());
-		orderDto.setClientName(clientName);
-		orderDto.setWorkerIds(order.getWorkerIds());
-		orderDto.setWorkerNames(workerNames);
-		orderDto.setSaldo(order.getSaldo());
-		orderDto.setPaid(order.getPaid());
-		orderDto.setStatus(order.getStatus().getValue());
-		orderDto.setWorkersMap(workersMap);
-		return orderDto;
+	public String getClientFullName() {
+		return clientFullName;
+	}
+	public void setClientFullName(String clientFullName) {
+		this.clientFullName = clientFullName;
+	}
+	public String getClientFirstName() {
+		return clientFirstName;
+	}
+	public void setClientFirstName(String clientFirstName) {
+		this.clientFirstName = clientFirstName;
+	}
+	public String getClientLastName() {
+		return clientLastName;
+	}
+	public void setClientLastName(String clientLastName) {
+		this.clientLastName = clientLastName;
+	}
+	public Long getBuildDateMillis() {
+		return buildDateMillis;
+	}
+	public void setBuildDateMillis(Long buildDateMillis) {
+		this.buildDateMillis = buildDateMillis;
 	}
 }

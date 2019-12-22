@@ -13,13 +13,19 @@
 
     ExpenseService.getAll = function(onTheFlyData, callbackContext, callBackFunction, callbackError) {
       var url;
-      url = this.apiUrl + '/getAll';
+      url = this.apiUrl + '/all';
       return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
     };
 
-    ExpenseService.get = function(orderId, onTheFlyData, callbackContext, callBackFunction, callbackError) {
+    ExpenseService.get = function(expenseId, onTheFlyData, callbackContext, callBackFunction, callbackError) {
       var url;
-      url = this.apiUrl + '/get/' + orderId;
+      url = this.apiUrl + '/get/' + expenseId;
+      return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
+    };
+
+    ExpenseService.getWorkerExpenses = function(workerId, onTheFlyData, callbackContext, callBackFunction, callbackError) {
+      var url;
+      url = this.apiUrl + '/getWorkerExpenses/' + workerId;
       return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
     };
 

@@ -1,8 +1,8 @@
 package com.dakiplast.entities.dto;
 
-import com.dakiplast.entities.interfaces.IExpense;
-
 public class ExpenseDto {
+	
+	private Long id;
 	private String moneyGivenByFullName;
 	private Long moneyGivenBy;
 	private String moneyTookFullName;
@@ -13,8 +13,6 @@ public class ExpenseDto {
 	private String expenseCreatedByFullName;
 	private Long expenseCreatedBy;
 	private Long sum;
-	
-	private ExpenseDto() {}
 
 	public Long getMoneyGivenBy() {
 		return moneyGivenBy;
@@ -95,19 +93,10 @@ public class ExpenseDto {
 	public void setExpenseCreatedByFullName(String expenseCreatedByFullName) {
 		this.expenseCreatedByFullName = expenseCreatedByFullName;
 	}
-
-	public static ExpenseDto ConvertToDto(IExpense expense, String moneyGivenByFullName, String moneyTookFullName, String expenseCreatedByFullName) {
-		ExpenseDto expenseDto = new ExpenseDto();
-		expenseDto.setMoneyGivenBy(expense.getMoneyGivenBy());
-		expenseDto.setMoneyGivenByFullName(moneyGivenByFullName);
-		expenseDto.setMoneyTook(expense.getMoneyTook());
-		expenseDto.setMoneyTookFullName(moneyTookFullName);
-		expenseDto.setPurpose(expense.getPurpose());
-		expenseDto.setMoneyGivenAt(expense.getMoneyGivenAt());
-		expenseDto.setExpenseCreatedAt(expense.getExpenseCreatedAt());
-		expenseDto.setExpenseCreatedBy(expense.getExpenseCreatedBy());
-		expenseDto.setExpenseCreatedByFullName(expenseCreatedByFullName);
-		expenseDto.setSum(expense.getSum());
-		return expenseDto;
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

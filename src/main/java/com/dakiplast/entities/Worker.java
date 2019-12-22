@@ -57,6 +57,9 @@ public class Worker implements Serializable, IWorker {
 	
 	@Column(name = "deleted")
 	private boolean deleted = false;
+	
+	@Column(name = "active")
+	private boolean active = true;
 
 	public Long getId() {
 		return id;
@@ -148,5 +151,13 @@ public class Worker implements Serializable, IWorker {
 	
 	public String getFullName() {
 		return this.firstName + ' ' + this.lastName;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 }

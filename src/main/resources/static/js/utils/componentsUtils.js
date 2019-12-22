@@ -17,6 +17,14 @@
       return console.log(response.message);
     };
 
+    window.globalSuccessMessage = function(response) {
+      return FloatingMessage.success(response.message);
+    };
+
+    window.globalErrorMessage = function(response) {
+      return FloatingMessage.error(response.message);
+    };
+
     ComponentsUtils.userDetailsHTML = function() {
       return "<div class='col-7 h-75 pt-5 flex'> <div class='container w-50'> <div class='profile-image h-336'> </div> </div> <div class='container w-50'> <table class='table table-borderless'> <tr> <td>Ime</td> <td class='js--first--name'></td> </tr> <tr> <td>Prezime</td> <td class='js--last--name'></td> </tr> <tr> <td>Ulica</td> <td class='js--street'></td> </tr> <tr> <td>Broj stana</td> <td class='js--build--number'></td> </tr> <tr> <td>Grad</td> <td class='js--city'></td> </tr> <tr> <td>Telefon</td> <td class='js--phone--number'></td> </tr> <tr> <td>Email</td> <td class='js--email'></td> </tr> </table> </div> </div>";
     };
@@ -33,7 +41,7 @@
     };
 
     ComponentsUtils.loadingPage = function() {
-      return "<div class='js--loading--page'><span class='loader-icon'></span></div>";
+      return "";
     };
 
     ComponentsUtils.getTimeFromMillis = function(millis) {
@@ -87,7 +95,7 @@
         inputValue = inputValue.toLowerCase();
         firstName = a.firstName.toLowerCase();
         lastName = a.lastName.toLowerCase();
-        if (firstName.startsWith(inputValue) || lastName.startsWith(inputValue)) {
+        if (firstName.toLowerCase().startsWith(inputValue) || lastName.toLowerCase().startsWith(inputValue)) {
           helpArray.push(a);
         }
         if (includePhoneNumber && a.phoneNumber.startsWith(inputValue)) {

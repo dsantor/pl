@@ -23,7 +23,8 @@ import com.google.gson.Gson;
 @Entity
 @Table(name = "orders")
 @NamedQueries({
-	@NamedQuery(name = "Order.findAll", query = "SELECT o from Order o")
+	@NamedQuery(name = "Order.findAll", query = "SELECT o from Order o"),
+	@NamedQuery(name = "Order.findOrdersByClientId", query = "SELECT o from Order o WHERE o.clientId = :clientId")
 })
 public class Order implements Serializable, IOrder {
 
@@ -51,6 +52,9 @@ public class Order implements Serializable, IOrder {
 	
 	@Column(name = "paid")
 	private Long paid;
+	
+	@Column(name = "build_date")
+	private Calendar buildDate;
 	
 	@Column(name = "status")
 	@Enumerated(EnumType.STRING)
@@ -120,8 +124,16 @@ public class Order implements Serializable, IOrder {
 		this.workerIds = workerIds;
 	}
 	
+	public Calendar getBuildDate() {
+		return buildDate;
+	}
+
+	public void setBuildDate(Calendar buildDate) {
+		this.buildDate = buildDate;
+	}
 	public List<Long> getWorkerIds() {
 		Long[] listIds = new Gson().fromJson(this.workerIds, Long[].class);
 		return Arrays.asList(listIds);
 	}
+
 }

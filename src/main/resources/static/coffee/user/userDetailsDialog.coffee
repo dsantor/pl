@@ -65,12 +65,7 @@ class @UserDetailsDialog extends AbstractPage
             return
             
     _resetPassword: () ->
-        UserService.defaultPassword(@user.id, null, this, @_globalSuccessMessage, @_globalErrorMessage)
-
-    _globalSuccessMessage: (response) ->
-        FloatingMessage.success(response.message)
-    _globalErrorMessage: (response) ->
-        FloatingMessage.error(response.message)
+        UserService.defaultPassword(@user.id, null, this, globalSuccessMessage, globalErrorMessage)
 
     _toggleBlockUserText: () ->
         text = 'Aktiviraj'
@@ -82,4 +77,4 @@ class @UserDetailsDialog extends AbstractPage
         @user.active = !@user.active
         @updatedUser = true
         $(".js--block--user").html(@_toggleBlockUserText())
-        UserService.toggleBlockUser(@user.id, null, this, @_globalSuccessMessage, @_globalErrorMessage)
+        UserService.toggleBlockUser(@user.id, null, this, globalSuccessMessage, globalErrorMessage)

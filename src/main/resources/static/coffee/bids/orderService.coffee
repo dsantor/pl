@@ -12,3 +12,7 @@ class @OrderService
     @get: (orderId, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
         url = @apiUrl + '/get/' + orderId
         AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)
+
+    @getAllClientOrders: (clientId, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
+        url = @apiUrl + '/getAll/' + clientId
+        AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)

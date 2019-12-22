@@ -1,6 +1,5 @@
 package com.dakiplast.repositoryImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -41,7 +40,7 @@ public class UserRepositoryImpl implements UserRepository {
 		query.setMaxResults(1);
 		List<User> users = query.getResultList();
 		
-		if (users == null || users.isEmpty()) {
+		if (users.isEmpty()) {
 	        return null;
 	    }
 	    return users.get(0);
@@ -101,9 +100,6 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public List<User> findAll() {
 		 Query query = entityManager.createNamedQuery("User.findAll");
-		 if (query == null) {
-			 return new ArrayList<>();
-		 }
 		 return query.getResultList();
 	}
 
@@ -122,9 +118,6 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public List<User> findAllExcludeUser(Long userId) {
 		 Query query = entityManager.createNamedQuery("User.findAllExcludeUser").setParameter("userId", userId);
-		 if (query == null) {
-			 return new ArrayList<>();
-		 }
 		 return query.getResultList();
 	}
 

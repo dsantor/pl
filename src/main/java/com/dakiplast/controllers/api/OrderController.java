@@ -2,11 +2,14 @@ package com.dakiplast.controllers.api;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.assertj.core.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,15 +18,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dakiplast.entities.dto.ClientDto;
 import com.dakiplast.entities.dto.OrderDto;
 import com.dakiplast.entities.interfaces.IClient;
 import com.dakiplast.entities.interfaces.IOrder;
 import com.dakiplast.entities.interfaces.IUser;
-import com.dakiplast.entities.interfaces.IWorker;
 import com.dakiplast.enums.UserActivityLogType;
 import com.dakiplast.exceptions.ErrorsEnum;
 import com.dakiplast.requests.OrderRequest;
 import com.dakiplast.responses.BaseResponse;
+import com.dakiplast.responses.OrderResponse;
 import com.dakiplast.services.ClientService;
 import com.dakiplast.services.OrderService;
 import com.dakiplast.services.UserActivityLogService;
@@ -68,47 +72,47 @@ public class OrderController {
 	}
 	
 	@GetMapping("/getAll")
-	public BaseResponse getAll(HttpServletRequest request) {
+	public OrderResponse getAll(HttpServletRequest request) {
 		List<IOrder> orders = orderService.getAll();
-		IWorker worker;
-		IClient client;
-		String clientName;
-		List<OrderDto> ordersDto = new ArrayList<>();
-		List<String> workerNames = new ArrayList<>();
-		Map<Long, String> workersMap = new HashMap<>();
+		List<OrderDto> ordersDto = new ArrayList<>(orders.size());
+		
 		for (IOrder order: orders) {
-			for(Long workerId: order.getWorkerIds()) {
-				worker = workerService.getById(workerId);
-				workersMap.put(workerId, worker.getFirstName() + " " + worker.getLastName());
-				workerNames.add(worker.getFirstName() + " " + worker.getLastName());
-			}
-			
-			IUser user = userService.getById(order.getCreatedBy());
-			client = clientService.getClientById(order.getClientId());
-			clientName = client.getFirstName() + " " + client.getLastName();
-			ordersDto.add(OrderDto.convertToDto(order, user.getFullName(), clientName, workerNames, workersMap));
+			ordersDto.add(orderService.convertToOrderDto(order));
 		}
-		return new BaseResponse(ordersDto, false, null);
+		
+		List<IClient> clients = clientService.getAll();
+		List<ClientDto> clientsDto = new ArrayList<>(clients.size());
+		
+		clients.stream().forEach(client -> clientsDto.add(ClientDto.convertToDto(client)));
+		return new OrderResponse(false, null, ordersDto, clientsDto);
 	}
 
 
 	@GetMapping("/get/{orderId}")
 	public BaseResponse getById(@PathVariable ("orderId") Long orderId) {
 		IOrder order = orderService.getById(orderId);
-		IWorker worker;
-		List<String> workerNames = new ArrayList<>();
-		Map<Long, String> workersMap = new HashMap<>();
-		
-		for(Long workerId: order.getWorkerIds()) {
-			worker = workerService.getById(workerId);
-			workersMap.put(workerId, worker.getFirstName() + " " + worker.getLastName());
-			workerNames.add(worker.getFirstName() + " " + worker.getLastName());
-		}
-	
-		IClient client = clientService.getClientById(order.getClientId());
-		IUser user = userService.getById(order.getCreatedBy());
-		String clientName = client.getFirstName() + " " + client.getLastName();
-		OrderDto orderDto = OrderDto.convertToDto(order,user.getFullName(), clientName, workerNames, workersMap);
+		OrderDto orderDto = orderService.convertToOrderDto(order);
 		return new BaseResponse(orderDto, false, null);
+	}
+	
+	@GetMapping("/getAll/{clientId}")
+	public OrderResponse getAllForClient(@PathVariable ("clientId") Long clientId) {
+		
+		IClient client = clientService.getClientById(clientId);
+		if (client == null) {
+			return new OrderResponse(true, "Klijent ne postoji", null, null);
+		}
+		
+		List<IOrder> orders = orderService.getOrdersForClient(client.getId());
+		List<OrderDto> ordersDto = new ArrayList<>(orders.size());
+		Set<ClientDto> clients = new HashSet<>();
+		for (IOrder order: orders) {
+			ordersDto.add(orderService.convertToOrderDto(order));
+			clients.add(ClientDto.convertToDto(clientService.getClientById(order.getClientId())));
+		}
+		
+		List<ClientDto> clientsDto = new ArrayList<>(clients.size());
+		clients.stream().forEach(clientDto -> clientsDto.add(clientDto));
+		return new OrderResponse(false, null, ordersDto, clientsDto);
 	}
 }

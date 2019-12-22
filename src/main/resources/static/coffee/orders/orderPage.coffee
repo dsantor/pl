@@ -30,7 +30,7 @@ class @OrderPage extends AbstractPage
                                 
                             <tr>
                                 <td>Klijent</td>
-                                 <td><a href='#client/#{@order.clientId}'>#{@order.clientName}</a></td>
+                                 <td><a href='#client/#{@order.clientId}'>#{@order.clientFullName}</a></td>
                             </tr>
                                 
                             <tr>

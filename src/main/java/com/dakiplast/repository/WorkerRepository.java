@@ -15,4 +15,5 @@ public interface WorkerRepository {
 	public boolean delete(Long id);
 	public List<IWorker> workersInDeficit();
 	public List<IWorker> workersInSurplus();
+	public boolean toggleBlockWorker(Long workerId);
 }
