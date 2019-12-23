@@ -2,7 +2,6 @@ class @ClientProfilePage extends AbstractPage
 
     constructor: (clientId) ->
         super()
-        # clientId = @_getClientIdFromURL()
         @clientId = Number(clientId)
         @client = null
         ClientService.get(clientId, null, this, @_loadedClient, @_loadedClientError)
@@ -26,10 +25,6 @@ class @ClientProfilePage extends AbstractPage
         if closest(target, '.js--show--orders')
             window.location.hash = "client/#{@clientId}/orders"
             return
-            
-    _getClientIdFromURL: () ->
-        hash = window.location.hash
-        return hash.substring(hash.indexOf('/'))
 
     _loadedClient:(response) ->
         @container.html(@_templateHTML(response.data))
@@ -41,7 +36,6 @@ class @ClientProfilePage extends AbstractPage
         return "<div class='container '>
                 <nav class='nav header justify-content-end pt-3'>
                     <span class='nav-link span-a back-button js--back--button'>Nazad</span>
-                    <span class='nav-link span-a js--change--color'>Promeni oznaku</span>
                     <span class='nav-link span-a js--show--orders'>Porudžbine</span>
                     <span class='nav-link span-a js--create--bids'>Kreiraj porudzbinu</span>
                 </nav>

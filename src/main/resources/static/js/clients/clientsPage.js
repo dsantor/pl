@@ -32,7 +32,6 @@
       this.createdNewClient = this._createdNewClient.bind(this);
       EventUtils.bindCreatedNewClient(this.createdNewClient);
       this.createClientDialog = new CreateClientDialog();
-      this.showClientDialog = new ShowClientDialog();
       this.clients = [];
     }
 
@@ -41,8 +40,6 @@
       this.createdNewClient = null;
       this.createClientDialog.destroy();
       this.createClientDialog = null;
-      this.showClientDialog.destroy();
-      this.showClientDialog = null;
       this.clients = null;
       return this.container.html('');
     };

@@ -16,7 +16,6 @@ class @ClientsPage extends AbstractPage
         @createdNewClient = @_createdNewClient.bind(this)
         EventUtils.bindCreatedNewClient(@createdNewClient)
         @createClientDialog = new CreateClientDialog()
-        @showClientDialog  = new ShowClientDialog()
 
         @clients = []
     
@@ -26,9 +25,6 @@ class @ClientsPage extends AbstractPage
 
         @createClientDialog.destroy()
         @createClientDialog = null
-
-        @showClientDialog.destroy()
-        @showClientDialog = null
 
         @clients = null
         @container.html('')
