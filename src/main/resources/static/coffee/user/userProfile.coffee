@@ -26,7 +26,6 @@ class @UserProfile
     getPageTitle: () ->
         return 'Profil'
 
-    
     destroy: () ->
         @container.off 'click', @clickEvent
         @clickEvent = null

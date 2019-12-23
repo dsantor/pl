@@ -15,20 +15,27 @@ class @ExpensesPage extends AbstractPage
         @suggestionsContainer = @container.find('.js--filter--suggestions')
         @filterStatus = @container.find('.js--filter--status')
 
+        @createExpenseDialog = new CreateExpenseDialog()
     destroy: () ->
         super()
+
+        @autoSuggestion.destroy()
+        autoSuggestion = null
+
+        @createExpenseDialog.destroy()
+        @createExpenseDialog = null
 
     _clickEventHandler: (event) ->
         target = $(event.target)
 
         if closest(target, '.js--create--expense')
-            console.log 'create expenses'
+            @createExpenseDialog.show()
             return
     
     _expensesLoaded: (response) ->
         @expenses = response.data
 
-        if @expenses.length < 0
+        if @expenses.length == 0
             @_renderEmptyState()
         else
             @_renderExpensesHTML(@expenses)
@@ -53,7 +60,7 @@ class @ExpensesPage extends AbstractPage
         for expense in expenses
             innerHtml += "<div class='flex-table js--expense--row' data-bid-id=#{expense.id}>
                             <div class='flex-table-cell w-20'>
-                                <a href='#user/#{expense.expenseCreatedBy}'>#{expense.expenseCreatedByFullName}</a>
+                                <a href='#worker/#{expense.expenseCreatedBy}'>#{expense.expenseCreatedByFullName}</a>
                             </div>
                             <div class='flex-table-cell w-20'>
                                 <a href='#user/#{expense.moneyGivenBy}'>#{expense.moneyGivenByFullName}</a>

@@ -105,7 +105,7 @@ class @WorkersPage extends AbstractPage
     _workersLoadedError: (response) ->
 
     emptyState: () ->
-        ComponentsUtils.emptyState('Nema unetih radnika :(', "<input type='button' class='btn btn-primary d-block js--create--worker' value='Dodaj radnika'/>")
+        ComponentsUtils.emptyState('Nema registrovanih radnika :(', "<input type='button' class='btn btn-primary d-block js--create--worker' value='Dodaj radnika'/>")
 
     _getFiltersHTML: () ->
         return ComponentsUtils.baseFilter()

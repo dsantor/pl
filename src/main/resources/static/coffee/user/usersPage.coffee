@@ -1,4 +1,4 @@
-class @UserPage extends AbstractPage
+class @UsersPage extends AbstractPage
 
     constructor: () ->
         super()
@@ -100,7 +100,7 @@ class @UserPage extends AbstractPage
         @usersContainer.html(@_emptyState())
     
     _emptyState: () ->
-        return "<div class='col-5 m-auto h-75 pt-5 text-center'>Nema registrovanih korisnika :(</div>"
+        return ComponentsUtils.emptyState("<div class='col-5 m-auto h-75 pt-5 text-center'>Nema registrovanih korisnika :(</div>", "<input type='button' class='btn btn-primary d-block js--create--user' value='Dodaj korisnika'/>")
 
     _showUserInfo: (id) ->
         user = @_getUserById(id)

@@ -11,7 +11,7 @@ class @WorkerPage extends AbstractPage
         target = $(event.target)
 
         if closest(target, '.js--back--button')
-            window.history.back()
+            MainNavigation.back()
             return
 
         if closest(target, '.js--block--worker')
@@ -19,16 +19,12 @@ class @WorkerPage extends AbstractPage
             return
         
         if closest(target, '.js--create--expense')
-            @createExpenseDialog.show(this)
+            @createExpenseDialog.show(@worker)
             return
 
         if closest( target, '.js--worker--expenses')
+            window.location.href = "#expenses/#{@worker.id}"
             return
-        # treba drugacija klasa koja ce prikazati
-        # sta je sve radnik do sada uradio
-        # if closest(target, '.js--user--activity')
-        #     @activityDialog.show(@worker.id)
-        #     return
 
     _loadedWorker: (response) ->
         @worker = response.data

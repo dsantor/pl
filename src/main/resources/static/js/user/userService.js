@@ -21,6 +21,12 @@
       return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
     };
 
+    UserService.getUsersIncludedMe = function(onTheFlyData, callbackContext, callBackFunction, callbackError) {
+      var url;
+      url = '../api/user/allIncludedMe';
+      return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
+    };
+
     UserService.changeUserInfo = function(data, onTheFlyData, callbackContext, callBackFunction, callbackError) {
       var url;
       url = '../api/user/update';

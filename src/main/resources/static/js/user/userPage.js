@@ -3,29 +3,33 @@
   var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
-  this.UserDetailsDialog = (function(superClass) {
-    extend(UserDetailsDialog, superClass);
+  this.UserPage = (function(superClass) {
+    extend(UserPage, superClass);
 
-    function UserDetailsDialog(userId) {
-      UserDetailsDialog.__super__.constructor.call(this);
-      UserService.getUser(userId, null, this, this.show, null);
-      this.activityDialog = new ActivityDialog();
+    function UserPage(userId) {
+      UserPage.__super__.constructor.call(this);
+      if (window.loggedUserInfo.id == userId) {
+        window.location.hash = '#profile';
+      } else {
+        UserService.getUser(userId, null, this, this.show, null);
+        this.activityDialog = new ActivityDialog();
+      }
     }
 
-    UserDetailsDialog.prototype.show = function(respone) {
+    UserPage.prototype.show = function(respone) {
       this.user = respone.data;
       return this.pageHTML();
     };
 
-    UserDetailsDialog.prototype.hide = function() {
-      UserDetailsDialog.__super__.hide.call(this);
+    UserPage.prototype.hide = function() {
+      UserPage.__super__.hide.call(this);
       if (this.updatedUser) {
         return this.parentPage.userDialogClosed();
       }
     };
 
-    UserDetailsDialog.prototype.destroy = function() {
-      UserDetailsDialog.__super__.destroy.call(this);
+    UserPage.prototype.destroy = function() {
+      UserPage.__super__.destroy.call(this);
       this.firstName = null;
       this.lastName = null;
       this.street = null;
@@ -38,7 +42,7 @@
       return this.updatedUser = null;
     };
 
-    UserDetailsDialog.prototype._customHTML = function() {
+    UserPage.prototype._customHTML = function() {
       var html, innerHTML;
       if (this.user) {
         innerHTML = this._toggleBlockUserText();
@@ -50,15 +54,15 @@
       }
     };
 
-    UserDetailsDialog.prototype.positiveAction = function() {
+    UserPage.prototype.positiveAction = function() {
       return this.hide();
     };
 
-    UserDetailsDialog.prototype._clickEventHandler = function(event) {
+    UserPage.prototype._clickEventHandler = function(event) {
       var target;
       target = $(event.target);
       if (closest(target, '.js--back--button')) {
-        window.history.back();
+        MainNavigation.back();
         return;
       }
       if (closest(target, '.js--reset--password')) {
@@ -73,11 +77,11 @@
       }
     };
 
-    UserDetailsDialog.prototype._resetPassword = function() {
+    UserPage.prototype._resetPassword = function() {
       return UserService.defaultPassword(this.user.id, null, this, globalSuccessMessage, globalErrorMessage);
     };
 
-    UserDetailsDialog.prototype._toggleBlockUserText = function() {
+    UserPage.prototype._toggleBlockUserText = function() {
       var text;
       text = 'Aktiviraj';
       if (this.user.active) {
@@ -86,14 +90,14 @@
       return text;
     };
 
-    UserDetailsDialog.prototype._toggleBlockUser = function() {
+    UserPage.prototype._toggleBlockUser = function() {
       this.user.active = !this.user.active;
       this.updatedUser = true;
       $(".js--block--user").html(this._toggleBlockUserText());
       return UserService.toggleBlockUser(this.user.id, null, this, globalSuccessMessage, globalErrorMessage);
     };
 
-    return UserDetailsDialog;
+    return UserPage;
 
   })(AbstractPage);
 

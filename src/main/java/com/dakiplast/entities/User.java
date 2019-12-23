@@ -19,7 +19,9 @@ import com.dakiplast.enums.RolesEnum;
 @Entity
 @Table(name = "users")
 @NamedQueries({
-	@NamedQuery( name = "User.findAll", query = "Select u from User u where u.deleted = true"),
+	@NamedQuery( name = "User.findAll", query = "Select u from User u"),
+	@NamedQuery( name = "User.findAllAtiveUsers", query = "Select u from User u where u.deleted = false"),
+	@NamedQuery( name = "User.findAllInativeUsers", query = "Select u from User u where u.deleted = true"),
 	@NamedQuery( name = "User.findAllExcludeUser", query = "Select u from User u where u.deleted = false and u.id !=: userId"),
 	@NamedQuery( name = "User.findById", query = "Select u from User u where user_id =: user_id"),
 	@NamedQuery( name = "User.findByEmail", query = "Select u from User u where email =: email")

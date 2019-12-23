@@ -8,23 +8,27 @@
 
     function CreateExpenseDialog() {
       CreateExpenseDialog.__super__.constructor.call(this);
+      this.worker = null;
+      this.workers = [];
+      this.keyDownEvent = this._keyDownEventHandler.bind(this);
+      this.container.on('keyup', this.keyDownEvent);
     }
 
     CreateExpenseDialog.prototype.destroy = function() {
-      CreateExpenseDialog.__super__.destroy.call(this);
       this.moneyGivenBy = null;
       this.moneyTook = null;
       this.purpose = null;
       this.moneyGivenAt = null;
       this.sum = null;
-      this.parentPage = null;
+      this.worker = null;
+      this.workers = null;
       this.container.off('keyup', this.keyDownEvent);
       this.keyDownEvent = null;
-      return this.userAutoSuggestions = null;
+      this.userAutoSuggestions = null;
+      return CreateExpenseDialog.__super__.destroy.call(this);
     };
 
-    CreateExpenseDialog.prototype.show = function(parentPage) {
-      this.parentPage = parentPage;
+    CreateExpenseDialog.prototype.show = function(worker) {
       CreateExpenseDialog.__super__.show.call(this);
       this.customHTML();
       this.moneyGivenBy = this.container.find('.js--money--given--by');
@@ -32,10 +36,21 @@
       this.purpose = this.container.find('.js--purpose');
       this.moneyGivenAt = this.container.find('.js--money--given--at');
       this.sum = this.container.find('.js--sum');
-      UserService.getUsers(null, this, this._usersLoaded, ajaxCallbackPrintMessage);
-      this.keyDownEvent = this._keyDownEventHandler.bind(this);
-      this.container.on('keyup', this.keyDownEvent);
-      return this.userAutoSuggestions = this.container.find('.js--user--suggestions');
+      this.worker = worker;
+      if (this.worker) {
+        this.moneyTook.attr('data-worker-id', this.worker.id);
+        this.moneyTook.val(this.worker.fullName);
+        this.moneyTook.attr('disabled', 'disabled');
+      } else {
+        WorkerService.getAll(null, this, this._workersLoaded, ajaxCallbackPrintMessage);
+      }
+      UserService.getUsersIncludedMe(null, this, this._usersLoaded, ajaxCallbackPrintMessage);
+      this.userAutoSuggestions = this.container.find('.js--user--suggestions');
+      return this.workersAutoSuggestions = this.container.find('.js--worker--suggestions');
+    };
+
+    CreateExpenseDialog.prototype._workersLoaded = function(response) {
+      return this.workers = response.data;
     };
 
     CreateExpenseDialog.prototype._usersLoaded = function(response) {
@@ -57,7 +72,7 @@
       }
       data = {
         moneyGivenBy: this.moneyGivenBy.attr('data-user-id'),
-        moneyTook: this.parentPage.worker.id,
+        moneyTook: this.worker.id,
         purpose: this.purpose.val(),
         moneyGivenAt: new Date(this.moneyGivenAt.val()).getTime(),
         sum: this.sum.val()
@@ -81,11 +96,18 @@
       valid &= validInput;
       validInput = this._validateInput(this.sum);
       valid &= validInput;
+      validInput = this._validateInput(this.moneyTook);
+      valid &= validInput;
+      if (this.worker) {
+        valid &= true;
+      } else {
+        valid = false;
+      }
       return valid;
     };
 
     CreateExpenseDialog.prototype._customHTML = function() {
-      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <div class='form-group'> <div class='pos-rel'> <label>Novac uručio*</label> <input type='text' class='form-control js--money--given--by' placeholder='ime i prezime'/> <div class='pos-rel'> <div class='suggestion-container js--user--suggestions pos-abs hide'></div> </div> </div> </div> <div class='form-group'> <label>Namena*</label> <textarea class='form-control js--purpose' placeholder='Novac namenjen za...'/> </div> <div class='form-group'> <label>Suma*</label> <input type='number' class='form-control js--sum' placeholder='din'/> </div> <div class='form-group'> <label>Novac uručen*</label> <input type='date' class='form-control js--money--given--at'/> </div> </div> </div>";
+      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <div class='form-group'> <div class='pos-rel'> <label>Novac uručio*</label> <input type='text' class='form-control js--money--given--by' placeholder='ime i prezime'/> <div class='pos-rel'> <div class='suggestion-container js--user--suggestions pos-abs hide'></div> </div> </div> </div> <div class='form-group'> <div class='pos-rel'> <label>Novac primio*</label> <input type='text' class='form-control js--money--took' placeholder='ime i prezime'/> <div class='pos-rel'> <div class='suggestion-container js--worker--suggestions pos-abs hide'></div> </div> </div> </div> <div class='form-group'> <label>Namena*</label> <textarea class='form-control js--purpose' placeholder='Novac namenjen za...'/> </div> <div class='form-group'> <label>Suma*</label> <input type='number' class='form-control js--sum' placeholder='din'/> </div> <div class='form-group'> <label>Novac uručen*</label> <input type='date' class='form-control js--money--given--at'/> </div> </div> </div>";
     };
 
     CreateExpenseDialog.prototype._pageClickEventHandler = function(event) {
@@ -93,6 +115,10 @@
       target = $(event.target);
       if (closest(target, '.js--user--suggestions')) {
         this._selectUserFromAutoSuggestion(target);
+        return;
+      }
+      if (closest(target, '.js--worker--suggestions')) {
+        this._selectWorkerFromAutoSuggestion(target);
         return;
       }
       return this.userAutoSuggestions.addClass('hide');
@@ -103,6 +129,10 @@
       target = $(event.target);
       if (closest(target, '.js--money--given--by')) {
         this._handlerUserSuggestion();
+        return;
+      }
+      if (closest(target, '.js--money--took')) {
+        this._handlerWorkerSuggestion();
       }
     };
 
@@ -112,6 +142,29 @@
 
     CreateExpenseDialog.prototype._handlerUserSuggestion = function() {
       return ComponentsUtils.handleAutoSuggestion(this.moneyGivenBy, 'data-user-id', this.users, this.userAutoSuggestions);
+    };
+
+    CreateExpenseDialog.prototype._selectWorkerFromAutoSuggestion = function(target) {
+      var i, len, ref, results, worker, workerId;
+      ComponentsUtils.selectFromAutoSuggestion(target, this.moneyTook, 'data-worker-id', this.workers, this.workersAutoSuggestions);
+      workerId = Number(this.moneyTook.attr('data-worker-id'));
+      this.worker = null;
+      ref = this.workers;
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        worker = ref[i];
+        if (worker.id === workerId) {
+          this.worker = worker;
+          break;
+        } else {
+          results.push(void 0);
+        }
+      }
+      return results;
+    };
+
+    CreateExpenseDialog.prototype._handlerWorkerSuggestion = function() {
+      return ComponentsUtils.handleAutoSuggestion(this.moneyTook, 'data-worker-id', this.workers, this.workersAutoSuggestions);
     };
 
     return CreateExpenseDialog;

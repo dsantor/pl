@@ -50,7 +50,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/all")
-	public BaseResponse getUsers(HttpServletRequest request) {
+	public BaseResponse getAll(HttpServletRequest request) {
 		Long userId = SessionService.getLoggedUserId(request);
 		List<User> users = userService.getUsersExcludeUser(userId);
 		
@@ -64,6 +64,19 @@ public class UserController {
 		return new BaseResponse(response, false, null);
 	}
 	
+	@GetMapping("/allIncludedMe")
+	public BaseResponse getAllIncludedMe() {
+		List<User> users = userService.getUsers();
+		
+		List<UserDto> response = new ArrayList<UserDto>();
+		UserDto userDto;
+		for (User user: users) {
+			userDto = new UserDto();
+			userDto.mapToUserDto(user);
+			response.add(userDto);
+		}
+		return new BaseResponse(response, false, null);
+	}
 	
 	@PostMapping("/update")
 	public BaseResponse update(@RequestBody UserRequest user, HttpServletRequest request) {

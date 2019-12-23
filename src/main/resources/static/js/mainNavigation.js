@@ -11,18 +11,7 @@
         '#bids': 'bids',
         '#expens': 'expenses'
       };
-      this.pageAndHash = {
-        '#profile': 'profile',
-        '#users': 'users',
-        '#user': 'users',
-        '#workers': 'workers',
-        '#worker': 'workers',
-        '#clients': "clients",
-        '#client': 'clients',
-        '#orders': 'orders',
-        '#order': 'orders',
-        "#bids": 'bids'
-      };
+      this.currentPageHash = null;
       this.currentPage = null;
       this.pageTitle = $('.js--page--title');
       this.navigationBar = $('.js--nav--bar');
@@ -30,6 +19,7 @@
       this.mainNavigation = $('.js--main--navigation');
       this.mainNavigation.on('click', this._mainNavigationHandler.bind(this));
       this._restrictPage();
+      this._savePreviousPage('#profile');
       $(window).on('hashchange', this._hashChangedHandler.bind(this));
       if (window.location.hash === '') {
         this._redirectToHomepage();
@@ -41,6 +31,7 @@
     MainNavigation.prototype._handlePage = function() {
       var hashValue, i, key, keys, len, tab;
       hashValue = this._extractHashValue();
+      this.currentPageHash = hashValue.page;
       this._openPage(hashValue);
       tab = '';
       keys = Object.keys(this.pages);
@@ -55,6 +46,7 @@
     };
 
     MainNavigation.prototype._hashChangedHandler = function(event) {
+      this._savePreviousPage(this.currentPageHash);
       if (this.currentPage) {
         this.currentPage.destroy();
       }
@@ -68,10 +60,10 @@
           this.currentPage = new UserProfile();
           break;
         case '#users':
-          this.currentPage = new UserPage();
+          this.currentPage = new UsersPage();
           break;
         case '#user':
-          this.currentPage = new UserDetailsDialog(hash.value);
+          this.currentPage = new UserPage(hash.value);
           break;
         case '#workers':
           this.currentPage = new WorkersPage();
@@ -132,8 +124,7 @@
     };
 
     MainNavigation.prototype._extractHashValue = function() {
-      var dash, dashes, data, hash, hashObject, page, value;
-      hashObject = {};
+      var dash, dashes, data, hash, page, value;
       hash = window.location.hash;
       dashes = hash.split('/');
       if (dashes.length > 2) {
@@ -157,6 +148,14 @@
         data: '',
         value: value
       };
+    };
+
+    MainNavigation.back = function() {
+      return window.location.hash = window.previousPageHash;
+    };
+
+    MainNavigation.prototype._savePreviousPage = function(hash) {
+      return window.previousPageHash = hash;
     };
 
     return MainNavigation;

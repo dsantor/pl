@@ -14,12 +14,12 @@ class @BidsPage
         @oldClientIsChosen     = true
         @_renderChoseBidHTML()
 
-        WorkerService.getAll(null, this, @_loadWorkersSuccess, @_loadWorkersError)
+        WorkerService.getAll(null, this, @_loadWorkersSuccess, ajaxCallbackPrintMessage)
 
         if @clientId
-            ClientService.get(clientId, null, this, @_loadedClientSuccess, @_loadWorkersError)
+            ClientService.get(clientId, null, this, @_loadedClientSuccess, ajaxCallbackPrintMessage)
         else
-            ClientService.getAll(null, this, @_loadedClientsSuccess, @_loadWorkersError)
+            ClientService.getAll(null, this, @_loadedClientsSuccess, ajaxCallbackPrintMessage)
 
         @bidsContainer              = @container.find('.bids--container')        
         @overviewContainer          = @container.find('.overview--container')
@@ -247,7 +247,6 @@ class @BidsPage
                                     <select class='js--order--status'>
                                         <option value='WAITING' selected>Na čekanju</option>
                                         <option value='ACCEPTED'>Prihvaćen</option>
-                                        <option value='DECLINED'>Odbijen</option>
                                     </select>
                                 </div>
                                 <div class='form-group'>
@@ -552,9 +551,6 @@ class @BidsPage
     _loadWorkersSuccess: (response) ->
         @allWorkers = response.data
 
-    _loadWorkersError: (response) ->
-        console.log response.message
-
     _selectWorkerFromAutoSuggestion: (target) ->
         id = Number(target.attr('data-worker-id'))
         addHtml = false
@@ -690,7 +686,7 @@ class @BidsPage
             downPlayment      : orderDownPlayment
         }
 
-        OrderService.create(data, null, this, @_orderSavedSuccess, @_loadWorkersError)
+        OrderService.create(data, null, this, @_orderSavedSuccess, ajaxCallbackPrintMessage)
 
     _orderSavedSuccess: (response)->
-        console.log response
+        window.location.href = '#order/' + response.data.id

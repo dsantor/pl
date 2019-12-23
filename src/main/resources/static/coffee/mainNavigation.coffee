@@ -3,14 +3,8 @@ class @MainNavigation
         @pages = {
             '#profile': 'profile', '#user': 'users', '#worker': 'workers',
             '#client': 'clients', '#order': 'orders', '#bids': 'bids', '#expens': 'expenses'}
-        @pageAndHash = {
-            '#profile': 'profile', '#users': 'users', '#user': 'users', 
-            '#workers': 'workers', '#worker': 'workers', 
-            '#clients': "clients", '#client': 'clients',
-            '#orders': 'orders',
-            '#order': 'orders',
-            "#bids": 'bids' }
 
+        @currentPageHash  = null
         @currentPage = null
         @pageTitle = $('.js--page--title')
         @navigationBar = $('.js--nav--bar')
@@ -20,7 +14,7 @@ class @MainNavigation
         @mainNavigation.on 'click', @_mainNavigationHandler.bind(this)
 		
         @_restrictPage()
-        
+        @_savePreviousPage('#profile')
         $(window).on 'hashchange', @_hashChangedHandler.bind(this)
 
         if window.location.hash == ''
@@ -31,6 +25,7 @@ class @MainNavigation
 
     _handlePage: () ->
         hashValue = @_extractHashValue()
+        @currentPageHash = hashValue.page
         @_openPage(hashValue)
         tab = ''
         keys = Object.keys(@pages)
@@ -42,6 +37,8 @@ class @MainNavigation
 
     _hashChangedHandler: (event) ->
         
+        @_savePreviousPage(@currentPageHash)
+
         if @currentPage
             @currentPage.destroy() 
 
@@ -55,10 +52,10 @@ class @MainNavigation
                 @currentPage = new UserProfile()
                 return
             when '#users'
-                @currentPage = new UserPage()
+                @currentPage = new UsersPage()
                 return
             when '#user'
-                @currentPage = new UserDetailsDialog(hash.value)
+                @currentPage = new UserPage(hash.value)
                 return
             when '#workers'
                 @currentPage = new WorkersPage()
@@ -112,7 +109,6 @@ class @MainNavigation
         @mainNavigation.toggleClass('open')
 
     _extractHashValue: () ->
-        hashObject = {}
         hash = window.location.hash
         dashes = hash.split('/') 
         if dashes.length > 2
@@ -128,5 +124,13 @@ class @MainNavigation
             value = hash.substring(dash + 1) 
         
         return {page: page, data: '', value: value}
+
+    
+    @back = () ->
+        window.location.hash = window.previousPageHash
+
+    _savePreviousPage: (hash) ->
+        window.previousPageHash = hash
+
 $(document).ready ->
     new MainNavigation()

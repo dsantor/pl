@@ -2,22 +2,27 @@ class @CreateExpenseDialog extends AbstractDialog
 
     constructor: () ->
         super()
+        @worker = null
+        @workers = []
 
+        @keyDownEvent = @_keyDownEventHandler.bind(this)
+        @container.on 'keyup', @keyDownEvent
+        
     destroy: () ->
-        super()
         @moneyGivenBy = null
         @moneyTook    = null
         @purpose      = null
         @moneyGivenAt = null
         @sum          = null
-        @parentPage   = null
-        
+        @worker       = null     
+        @workers      = null   
         @container.off 'keyup', @keyDownEvent
         @keyDownEvent = null
 
         @userAutoSuggestions = null
+        super()
 
-    show: (@parentPage) ->
+    show: (worker) ->
         super()
         @customHTML()
 
@@ -27,12 +32,21 @@ class @CreateExpenseDialog extends AbstractDialog
         @moneyGivenAt = @container.find('.js--money--given--at')
         @sum          = @container.find('.js--sum')
 
-        UserService.getUsers(null, this, @_usersLoaded, ajaxCallbackPrintMessage)
-        
-        @keyDownEvent = @_keyDownEventHandler.bind(this)
-        @container.on 'keyup', @keyDownEvent
+        @worker = worker
+        if @worker
+            @moneyTook.attr('data-worker-id', @worker.id)
+            @moneyTook.val(@worker.fullName)
+            @moneyTook.attr('disabled', 'disabled')
+        else
+            WorkerService.getAll(null, this, @_workersLoaded, ajaxCallbackPrintMessage)
 
-        @userAutoSuggestions   = @container.find('.js--user--suggestions')
+        UserService.getUsersIncludedMe(null, this, @_usersLoaded, ajaxCallbackPrintMessage)
+
+        @userAutoSuggestions    = @container.find('.js--user--suggestions')
+        @workersAutoSuggestions = @container.find('.js--worker--suggestions')
+
+    _workersLoaded: (response) ->
+        @workers = response.data
 
     _usersLoaded: (response) ->
         @users = response.data
@@ -49,7 +63,7 @@ class @CreateExpenseDialog extends AbstractDialog
 
         data = {
             moneyGivenBy     : @moneyGivenBy.attr('data-user-id')
-            moneyTook        : @parentPage.worker.id
+            moneyTook        : @worker.id
             purpose          : @purpose.val()
             moneyGivenAt     : new Date(@moneyGivenAt.val()).getTime()
             sum              : @sum.val()
@@ -74,6 +88,14 @@ class @CreateExpenseDialog extends AbstractDialog
 
         validInput = @_validateInput(@sum)
         valid &= validInput
+        
+        validInput = @_validateInput(@moneyTook)
+        valid &= validInput
+
+        if @worker
+            valid &= true
+        else
+            valid = false
 
         return valid
 
@@ -86,6 +108,15 @@ class @CreateExpenseDialog extends AbstractDialog
                                 <input type='text' class='form-control js--money--given--by' placeholder='ime i prezime'/>
                                 <div class='pos-rel'>
                                     <div class='suggestion-container js--user--suggestions pos-abs hide'></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class='form-group'>
+                             <div class='pos-rel'>
+                                <label>Novac primio*</label>
+                                <input type='text' class='form-control js--money--took' placeholder='ime i prezime'/>
+                                <div class='pos-rel'>
+                                    <div class='suggestion-container js--worker--suggestions pos-abs hide'></div>
                                 </div>
                             </div>
                         </div>
@@ -111,6 +142,10 @@ class @CreateExpenseDialog extends AbstractDialog
             @_selectUserFromAutoSuggestion(target)
             return
 
+        if closest(target, '.js--worker--suggestions')
+            @_selectWorkerFromAutoSuggestion(target)
+            return
+
         @userAutoSuggestions.addClass('hide')
 
     _keyDownEventHandler: (event) ->
@@ -118,9 +153,25 @@ class @CreateExpenseDialog extends AbstractDialog
         if closest(target, '.js--money--given--by')
             @_handlerUserSuggestion()
             return
+        
+        if closest(target, '.js--money--took')
+            @_handlerWorkerSuggestion()
+            return
 
     _selectUserFromAutoSuggestion: (target) ->
         ComponentsUtils.selectFromAutoSuggestion(target,  @moneyGivenBy, 'data-user-id', @users, @userAutoSuggestions)
 
     _handlerUserSuggestion: () ->
         ComponentsUtils.handleAutoSuggestion(@moneyGivenBy, 'data-user-id', @users, @userAutoSuggestions)
+
+    _selectWorkerFromAutoSuggestion: (target) ->
+        ComponentsUtils.selectFromAutoSuggestion(target,  @moneyTook, 'data-worker-id', @workers, @workersAutoSuggestions)
+        workerId = Number(@moneyTook.attr('data-worker-id'))
+        @worker = null
+        for worker in @workers
+            if worker.id is workerId
+                @worker = worker
+                break
+
+    _handlerWorkerSuggestion: () ->
+        ComponentsUtils.handleAutoSuggestion(@moneyTook, 'data-worker-id', @workers, @workersAutoSuggestions)

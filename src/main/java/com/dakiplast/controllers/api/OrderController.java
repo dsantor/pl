@@ -58,11 +58,6 @@ public class OrderController {
 			return new BaseResponse(null, false, ErrorsEnum.PRIVILEGES_ERROR.getMessage());
 		}
 		
-		if (orderRequest.getClientId() == null) {
-			IClient client = clientService.create(orderRequest.getCreateClient(), loggedUserId);
-			orderRequest.setClientId(client.getId());
-		}
-		
 		IOrder order = orderService.create(orderRequest, loggedUserId);
 		userActivityLogService.create(loggedUserId, null, order.getClientId(), null, UserActivityLogType.CREATED_ORDER);
 		return new BaseResponse(order, false, null);

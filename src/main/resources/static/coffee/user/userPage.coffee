@@ -1,10 +1,13 @@
-class @UserDetailsDialog extends AbstractPage
+class @UserPage extends AbstractPage
 
     constructor: (userId) ->
         super()
-        UserService.getUser(userId, null, this, @show, null)
+        if  `window.loggedUserInfo.id == userId`
+            window.location.hash = '#profile'
+        else
+            UserService.getUser(userId, null, this, @show, null)
 
-        @activityDialog = new ActivityDialog()
+            @activityDialog = new ActivityDialog()
 
     show: (respone) ->
         @user = respone.data
@@ -15,6 +18,7 @@ class @UserDetailsDialog extends AbstractPage
         if @updatedUser
             @parentPage.userDialogClosed()
 
+    
     destroy: () ->
         super()
         @firstName      = null
@@ -49,8 +53,7 @@ class @UserDetailsDialog extends AbstractPage
         target = $(event.target)
 
         if closest(target, '.js--back--button')
-            window.history.back()
-            # window.location.hash = 'users'
+            MainNavigation.back()
             return
         
         if closest(target, '.js--reset--password')

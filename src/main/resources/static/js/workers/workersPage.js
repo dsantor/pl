@@ -89,7 +89,7 @@
     WorkersPage.prototype._workersLoadedError = function(response) {};
 
     WorkersPage.prototype.emptyState = function() {
-      return ComponentsUtils.emptyState('Nema unetih radnika :(', "<input type='button' class='btn btn-primary d-block js--create--worker' value='Dodaj radnika'/>");
+      return ComponentsUtils.emptyState('Nema registrovanih radnika :(', "<input type='button' class='btn btn-primary d-block js--create--worker' value='Dodaj radnika'/>");
     };
 
     WorkersPage.prototype._getFiltersHTML = function() {

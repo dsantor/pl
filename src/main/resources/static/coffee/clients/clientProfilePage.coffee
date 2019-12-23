@@ -20,8 +20,7 @@ class @ClientProfilePage extends AbstractPage
             return
         
         if closest(target, '.js--back--button')
-            window.history.back()
-            # window.location.hash = 'clients'
+            MainNavigation.back()
             return
         
         if closest(target, '.js--show--orders')

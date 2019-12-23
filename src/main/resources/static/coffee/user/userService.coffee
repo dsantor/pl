@@ -12,6 +12,10 @@ class @UserService
         url = '../api/user/all'
         AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)
 
+    @getUsersIncludedMe: (onTheFlyData, callbackContext, callBackFunction, callbackError) ->
+        url = '../api/user/allIncludedMe'
+        AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)
+
     @changeUserInfo: (data, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
         url = '../api/user/update'
         AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError)

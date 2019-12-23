@@ -20,7 +20,7 @@
       var target;
       target = $(event.target);
       if (closest(target, '.js--back--button')) {
-        window.history.back();
+        MainNavigation.back();
         return;
       }
       if (closest(target, '.js--block--worker')) {
@@ -28,11 +28,11 @@
         return;
       }
       if (closest(target, '.js--create--expense')) {
-        this.createExpenseDialog.show(this);
+        this.createExpenseDialog.show(this.worker);
         return;
       }
       if (closest(target, '.js--worker--expenses')) {
-
+        window.location.href = "#expenses/" + this.worker.id;
       }
     };
 

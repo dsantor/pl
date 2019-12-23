@@ -3,11 +3,11 @@
   var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
-  this.UserPage = (function(superClass) {
-    extend(UserPage, superClass);
+  this.UsersPage = (function(superClass) {
+    extend(UsersPage, superClass);
 
-    function UserPage() {
-      UserPage.__super__.constructor.call(this);
+    function UsersPage() {
+      UsersPage.__super__.constructor.call(this);
       this.pageHTML();
       UserService.getUsers(null, this, this._getUsersSuccess, ajaxCallbackPrintMessage);
       this.filterContainer = this.container.find('.js--filter--container');
@@ -23,8 +23,8 @@
       this.crateUserDialog = new CreateUserDialog();
     }
 
-    UserPage.prototype.destroy = function() {
-      UserPage.__super__.destroy.call(this);
+    UsersPage.prototype.destroy = function() {
+      UsersPage.__super__.destroy.call(this);
       this.crateUserDialog.destroy();
       this.crateUserDialog = null;
       this.autoSuggestion.destroy();
@@ -40,16 +40,16 @@
       return this.users = null;
     };
 
-    UserPage.prototype.getPageTitle = function() {
+    UsersPage.prototype.getPageTitle = function() {
       return 'Korisnici';
     };
 
-    UserPage.prototype._getUsersSuccess = function(response) {
+    UsersPage.prototype._getUsersSuccess = function(response) {
       this.users = response.data;
       return this._renderUsersHTML(this.users);
     };
 
-    UserPage.prototype._renderUsersHTML = function(users) {
+    UsersPage.prototype._renderUsersHTML = function(users) {
       var adminOptionsHtml, firstName, i, lastName, len, phoneNumber, rowHtml, tableHtml, u, userIcon;
       if (users === null || users.length === 0) {
         this.emptyState();
@@ -77,24 +77,24 @@
       return this.usersContainer.html(tableHtml);
     };
 
-    UserPage.prototype._customHTML = function() {
+    UsersPage.prototype._customHTML = function() {
       return "<nav class='nav justify-content-end pt-3'> <span class='nav-link span-a js--create--user'>Dodaj korisnika</span> </nav> <div class='js--filter--container'></div> <div class='js--users--container'> " + (ComponentsUtils.loadingPage()) + " </div>";
     };
 
-    UserPage.prototype.emptyState = function() {
+    UsersPage.prototype.emptyState = function() {
       return this.usersContainer.html(this._emptyState());
     };
 
-    UserPage.prototype._emptyState = function() {
-      return "<div class='col-5 m-auto h-75 pt-5 text-center'>Nema registrovanih korisnika :(</div>";
+    UsersPage.prototype._emptyState = function() {
+      return ComponentsUtils.emptyState("<div class='col-5 m-auto h-75 pt-5 text-center'>Nema registrovanih korisnika :(</div>", "<input type='button' class='btn btn-primary d-block js--create--user' value='Dodaj korisnika'/>");
     };
 
-    UserPage.prototype._showUserInfo = function(id) {
+    UsersPage.prototype._showUserInfo = function(id) {
       var user;
       return user = this._getUserById(id);
     };
 
-    UserPage.prototype._clickEventHandler = function(e) {
+    UsersPage.prototype._clickEventHandler = function(e) {
       var element, targetElement;
       targetElement = $(e.target);
       element = targetElement.closest('.js--create--user');
@@ -113,13 +113,13 @@
       }
     };
 
-    UserPage.prototype._removeUser = function(element) {
+    UsersPage.prototype._removeUser = function(element) {
       var userId;
       userId = element.attr('data-user-id');
       return UserService.remove(userId, null, this, this._removeUserSuccess, ajaxCallbackPrintMessage);
     };
 
-    UserPage.prototype._removeUserSuccess = function(response) {
+    UsersPage.prototype._removeUserSuccess = function(response) {
       var i, len, ref, u, userId, users;
       userId = response.data;
       $(".js--user--row[data-user-id='" + userId + "']").remove();
@@ -137,12 +137,12 @@
       }
     };
 
-    UserPage.prototype._createdNewUser = function(event, user) {
+    UsersPage.prototype._createdNewUser = function(event, user) {
       this.users.push(user);
       return this._renderUsersHTML(this.users);
     };
 
-    UserPage.prototype._getUserById = function(id) {
+    UsersPage.prototype._getUserById = function(id) {
       var i, len, ref, user;
       id = +id;
       ref = this.users;
@@ -155,30 +155,30 @@
       return null;
     };
 
-    UserPage.prototype.userDialogClosed = function() {
+    UsersPage.prototype.userDialogClosed = function() {
       return this._renderUsersHTML(this.users);
     };
 
-    UserPage.prototype.triggerFilterAs = function(event) {
+    UsersPage.prototype.triggerFilterAs = function(event) {
       return ComponentsUtils.handleAutoSuggestion(this.userASInput, 'data-user-id', this.users, this.suggestionsContainer, true, this, this._resetFilter);
     };
 
-    UserPage.prototype.triggerFilterStatus = function(event) {
+    UsersPage.prototype.triggerFilterStatus = function(event) {
       return this._applyFilter();
     };
 
-    UserPage.prototype.triggerFilterSuggestions = function(event) {
+    UsersPage.prototype.triggerFilterSuggestions = function(event) {
       var target;
       target = $(event.target);
       ComponentsUtils.selectFromAutoSuggestion(target, this.userASInput, 'data-user-id', this.users, this.suggestionsContainer);
       this._applyFilter();
     };
 
-    UserPage.prototype.triggerFilterReset = function(event) {
+    UsersPage.prototype.triggerFilterReset = function(event) {
       this._resetFilter();
     };
 
-    UserPage.prototype._applyFilter = function() {
+    UsersPage.prototype._applyFilter = function() {
       var filteredUsers, i, id, j, k, len, len1, len2, ref, ref1, status, user, users;
       status = this.userStatus.val();
       users = [];
@@ -219,14 +219,14 @@
       }
     };
 
-    UserPage.prototype._resetFilter = function() {
+    UsersPage.prototype._resetFilter = function() {
       this.userASInput.val('');
       this.userASInput.removeAttr('data-user-id');
       this.userStatus.val(this.userStatus[0].options[0].value);
       return this._renderUsersHTML(this.users);
     };
 
-    return UserPage;
+    return UsersPage;
 
   })(AbstractPage);
 

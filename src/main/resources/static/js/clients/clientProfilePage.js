@@ -29,7 +29,7 @@
         return;
       }
       if (closest(target, '.js--back--button')) {
-        window.history.back();
+        MainNavigation.back();
         return;
       }
       if (closest(target, '.js--show--orders')) {
