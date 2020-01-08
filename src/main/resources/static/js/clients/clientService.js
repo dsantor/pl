@@ -21,6 +21,12 @@
       return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
     };
 
+    ClientService.update = function(data, onTheFlyData, callbackContext, callBackFunction, callbackError) {
+      var url;
+      url = '../api/client/update';
+      return AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError);
+    };
+
     return ClientService;
 
   })();

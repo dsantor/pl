@@ -34,8 +34,6 @@ class @MainNavigation
         @_handleNavigationButtons(tab)
 
     _hashChangedHandler: (event) ->
-        
-        @_savePreviousPage(@currentPageHash)
 
         if @currentPage
             @currentPage.destroy() 

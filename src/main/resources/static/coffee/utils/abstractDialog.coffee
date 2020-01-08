@@ -75,6 +75,7 @@ class @AbstractDialog
 
     customHTML: () ->
         @_templateHTML(@_customHTML())
+        
     _customHTML: () ->
         return ''
 

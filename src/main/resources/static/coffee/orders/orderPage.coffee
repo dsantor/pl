@@ -4,23 +4,44 @@ class @OrderPage extends AbstractPage
         super()
         @order = null
         OrderService.get(orderId, null, this, @_loadedOrder, ajaxCallbackPrintMessage)
+        @payOrderDialog = new PayOrderDialog()
 
     destroy: () ->
         super()
         @order = null
+        @payOrderDialog.destroy()
+        @payOrderDialog = null
 
     _loadedOrder: (response) ->
-        console.log response
         @order = response.data
         @pageHTML()
 
+    _clickEventHandler: (event) ->
+        target = $(event.target)
+
+        if closest(target, '.js--back--button')
+            MainNavigation.back()
+            return
+        
+        if closest(target, '.js--paying--order')
+            @payOrderDialog.show(@order.id, this)
+            return
+
+        if closest(target, '.js--complete--order')
+            console.log 'complete order dialog'
+            return
     
     _customHTML: () ->
         workersHTML = ''
         keys = Object.keys(@order.workersMap)
         for key in keys
             workersHTML += "<a href='#worker/#{key}'>#{@order.workersMap[key]}</a></br>"
-        return "<div class='h-75 pt-5 flex'>
+        return "<nav class='nav justify-content-end header pt-3'> 
+                    <span class='nav-link span-a back-button js--back--button'>Nazad</span>
+                    <span class='nav-link span-a js--paying--order'>Plaćanje</span>
+                    <span class='nav-link span-a js--complete--order'>Završi porudžbinu</span>
+                </nav>
+                <div class='h-75 pt-5 flex'>
                     <div class='container w-50'>
                         <table class='table table-borderless'>
                             <tr>
@@ -57,3 +78,7 @@ class @OrderPage extends AbstractPage
                         </table>
                     </div>
                 </div>"
+
+    payOrderSuccess: (response) ->
+        @order.paid = response.data
+        @pageHTML()

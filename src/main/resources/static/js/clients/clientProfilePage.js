@@ -11,6 +11,7 @@
       this.clientId = Number(clientId);
       this.client = null;
       ClientService.get(clientId, null, this, this._loadedClient, this._loadedClientError);
+      this.createClientDialog = new CreateClientDialog();
     }
 
     ClientProfilePage.prototype.getPageTitle = function() {
@@ -18,7 +19,9 @@
     };
 
     ClientProfilePage.prototype.destroy = function() {
-      return ClientProfilePage.__super__.destroy.call(this);
+      ClientProfilePage.__super__.destroy.call(this);
+      this.createClientDialog.destroy();
+      return this.createClientDialog = null;
     };
 
     ClientProfilePage.prototype._clickEventHandler = function(event) {
@@ -34,11 +37,20 @@
       }
       if (closest(target, '.js--show--orders')) {
         window.location.hash = "client/" + this.clientId + "/orders";
+        return;
+      }
+      if (closest(target, '.js--edit--profile')) {
+        this.createClientDialog.show(this.client, this);
       }
     };
 
+    ClientProfilePage.prototype.updatedClient = function(response) {
+      return this._loadedClient(response);
+    };
+
     ClientProfilePage.prototype._loadedClient = function(response) {
-      return this.container.html(this._templateHTML(response.data));
+      this.client = response.data;
+      return this.container.html(this._templateHTML(this.client));
     };
 
     ClientProfilePage.prototype._loadedClientError = function() {
@@ -46,7 +58,7 @@
     };
 
     ClientProfilePage.prototype._templateHTML = function(client) {
-      return "<div class='container '> <nav class='nav header justify-content-end pt-3'> <span class='nav-link span-a back-button js--back--button'>Nazad</span> <span class='nav-link span-a js--show--orders'>Porudžbine</span> <span class='nav-link span-a js--create--bids'>Kreiraj porudzbinu</span> </nav> <div class='col-7 h-75 pt-5 flex'> <div class='container w-50'> <div class='profile-image h-336'> </div> </div> <div class='container w-50'> <table class='table table-borderless'> <tr> <td>Ime</td> <td>" + (client.firstName || '/') + "</td> </tr> <tr> <td>Prezime</td> <td>" + (client.lastName || '/') + "</td> </tr> <tr> <td>Ulica</td> <td>" + (client.street || '/') + "</td> </tr> <tr> <td>Broj stana</td> <td>" + (client.buildNumber || '/') + "</td> </tr> <tr> <td>Grad</td> <td>" + (client.city || '/') + "</td> </tr> <tr> <td>Telefon</td> <td>" + (client.phoneNumber || '/') + "</td> </tr> <tr> <td>Email</td> <td>" + (client.email || '/') + "</td> </tr> <!-- <tr> <td colspan='2'><input type='button' value='Izmeni' class='btn btn-lg btn-primary btn-block js--edit--profile'/></td> </tr> --> </table> </div> </div> </div>";
+      return "<div class='container '> <nav class='nav header justify-content-end pt-3'> <span class='nav-link span-a back-button js--back--button'>Nazad</span> <span class='nav-link span-a js--edit--profile'>Izmeni</span> <span class='nav-link span-a js--show--orders'>Porudžbine</span> <span class='nav-link span-a js--create--bids'>Kreiraj porudzbinu</span> </nav> <div class='h-75 pt-5 flex'> <div class='container w-40'> <div class='profile-image h-336'> </div> </div> <div class='container w-60'> <table class='table table-borderless'> <tr> <td class='wc-15'>Ime</td> <td>" + (client.firstName || '/') + "</td> </tr> <tr> <td class='wc-15'>Prezime</td> <td>" + (client.lastName || '/') + "</td> </tr> <tr> <td class='wc-15'>Ulica</td> <td>" + (client.street || '/') + "</td> </tr> <tr> <td class='wc-15'>Broj stana</td> <td>" + (client.buildNumber || '/') + "</td> </tr> <tr> <td class='wc-15'>Grad</td> <td>" + (client.city || '/') + "</td> </tr> <tr> <td class='wc-15'>Telefon</td> <td>" + (client.phoneNumber || '/') + "</td> </tr> <tr> <td class='wc-15'>Email</td> <td>" + (client.email || '/') + "</td> </tr> </table> </div> </div> </div>";
     };
 
     return ClientProfilePage;

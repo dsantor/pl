@@ -23,6 +23,7 @@ import com.dakiplast.entities.interfaces.IUser;
 import com.dakiplast.enums.UserActivityLogType;
 import com.dakiplast.exceptions.ErrorsEnum;
 import com.dakiplast.requests.OrderRequest;
+import com.dakiplast.requests.PayOrderRequest;
 import com.dakiplast.responses.BaseResponse;
 import com.dakiplast.responses.OrderResponse;
 import com.dakiplast.services.ClientService;
@@ -106,5 +107,21 @@ public class OrderController {
 		List<ClientDto> clientsDto = new ArrayList<>(clients.size());
 		clients.stream().forEach(clientDto -> clientsDto.add(clientDto));
 		return new OrderResponse(false, null, ordersDto, clientsDto);
+	}
+	
+	@PostMapping("/payOrder")
+	public BaseResponse payOrder(@RequestBody PayOrderRequest payOrderRequest, HttpServletRequest request) {
+		
+		IOrder order = orderService.getById(payOrderRequest.getOrderId());
+		if (order == null) {
+			return new BaseResponse(null, true, "Porudžbina ne postoji");
+		}
+		
+		Long paidAmount = payOrderRequest.getPaidAmount();
+		if (paidAmount == null || paidAmount < 0) {
+			return new BaseResponse(null, true, "Iznos uplate nije validan"); 
+		}
+		order = orderService.payOrder(payOrderRequest);
+		return new BaseResponse(order.getPaid(), false, null);
 	}
 }

@@ -20,6 +20,7 @@ import com.dakiplast.requests.ClientRequest;
 import com.dakiplast.requests.DoorRequest;
 import com.dakiplast.requests.MosquitoRequest;
 import com.dakiplast.requests.OrderRequest;
+import com.dakiplast.requests.PayOrderRequest;
 import com.dakiplast.requests.ShutterRequest;
 import com.dakiplast.requests.ThresholdRequest;
 import com.dakiplast.requests.WindowRequest;
@@ -235,6 +236,9 @@ public class OrderServiceImpl implements OrderService {
 
 		@Override
 		public IOrder getById(Long orderId) {
+			if (orderId == null) {
+				return null;
+			}
 			return orderRepository.getById(orderId);
 		}
 
@@ -306,6 +310,17 @@ public class OrderServiceImpl implements OrderService {
 			orderDto.setStatus(order.getStatus().getValue());
 			orderDto.setWorkersMap(workersMap);
 			return orderDto;
+		}
+
+		@Override
+		public IOrder payOrder(PayOrderRequest payOrderRequest) {
+			Long orderId = payOrderRequest.getOrderId();
+			Long paidAmount = payOrderRequest.getPaidAmount();
+			
+			IOrder order = getById(orderId);
+			Long totalPaid = order.getPaid() + paidAmount;
+			
+			return orderRepository.payOrder(orderId, totalPaid);
 		}		
 	
 }

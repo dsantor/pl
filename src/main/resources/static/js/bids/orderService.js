@@ -29,6 +29,12 @@
       return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
     };
 
+    OrderService.payOrder = function(data, onTheFlyData, callbackContext, callBackFunction, callbackError) {
+      var url;
+      url = this.apiUrl + '/payOrder';
+      return AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError);
+    };
+
     return OrderService;
 
   })();

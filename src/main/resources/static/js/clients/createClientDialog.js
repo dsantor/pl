@@ -14,7 +14,9 @@
       return 'Kreiranje klijenta';
     };
 
-    CreateClientDialog.prototype.show = function() {
+    CreateClientDialog.prototype.show = function(client, parentPage) {
+      this.client = client;
+      this.parentPage = parentPage;
       CreateClientDialog.__super__.show.call(this);
       this.customHTML();
       this.firstName = this.container.find('.js--firstName');
@@ -24,7 +26,15 @@
       this.city = this.container.find('.js--city');
       this.phoneNumber = this.container.find('.js--phoneNumber');
       this.email = this.container.find('.js--email');
-      return this.password = this.container.find('.js--password');
+      if (this.client) {
+        this.firstName.val(this._prettyPrint(this.client.firstName));
+        this.lastName.val(this._prettyPrint(this.client.lastName));
+        this.street.val(this._prettyPrint(this.client.street));
+        this.buildNumber.val(this._prettyPrint(this.client.buildNumber));
+        this.city.val(this._prettyPrint(this.client.city));
+        this.phoneNumber.val(this._prettyPrint(this.client.phoneNumber));
+        return this.email.val(this._prettyPrint(this.client.email));
+      }
     };
 
     CreateClientDialog.prototype.hide = function() {
@@ -39,7 +49,8 @@
       this.city = null;
       this.phoneNumber = null;
       this.email = null;
-      return this.password = null;
+      this.client = null;
+      return this.parentPage = null;
     };
 
     CreateClientDialog.prototype._customHTML = function() {
@@ -51,15 +62,15 @@
     };
 
     CreateClientDialog.prototype.positiveAction = function() {
-      var buildNumber, city, data, email, firstName, lastName, phoneNumber, street, valid;
+      var buildNumber, city, data, email, firstName, id, lastName, phoneNumber, street, valid;
       valid = true;
-      firstName = this.firstName.val().trim();
-      lastName = this.lastName.val().trim();
-      street = this.street.val().trim();
-      buildNumber = this.buildNumber.val().trim();
-      city = this.city.val().trim();
-      phoneNumber = this.phoneNumber.val().trim();
-      email = this.email.val().trim();
+      firstName = this._removeShash(this.firstName.val().trim());
+      lastName = this._removeShash(this.lastName.val().trim());
+      street = this._removeShash(this.street.val().trim());
+      buildNumber = this._removeShash(this.buildNumber.val().trim());
+      city = this._removeShash(this.city.val().trim());
+      phoneNumber = this._removeShash(this.phoneNumber.val().trim());
+      email = this._removeShash(this.email.val().trim());
       if (firstName === '') {
         this.firstName.addClass(ComponentsUtils.CSS_INVALID_INPUT);
         valid = false;
@@ -81,7 +92,12 @@
       if (!valid) {
         return;
       }
+      id = null;
+      if (this.client) {
+        id = this.client.id;
+      }
       data = {
+        id: id,
         firstName: firstName,
         lastName: lastName,
         street: street,
@@ -90,8 +106,22 @@
         phoneNumber: phoneNumber,
         email: email
       };
-      ClientService.save(data, null, this, this._saveClientSuccess, this._saveClientError);
+      if (this.client) {
+        ClientService.update(data, null, this, this._updateClientSuccess, this._updateClientError);
+      } else {
+        ClientService.save(data, null, this, this._saveClientSuccess, this._saveClientError);
+      }
       return this.hide();
+    };
+
+    CreateClientDialog.prototype._updateClientSuccess = function(response) {
+      if (this.parentPage && this.parentPage.updatedClient) {
+        return this.parentPage.updatedClient(response);
+      }
+    };
+
+    CreateClientDialog.prototype._updateClientError = function(response) {
+      return FloatingMessage.error("Izmene nisu uspešno sačuvane, pokušajte ponovo.");
     };
 
     CreateClientDialog.prototype._saveClientSuccess = function(response) {
@@ -100,7 +130,19 @@
     };
 
     CreateClientDialog.prototype._saveClientError = function(response) {
-      return FloatingMessage.error("Korisnik nije uspesno kreiran, pokusajte ponovo.");
+      return FloatingMessage.error("Klijent nije uspešno kreiran, pokušajte ponovo.");
+    };
+
+    CreateClientDialog.prototype._prettyPrint = function(value) {
+      return value || '/';
+    };
+
+    CreateClientDialog.prototype._removeShash = function(value) {
+      if (value === '/') {
+        return '';
+      } else {
+        return value;
+      }
     };
 
     return CreateClientDialog;

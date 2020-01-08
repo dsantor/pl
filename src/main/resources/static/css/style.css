@@ -10063,8 +10063,20 @@ a.text-dark:hover, a.text-dark:focus {
   width: 20% !important;
 }
 
+.w-30 {
+  width: 30% !important;
+}
+
 .w-40 {
   width: 40% !important;
+}
+
+.w-60 {
+  width: 60% !important;
+}
+
+.w-fit-content {
+  width: fit-content !important;
 }
 
 .table-text {
@@ -10240,6 +10252,9 @@ select {
     width: 10ch;
 }
 
+.wc-15 {
+  width: 15ch !important;
+}
 
 label.left-label {
   display: block;

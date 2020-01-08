@@ -10,4 +10,7 @@ public interface ClientRepository {
 	
 	IClient getClientById(Long id);
 	List<IClient> getAll();
+
+	IClient update(Long clientId, String firstName, String lastName, String phoneNumber, String email, String city,
+			String street, String buildNumber);
 }

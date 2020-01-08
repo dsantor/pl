@@ -7,7 +7,7 @@
         return 'Kreiranje klijenta'    
 
 
-    show: () ->
+    show: (@client, @parentPage) ->
         super()
         @customHTML()
         # Inputs
@@ -18,7 +18,15 @@
         @city         = @container.find('.js--city')
         @phoneNumber  = @container.find('.js--phoneNumber')
         @email        = @container.find('.js--email')
-        @password     = @container.find('.js--password')
+        
+        if @client
+            @firstName.val(@_prettyPrint(@client.firstName))
+            @lastName.val(@_prettyPrint(@client.lastName))
+            @street.val(@_prettyPrint(@client.street))
+            @buildNumber.val(@_prettyPrint(@client.buildNumber))
+            @city.val(@_prettyPrint(@client.city))
+            @phoneNumber.val(@_prettyPrint(@client.phoneNumber))
+            @email.val(@_prettyPrint(@client.email))
 
     hide: () ->
         super()
@@ -32,7 +40,9 @@
         @city         = null
         @phoneNumber  = null
         @email        = null
-        @password     = null
+        @client       = null
+        @parentPage   = null
+
 
     _customHTML: () ->
         "<div class='col-7 m-auto h-75 pt-5 flex'>
@@ -79,13 +89,13 @@
     positiveAction: () ->
         valid       = true
         
-        firstName    = @firstName.val().trim()
-        lastName     = @lastName.val().trim()
-        street       = @street.val().trim()
-        buildNumber  = @buildNumber.val().trim()
-        city         = @city.val().trim()
-        phoneNumber  = @phoneNumber.val().trim()
-        email        = @email.val().trim()
+        firstName    = @_removeShash(@firstName.val().trim())
+        lastName     = @_removeShash(@lastName.val().trim())
+        street       = @_removeShash(@street.val().trim())
+        buildNumber  = @_removeShash(@buildNumber.val().trim())
+        city         = @_removeShash(@city.val().trim())
+        phoneNumber  = @_removeShash(@phoneNumber.val().trim())
+        email        = @_removeShash(@email.val().trim())
 
         if firstName is ''
             @firstName.addClass(ComponentsUtils.CSS_INVALID_INPUT)
@@ -108,7 +118,12 @@
         if not valid
             return
 
+        id = null
+        if @client
+            id = @client.id
+
         data = {
+            id           : id
             firstName    : firstName
             lastName     : lastName
             street       : street
@@ -118,12 +133,32 @@
             email        : email
         }
 
-        ClientService.save(data, null, this, @_saveClientSuccess, @_saveClientError)
+        if @client
+            ClientService.update(data, null, this, @_updateClientSuccess, @_updateClientError)
+        else
+            ClientService.save(data, null, this, @_saveClientSuccess, @_saveClientError)
         @hide()
+
+    _updateClientSuccess: (response) ->
+        if @parentPage and @parentPage.updatedClient
+            @parentPage.updatedClient(response)
+
+    _updateClientError: (response) ->
+        FloatingMessage.error("Izmene nisu uspešno sačuvane, pokušajte ponovo.")
 
     _saveClientSuccess: (response) ->
         FloatingMessage.success("Kreiran klijent #{response.data.firstName}  #{response.data.lastName}" )
         EventUtils.triggerCreatedNewClient(response.data)
 
     _saveClientError: (response) ->
-        FloatingMessage.error("Korisnik nije uspesno kreiran, pokusajte ponovo.")
+        FloatingMessage.error("Klijent nije uspešno kreiran, pokušajte ponovo.")
+
+    _prettyPrint: (value) ->
+        return value or '/'
+
+    _removeShash: (value) ->
+        if value is '/'
+            return ''
+        else
+            return value
+    

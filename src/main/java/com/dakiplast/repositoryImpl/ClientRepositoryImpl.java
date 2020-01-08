@@ -48,4 +48,22 @@ public class ClientRepositoryImpl implements ClientRepository {
 		return entity;
 	}
 
+
+	@Override
+	public IClient update(Long clientId, String firstName, String lastName, String phoneNumber, String email,
+			String city, String street, String buildNumber) {
+	
+		Client entity = em.find(Client.class, clientId);
+		entity.setBuildNumber(buildNumber);
+		entity.setCity(city);
+		entity.setEmail(email);
+		entity.setFirstName(firstName);
+		entity.setLastName(lastName);
+		entity.setPhoneNumber(phoneNumber);
+		entity.setStreet(street);
+		
+		em.merge(entity);
+		return entity;
+	}
+
 }

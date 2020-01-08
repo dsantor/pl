@@ -5,12 +5,15 @@ class @ClientProfilePage extends AbstractPage
         @clientId = Number(clientId)
         @client = null
         ClientService.get(clientId, null, this, @_loadedClient, @_loadedClientError)
+        @createClientDialog = new CreateClientDialog()
 
     getPageTitle: () ->
         return 'Klijent profil'
         
     destroy: () ->
         super()
+        @createClientDialog.destroy()
+        @createClientDialog = null
 
     _clickEventHandler: (event) ->
         target = $(event.target)
@@ -26,8 +29,16 @@ class @ClientProfilePage extends AbstractPage
             window.location.hash = "client/#{@clientId}/orders"
             return
 
-    _loadedClient:(response) ->
-        @container.html(@_templateHTML(response.data))
+        if closest(target, '.js--edit--profile')
+            @createClientDialog.show(@client, this)
+            return
+
+    updatedClient: (response) ->
+        @_loadedClient(response)
+
+    _loadedClient: (response) ->
+        @client = response.data
+        @container.html(@_templateHTML(@client))
 
     _loadedClientError: () ->
         console.log 'error'
@@ -36,53 +47,50 @@ class @ClientProfilePage extends AbstractPage
         return "<div class='container '>
                 <nav class='nav header justify-content-end pt-3'>
                     <span class='nav-link span-a back-button js--back--button'>Nazad</span>
+                    <span class='nav-link span-a js--edit--profile'>Izmeni</span>
                     <span class='nav-link span-a js--show--orders'>Porudžbine</span>
                     <span class='nav-link span-a js--create--bids'>Kreiraj porudzbinu</span>
                 </nav>
-                <div class='col-7 h-75 pt-5 flex'>
-                    <div class='container w-50'>
+                <div class='h-75 pt-5 flex'>
+                    <div class='container w-40'>
                         <div class='profile-image h-336'>
                         </div>
                     </div>
-                    <div class='container w-50'>
+                    <div class='container w-60'>
                         <table class='table table-borderless'>
                             <tr>
-                                <td>Ime</td>
+                                <td class='wc-15'>Ime</td>
                                 <td>#{client.firstName or '/'}</td>
                             </tr>
                                 
                             <tr>
-                                <td>Prezime</td>
+                                <td class='wc-15'>Prezime</td>
                                 <td>#{client.lastName or '/'}</td>
                             </tr>
                                 
                             <tr>
-                                <td>Ulica</td>
+                                <td class='wc-15'>Ulica</td>
                                 <td>#{client.street or '/'}</td>
                             </tr>
                             
                             <tr>
-                                <td>Broj stana</td>
+                                <td class='wc-15'>Broj stana</td>
                                 <td>#{client.buildNumber or '/'}</td>
                             </tr>
                             <tr>
-                                <td>Grad</td>
+                                <td class='wc-15'>Grad</td>
                                 <td>#{client.city or '/'}</td>
                             </tr>
                                 
                             <tr>
-                                <td>Telefon</td>
+                                <td class='wc-15'>Telefon</td>
                                 <td>#{client.phoneNumber or '/'}</td>
                             </tr>
                                 
                             <tr>
-                                <td>Email</td>
+                                <td class='wc-15'>Email</td>
                                 <td>#{client.email or '/'}</td>
                             </tr>
-                            <!-- <tr>
-                                <td colspan='2'><input type='button' value='Izmeni' class='btn btn-lg btn-primary btn-block js--edit--profile'/></td>
-                            </tr> -->
-                                
                         </table>
                     </div>
                 </div>

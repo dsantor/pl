@@ -180,4 +180,12 @@ public class OrderRepositoryImpl implements OrderRepository {
 		Query query = entityManager.createNamedQuery("Order.findOrdersByClientId").setParameter("clientId", clientId);
 		return query.getResultList();
 	}
+
+	@Override
+	public IOrder payOrder(Long orderId, Long totalPaid) {
+		Order entity = entityManager.find(Order.class, orderId);
+		entity.setPaid(totalPaid);
+		entityManager.merge(entity);
+		return entity;
+	}
 }

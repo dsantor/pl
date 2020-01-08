@@ -16,3 +16,7 @@ class @OrderService
     @getAllClientOrders: (clientId, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
         url = @apiUrl + '/getAll/' + clientId
         AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)
+
+    @payOrder: (data, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
+        url = @apiUrl + '/payOrder'
+        AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError)

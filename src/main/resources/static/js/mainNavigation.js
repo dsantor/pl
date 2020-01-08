@@ -44,7 +44,6 @@
     };
 
     MainNavigation.prototype._hashChangedHandler = function(event) {
-      this._savePreviousPage(this.currentPageHash);
       if (this.currentPage) {
         this.currentPage.destroy();
       }

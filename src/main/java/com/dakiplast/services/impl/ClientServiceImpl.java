@@ -22,6 +22,9 @@ public class ClientServiceImpl implements ClientService {
 	
 	@Override
 	public IClient getClientById(Long id) {
+		if (id == null) {
+			return null;
+		}
 		return clientRepository.getClientById(id);
 	}
 
@@ -34,7 +37,7 @@ public class ClientServiceImpl implements ClientService {
 	public IClient create(ClientRequest clientRequest, Long createdBy) {
 		
 		String firstName   = clientRequest.getFirstName().trim();
-		String lastName    = clientRequest.getFirstName().trim();
+		String lastName    = clientRequest.getLastName().trim();
 		String buildNumber = clientRequest.getBuildNumber().trim();
 		String city 	   = clientRequest.getCity().trim();
 		String email 	   = clientRequest.getEmail().trim();
@@ -47,6 +50,24 @@ public class ClientServiceImpl implements ClientService {
 		}
 		
 		return clientRepository.create(firstName, lastName, phoneNumber, email, city, street, buildNumber, createdBy);
+	}
+
+	@Override
+	public IClient update(ClientRequest clientRequest) {
+		Long clientId	   = clientRequest.getId();
+		String firstName   = clientRequest.getFirstName().trim();
+		String lastName    = clientRequest.getLastName().trim();
+		String buildNumber = clientRequest.getBuildNumber().trim();
+		String city 	   = clientRequest.getCity().trim();
+		String email 	   = clientRequest.getEmail().trim();
+		String phoneNumber = clientRequest.getPhoneNumber().trim();
+		String street 	   = clientRequest.getStreet().trim();
+		
+		if (firstName.isEmpty() || lastName.isEmpty() || phoneNumber.isEmpty()) {
+			return getClientById(clientId);
+		}
+		
+		return clientRepository.update(clientId, firstName, lastName, phoneNumber, email, city, street, buildNumber);
 	}
 
 }

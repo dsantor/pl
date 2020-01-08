@@ -148,7 +148,7 @@ class @AutoSuggestion
         return "<div class='flex-column w-100'>
                     <div class='flex flex-row justify-content-around pb-3'>
                         <div class='flex flex-row w-40'>
-                            <label class='mr-2 mb-0 align-self-center w-25 d-inline-block'>Pretraži</label>
+                            <label class='flex mr-2 mb-0 align-self-center w-fit-content'>Pretraži</label>
                             <div class='pos-rel w-100 mb-2'>
                                 <input type='text' class='form-control w-100 input-icon-icon-24 js--filter--as'/>
                                 <i class='input-icon-24 search-icon cursor-initial'></i>
@@ -200,7 +200,7 @@ class @AutoSuggestion
                     <div class='flex flex-row justify-content-around pb-3'>
                         <div class='flex flex-column w-40'>
                             <div class='flex flex-row w-100'>
-                                <label class='mr-2 mb-0 align-self-center w-25 d-inline-block'>Pretraži</label>
+                                <label class='flex mr-2 mb-0 align-self-center w-fit-content'>Pretraži</label>
                                 <div class='pos-rel w-100 mb-2'>
                                     <input type='text' class='form-control w-100 input-icon-icon-24 js--filter--as'/>
                                     <i class='input-icon-24 search-icon cursor-initial'></i>

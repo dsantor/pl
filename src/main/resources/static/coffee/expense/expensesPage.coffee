@@ -72,7 +72,8 @@ class @ExpensesPage extends AbstractPage
                             <div class='flex-table-cell w-20'>#{expense.purpose}</div>
                          </div>"
 
-        html = "<div class='flex-table'>
+        html = "<div class='hide'></div>
+                <div class='flex-table'>
                     <div class='flex-table-cell w-20'>Izručio novac</div>
                     <div class='flex-table-cell w-20'>Primio novac</div>
                     <div class='flex-table-cell w-20'>Datum</div>

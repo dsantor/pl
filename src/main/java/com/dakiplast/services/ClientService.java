@@ -11,4 +11,5 @@ public interface ClientService {
 	List<IClient> getAll();
 	
 	IClient create(ClientRequest clientRequest, Long createdBy);
+	IClient update(ClientRequest clientRequest);
 }

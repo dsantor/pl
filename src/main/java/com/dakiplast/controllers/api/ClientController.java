@@ -82,4 +82,22 @@ public class ClientController {
 		IClient client = clientService.getClientById(clientId);
 		return new BaseResponse(client, false, null);
 	}
+	
+	@PostMapping("/update")
+	public BaseResponse update(@RequestBody ClientRequest clientRequest, HttpServletRequest request) {
+		
+		Long loggedUserId = SessionService.getLoggedUserId(request);
+		IUser user = userService.getById(loggedUserId);
+		if (!Validation.isUserOrAdmin(user)) {
+			return new BaseResponse(null, true, ErrorsEnum.PRIVILEGES_ERROR.getMessage());
+		}
+
+		IClient client = clientService.getClientById(clientRequest.getId());
+		if (client == null) {
+			return new BaseResponse(null, true, "Klijent ne postoji");
+		}
+		
+		client = clientService.update(clientRequest);
+		return new BaseResponse(client, false, null);
+	}
 }
