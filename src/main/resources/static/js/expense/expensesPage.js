@@ -65,7 +65,16 @@
         innerHtml += "<div class='flex-table js--expense--row' data-bid-id=" + expense.id + "> <div class='flex-table-cell w-20'> <a href='#worker/" + expense.expenseCreatedBy + "'>" + expense.expenseCreatedByFullName + "</a> </div> <div class='flex-table-cell w-20'> <a href='#user/" + expense.moneyGivenBy + "'>" + expense.moneyGivenByFullName + "</a> </div> <div class='flex-table-cell w-20'> " + (ComponentsUtils.getTimeFromMillis(expense.moneyGivenAt)) + " </div> <div class='flex-table-cell w-20'>" + expense.sum + "</div> <div class='flex-table-cell w-20'>" + expense.purpose + "</div> </div>";
       }
       html = "<div class='flex-table'> <div class='flex-table-cell w-20'>Izručio novac</div> <div class='flex-table-cell w-20'>Primio novac</div> <div class='flex-table-cell w-20'>Datum</div> <div class='flex-table-cell w-20'>Suma</div> <div class='flex-table-cell w-20'>Svrha</div> </div> " + innerHtml + " </div>";
-      return this.expensesContainer.html(html);
+      this.expensesContainer.html(html);
+      return {
+        triggerFiterSumFrom: function() {
+          return this._triggerFilter();
+        },
+        triggerFiterSumTo: function() {
+          return this._triggerFilter();
+        },
+        _triggerFilter: function() {}
+      };
     };
 
     return ExpensesPage;

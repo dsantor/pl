@@ -14,7 +14,6 @@ class @MainNavigation
         @mainNavigation.on 'click', @_mainNavigationHandler.bind(this)
 		
         @_restrictPage()
-        @_savePreviousPage('#profile')
         $(window).on 'hashchange', @_hashChangedHandler.bind(this)
 
         if window.location.hash == ''
@@ -25,7 +24,6 @@ class @MainNavigation
 
     _handlePage: () ->
         hashValue = @_extractHashValue()
-        @currentPageHash = hashValue.page
         @_openPage(hashValue)
         tab = ''
         keys = Object.keys(@pages)
@@ -127,10 +125,7 @@ class @MainNavigation
 
     
     @back = () ->
-        window.location.hash = window.previousPageHash
-
-    _savePreviousPage: (hash) ->
-        window.previousPageHash = hash
+        window.previousPageHash = history.back()
 
 $(document).ready ->
     new MainNavigation()

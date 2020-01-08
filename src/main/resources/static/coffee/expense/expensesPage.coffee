@@ -83,3 +83,13 @@ class @ExpensesPage extends AbstractPage
                 </div>"
 
         @expensesContainer.html(html)
+
+
+        triggerFiterSumFrom: () ->
+            @_triggerFilter()
+
+        triggerFiterSumTo: () ->
+            @_triggerFilter()
+
+        
+        _triggerFilter: () ->

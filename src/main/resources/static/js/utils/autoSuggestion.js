@@ -48,7 +48,7 @@
     };
 
     AutoSuggestion.prototype._changeEventHander = function(event) {
-      var base, base1, base2, base3, target;
+      var base, base1, base2, base3, base4, base5, target;
       target = $(event.target);
       if (closest(target, '.js--filter--status')) {
         if (typeof (base = this.parentPage).triggerFilterStatus === "function") {
@@ -68,7 +68,19 @@
         }
         return;
       }
-      return typeof (base3 = this.parentPage).AutoSuggestionChangeEventHander === "function" ? base3.AutoSuggestionChangeEventHander(event) : void 0;
+      if (closest(target, '.js--filter--sum--from')) {
+        if (typeof (base3 = this.parentPage).triggerFiterSumFrom === "function") {
+          base3.triggerFiterSumFrom();
+        }
+        return;
+      }
+      if (closest(target, '.js--filter--sum--to')) {
+        if (typeof (base4 = this.parentPage).triggerFiterSumTo === "function") {
+          base4.triggerFiterSumTo();
+        }
+        return;
+      }
+      return typeof (base5 = this.parentPage).AutoSuggestionChangeEventHander === "function" ? base5.AutoSuggestionChangeEventHander(event) : void 0;
     };
 
     AutoSuggestion.prototype._clickEventHandler = function(event) {

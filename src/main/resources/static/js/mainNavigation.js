@@ -19,7 +19,6 @@
       this.mainNavigation = $('.js--main--navigation');
       this.mainNavigation.on('click', this._mainNavigationHandler.bind(this));
       this._restrictPage();
-      this._savePreviousPage('#profile');
       $(window).on('hashchange', this._hashChangedHandler.bind(this));
       if (window.location.hash === '') {
         this._redirectToHomepage();
@@ -31,7 +30,6 @@
     MainNavigation.prototype._handlePage = function() {
       var hashValue, i, key, keys, len, tab;
       hashValue = this._extractHashValue();
-      this.currentPageHash = hashValue.page;
       this._openPage(hashValue);
       tab = '';
       keys = Object.keys(this.pages);
@@ -151,11 +149,7 @@
     };
 
     MainNavigation.back = function() {
-      return window.location.hash = window.previousPageHash;
-    };
-
-    MainNavigation.prototype._savePreviousPage = function(hash) {
-      return window.previousPageHash = hash;
+      return window.previousPageHash = history.back();
     };
 
     return MainNavigation;

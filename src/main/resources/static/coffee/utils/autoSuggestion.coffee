@@ -59,6 +59,14 @@ class @AutoSuggestion
             @parentPage.triggerFilterTo?(event)
             return
 
+        if closest(target, '.js--filter--sum--from')
+            @parentPage.triggerFiterSumFrom?()
+            return
+        
+        if closest(target, '.js--filter--sum--to')
+            @parentPage.triggerFiterSumTo?()
+            return
+
         @parentPage.AutoSuggestionChangeEventHander?(event)
 
     _clickEventHandler: (event) ->
