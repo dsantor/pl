@@ -28,7 +28,7 @@ class @OrderPage extends AbstractPage
             return
 
         if closest(target, '.js--complete--order')
-            console.log 'complete order dialog'
+            console.log 'complete order dialog' 
             return
     
     _customHTML: () ->
