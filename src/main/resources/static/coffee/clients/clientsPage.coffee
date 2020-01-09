@@ -54,7 +54,9 @@ class @ClientsPage extends AbstractPage
                     <span class='nav-link span-a js--create--client'>Dodaj klijenta</span>
                 </nav>
                 <div class='js--filter--container--wrapper'></div>
-                <div class='js--clients--container'></div>"
+                <div class='js--clients--container'>
+                    #{ComponentsUtils.loadingPage()}
+                </div>"
 
     _renderClientsHTML: (clients) ->        
         tableHtml = "

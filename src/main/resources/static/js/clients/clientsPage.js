@@ -68,7 +68,7 @@
     };
 
     ClientsPage.prototype._customHTML = function() {
-      return " <nav class='nav justify-content-end pt-3'> <span class='nav-link span-a js--create--client'>Dodaj klijenta</span> </nav> <div class='js--filter--container--wrapper'></div> <div class='js--clients--container'></div>";
+      return " <nav class='nav justify-content-end pt-3'> <span class='nav-link span-a js--create--client'>Dodaj klijenta</span> </nav> <div class='js--filter--container--wrapper'></div> <div class='js--clients--container'> " + (ComponentsUtils.loadingPage()) + " </div>";
     };
 
     ClientsPage.prototype._renderClientsHTML = function(clients) {

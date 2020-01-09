@@ -63,7 +63,7 @@
     };
 
     OrdersPage.prototype._customHTML = function() {
-      return "<div class='js--filter--container--wrapper pt-5'></div> <div class='js--orders--container'></div>";
+      return "<div class='js--filter--container--wrapper pt-5'></div> <div class='js--orders--container'> " + (ComponentsUtils.loadingPage()) + " </div>";
     };
 
     OrdersPage.prototype._renderOrdersHTML = function(orders) {

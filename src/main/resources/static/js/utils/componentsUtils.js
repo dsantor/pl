@@ -42,7 +42,7 @@
     };
 
     ComponentsUtils.loadingPage = function() {
-      return "";
+      return "<div><span class='loader-icon'></span></div>";
     };
 
     ComponentsUtils.getTimeFromMillis = function(millis) {

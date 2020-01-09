@@ -40,7 +40,9 @@ class @OrdersPage extends AbstractPage
 
     _customHTML: () ->
         return "<div class='js--filter--container--wrapper pt-5'></div>
-                <div class='js--orders--container'></div>"
+                <div class='js--orders--container'>
+                    #{ComponentsUtils.loadingPage()}
+                </div>"
     
     _renderOrdersHTML: (orders) ->
         tableHtml = ''

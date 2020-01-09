@@ -69,7 +69,7 @@ class @ComponentsUtils
                 <div class='pt-3'>#{innerHtml}</div>"
 
     @loadingPage: () ->
-        return ""
+        return "<div><span class='loader-icon'></span></div>"
 
     @getTimeFromMillis: (millis) ->
         date = new Date(millis)
