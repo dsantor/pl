@@ -8,13 +8,18 @@ class @ExpensesPage extends AbstractPage
         else
             ExpenseService.getAll(null, this, @_expensesLoaded, @_expensesLoadedError)
 
+        @clientsAndWorkers = []
+        WorkerService.getAll(null, this, @_loadedClientsSuccess, @_loadedClientsError)
         @filterContainer = @container.find('.js--filter--container')
         @expensesContainer = @container.find('.js--expenses--container')
         @autoSuggestion = new AutoSuggestion(this, @filterContainer, AutoSuggestion.EXPENSE_FILTER)
         @filterAsInput = @container.find('.js--filter--as')
         @suggestionsContainer = @container.find('.js--filter--suggestions')
-        @filterStatus = @container.find('.js--filter--status')
 
+        @filterFrom    = @container.find('.js--filter--from')
+        @filterTo      = @container.find('.js--filter--to')
+        @filterSumFrom = @container.find('.js--filter--sum--from')
+        @filterSumTo   = @container.find('.js--filter--sum--to')
         @createExpenseDialog = new CreateExpenseDialog()
     destroy: () ->
         super()
@@ -60,10 +65,10 @@ class @ExpensesPage extends AbstractPage
         for expense in expenses
             innerHtml += "<div class='flex-table js--expense--row' data-bid-id=#{expense.id}>
                             <div class='flex-table-cell w-20'>
-                                <a href='#worker/#{expense.expenseCreatedBy}'>#{expense.expenseCreatedByFullName}</a>
+                                <a href='#user/#{expense.expenseCreatedBy}'>#{expense.expenseCreatedByFullName}</a>
                             </div>
                             <div class='flex-table-cell w-20'>
-                                <a href='#user/#{expense.moneyGivenBy}'>#{expense.moneyGivenByFullName}</a>
+                                <a href='#worker/#{expense.moneyGivenBy}'>#{expense.moneyGivenByFullName}</a>
                             </div>
                             <div class='flex-table-cell w-20'>
                                 #{ComponentsUtils.getTimeFromMillis(expense.moneyGivenAt)}
@@ -74,8 +79,8 @@ class @ExpensesPage extends AbstractPage
 
         html = "<div class='hide'></div>
                 <div class='flex-table'>
-                    <div class='flex-table-cell w-20'>Izručio novac</div>
                     <div class='flex-table-cell w-20'>Primio novac</div>
+                    <div class='flex-table-cell w-20'>Izručio novac</div>
                     <div class='flex-table-cell w-20'>Datum</div>
                     <div class='flex-table-cell w-20'>Suma</div>
                     <div class='flex-table-cell w-20'>Svrha</div>
@@ -86,11 +91,92 @@ class @ExpensesPage extends AbstractPage
         @expensesContainer.html(html)
 
 
-        triggerFiterSumFrom: () ->
-            @_triggerFilter()
+    triggerFiterSumFrom: () ->
+        @_applyFilter()
 
-        triggerFiterSumTo: () ->
-            @_triggerFilter()
+    triggerFiterSumTo: () ->
+        @_applyFilter()
 
+    triggerFilterFrom: () ->
+        @_applyFilter()
+
+    triggerFilterTo: () ->
+        @_applyFilter()
+    
+    triggerFilterAs: (event) ->
+        ComponentsUtils.handleAutoSuggestion(@filterAsInput, 'data-id', @clientsAndWorkers, @suggestionsContainer, true, this, @_resetFilter)
+
+    triggerFilterSuggestions: (event) ->
+        target = $(event.target)
+        ComponentsUtils.selectFromAutoSuggestion(target, @filterAsInput, 'data-id', @clientsAndWorkers, @suggestionsContainer)
+        @_applyFilter()
+        return
+
+    triggerFilterReset: () ->
+        @_resetFilter()
+    
+    _resetFilter: () ->
+        @filterSumFrom.val('')
+        @filterSumTo.val('')
+        @filterFrom.val('')
+        @filterTo.val('')
+        @filterAsInput.val('')
+        @filterAsInput.removeAttr('data-id')
+        @_applyFilter()
         
-        _triggerFilter: () ->
+    _applyFilter: () ->
+        sumFrom = @filterSumFrom.val()
+        sumTo = @filterSumTo.val()
+        filteredExpenses = []
+        if sumFrom or sumTo
+            if sumFrom
+                sumFrom = sumFrom.trim()
+            else
+                sumFrom = 0
+            
+            if sumTo
+                sumTo = sumTo.trim()
+            else
+                sumTo = Number.MAX_SAFE_INTEGER
+
+            for expense in @expenses
+                if expense.sum >= sumFrom and expense.sum <= sumTo
+                    filteredExpenses.push(expense)
+
+        else
+            filteredExpenses = @expenses.slice()
+
+        if @filterFrom.val() or @filterTo.val()
+            if @filterFrom.val()
+                dateFrom = new Date(@filterFrom.val()).getTime()
+            else
+                dateFrom = new Date('1970').getTime()
+            
+            if @filterTo.val()
+                dateTo = new Date(@filterTo.val()).getTime()
+            else
+                dateTo = new Date().getTime()
+            
+            filteredByDate = []
+            for expense in filteredExpenses
+                if expense.moneyGivenAt >= dateFrom and expense.moneyGivenAt <= dateTo
+                    filteredByDate.push(expense)
+            filteredExpenses = filteredByDate
+
+        filterAs = @filterAsInput.val().trim()
+        # razdvojiti data att za usera i workera
+        if filterAs
+            filtered = []
+            userId = Number(@filterAsInput.attr('data-id'))
+            for expense in filteredExpenses
+                if expense.moneyTook == userId
+                    filtered.push(expense)
+            
+            filteredExpenses = filtered
+        @_renderExpensesHTML(filteredExpenses)
+
+
+    _loadedClientsSuccess: (response) ->
+        @clientsAndWorkers = @clientsAndWorkers.concat(response.data)
+    _loadedClientsError: (response) ->
+        console.log 'error'

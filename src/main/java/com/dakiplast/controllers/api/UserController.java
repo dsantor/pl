@@ -85,7 +85,11 @@ public class UserController {
 		
 		try {
 			boolean updated = userService.update(userId, user);
-			return new BaseResponse(updated, false, "Uspešno sačuvane izmene.");
+			IUser iUser = userService.getById(userId);
+			Object[] obs= new Object[2];
+			obs[0] = user;
+			obs[1] = iUser;
+			return new BaseResponse(obs, false, "Uspešno sačuvane izmene.");
 
 		}catch (Exception e) {
 			return new BaseResponse(false, true, e.getMessage());

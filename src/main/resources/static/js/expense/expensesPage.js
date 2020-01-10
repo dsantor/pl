@@ -14,12 +14,17 @@
       } else {
         ExpenseService.getAll(null, this, this._expensesLoaded, this._expensesLoadedError);
       }
+      this.clientsAndWorkers = [];
+      WorkerService.getAll(null, this, this._loadedClientsSuccess, this._loadedClientsError);
       this.filterContainer = this.container.find('.js--filter--container');
       this.expensesContainer = this.container.find('.js--expenses--container');
       this.autoSuggestion = new AutoSuggestion(this, this.filterContainer, AutoSuggestion.EXPENSE_FILTER);
       this.filterAsInput = this.container.find('.js--filter--as');
       this.suggestionsContainer = this.container.find('.js--filter--suggestions');
-      this.filterStatus = this.container.find('.js--filter--status');
+      this.filterFrom = this.container.find('.js--filter--from');
+      this.filterTo = this.container.find('.js--filter--to');
+      this.filterSumFrom = this.container.find('.js--filter--sum--from');
+      this.filterSumTo = this.container.find('.js--filter--sum--to');
       this.createExpenseDialog = new CreateExpenseDialog();
     }
 
@@ -62,19 +67,120 @@
       innerHtml = "";
       for (i = 0, len = expenses.length; i < len; i++) {
         expense = expenses[i];
-        innerHtml += "<div class='flex-table js--expense--row' data-bid-id=" + expense.id + "> <div class='flex-table-cell w-20'> <a href='#worker/" + expense.expenseCreatedBy + "'>" + expense.expenseCreatedByFullName + "</a> </div> <div class='flex-table-cell w-20'> <a href='#user/" + expense.moneyGivenBy + "'>" + expense.moneyGivenByFullName + "</a> </div> <div class='flex-table-cell w-20'> " + (ComponentsUtils.getTimeFromMillis(expense.moneyGivenAt)) + " </div> <div class='flex-table-cell w-20'>" + expense.sum + "</div> <div class='flex-table-cell w-20'>" + expense.purpose + "</div> </div>";
+        innerHtml += "<div class='flex-table js--expense--row' data-bid-id=" + expense.id + "> <div class='flex-table-cell w-20'> <a href='#user/" + expense.expenseCreatedBy + "'>" + expense.expenseCreatedByFullName + "</a> </div> <div class='flex-table-cell w-20'> <a href='#worker/" + expense.moneyGivenBy + "'>" + expense.moneyGivenByFullName + "</a> </div> <div class='flex-table-cell w-20'> " + (ComponentsUtils.getTimeFromMillis(expense.moneyGivenAt)) + " </div> <div class='flex-table-cell w-20'>" + expense.sum + "</div> <div class='flex-table-cell w-20'>" + expense.purpose + "</div> </div>";
       }
-      html = "<div class='hide'></div> <div class='flex-table'> <div class='flex-table-cell w-20'>Izručio novac</div> <div class='flex-table-cell w-20'>Primio novac</div> <div class='flex-table-cell w-20'>Datum</div> <div class='flex-table-cell w-20'>Suma</div> <div class='flex-table-cell w-20'>Svrha</div> </div> " + innerHtml + " </div>";
-      this.expensesContainer.html(html);
-      return {
-        triggerFiterSumFrom: function() {
-          return this._triggerFilter();
-        },
-        triggerFiterSumTo: function() {
-          return this._triggerFilter();
-        },
-        _triggerFilter: function() {}
-      };
+      html = "<div class='hide'></div> <div class='flex-table'> <div class='flex-table-cell w-20'>Primio novac</div> <div class='flex-table-cell w-20'>Izručio novac</div> <div class='flex-table-cell w-20'>Datum</div> <div class='flex-table-cell w-20'>Suma</div> <div class='flex-table-cell w-20'>Svrha</div> </div> " + innerHtml + " </div>";
+      return this.expensesContainer.html(html);
+    };
+
+    ExpensesPage.prototype.triggerFiterSumFrom = function() {
+      return this._applyFilter();
+    };
+
+    ExpensesPage.prototype.triggerFiterSumTo = function() {
+      return this._applyFilter();
+    };
+
+    ExpensesPage.prototype.triggerFilterFrom = function() {
+      return this._applyFilter();
+    };
+
+    ExpensesPage.prototype.triggerFilterTo = function() {
+      return this._applyFilter();
+    };
+
+    ExpensesPage.prototype.triggerFilterAs = function(event) {
+      return ComponentsUtils.handleAutoSuggestion(this.filterAsInput, 'data-id', this.clientsAndWorkers, this.suggestionsContainer, true, this, this._resetFilter);
+    };
+
+    ExpensesPage.prototype.triggerFilterSuggestions = function(event) {
+      var target;
+      target = $(event.target);
+      ComponentsUtils.selectFromAutoSuggestion(target, this.filterAsInput, 'data-id', this.clientsAndWorkers, this.suggestionsContainer);
+      this._applyFilter();
+    };
+
+    ExpensesPage.prototype.triggerFilterReset = function() {
+      return this._resetFilter();
+    };
+
+    ExpensesPage.prototype._resetFilter = function() {
+      this.filterSumFrom.val('');
+      this.filterSumTo.val('');
+      this.filterFrom.val('');
+      this.filterTo.val('');
+      this.filterAsInput.val('');
+      this.filterAsInput.removeAttr('data-id');
+      return this._applyFilter();
+    };
+
+    ExpensesPage.prototype._applyFilter = function() {
+      var dateFrom, dateTo, expense, filterAs, filtered, filteredByDate, filteredExpenses, i, j, k, len, len1, len2, ref, sumFrom, sumTo, userId;
+      sumFrom = this.filterSumFrom.val();
+      sumTo = this.filterSumTo.val();
+      filteredExpenses = [];
+      if (sumFrom || sumTo) {
+        if (sumFrom) {
+          sumFrom = sumFrom.trim();
+        } else {
+          sumFrom = 0;
+        }
+        if (sumTo) {
+          sumTo = sumTo.trim();
+        } else {
+          sumTo = Number.MAX_SAFE_INTEGER;
+        }
+        ref = this.expenses;
+        for (i = 0, len = ref.length; i < len; i++) {
+          expense = ref[i];
+          if (expense.sum >= sumFrom && expense.sum <= sumTo) {
+            filteredExpenses.push(expense);
+          }
+        }
+      } else {
+        filteredExpenses = this.expenses.slice();
+      }
+      if (this.filterFrom.val() || this.filterTo.val()) {
+        if (this.filterFrom.val()) {
+          dateFrom = new Date(this.filterFrom.val()).getTime();
+        } else {
+          dateFrom = new Date('1970').getTime();
+        }
+        if (this.filterTo.val()) {
+          dateTo = new Date(this.filterTo.val()).getTime();
+        } else {
+          dateTo = new Date().getTime();
+        }
+        filteredByDate = [];
+        for (j = 0, len1 = filteredExpenses.length; j < len1; j++) {
+          expense = filteredExpenses[j];
+          if (expense.moneyGivenAt >= dateFrom && expense.moneyGivenAt <= dateTo) {
+            filteredByDate.push(expense);
+          }
+        }
+        filteredExpenses = filteredByDate;
+      }
+      filterAs = this.filterAsInput.val().trim();
+      if (filterAs) {
+        filtered = [];
+        userId = Number(this.filterAsInput.attr('data-id'));
+        for (k = 0, len2 = filteredExpenses.length; k < len2; k++) {
+          expense = filteredExpenses[k];
+          if (expense.moneyTook === userId) {
+            filtered.push(expense);
+          }
+        }
+        filteredExpenses = filtered;
+      }
+      return this._renderExpensesHTML(filteredExpenses);
+    };
+
+    ExpensesPage.prototype._loadedClientsSuccess = function(response) {
+      return this.clientsAndWorkers = this.clientsAndWorkers.concat(response.data);
+    };
+
+    ExpensesPage.prototype._loadedClientsError = function(response) {
+      return console.log('error');
     };
 
     return ExpensesPage;

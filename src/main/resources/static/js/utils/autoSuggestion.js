@@ -36,7 +36,7 @@
     };
 
     AutoSuggestion.prototype._keyupEventHandler = function(event) {
-      var base, base1, target;
+      var base, base1, base2, base3, target;
       target = $(event.target);
       if (closest(target, '.js--filter--as')) {
         if (typeof (base = this.parentPage).triggerFilterAs === "function") {
@@ -44,11 +44,23 @@
         }
         return;
       }
-      return typeof (base1 = this.parentPage).AutoSuggestionKeyUpEventHander === "function" ? base1.AutoSuggestionKeyUpEventHander(event) : void 0;
+      if (closest(target, '.js--filter--sum--from')) {
+        if (typeof (base1 = this.parentPage).triggerFiterSumFrom === "function") {
+          base1.triggerFiterSumFrom();
+        }
+        return;
+      }
+      if (closest(target, '.js--filter--sum--to')) {
+        if (typeof (base2 = this.parentPage).triggerFiterSumTo === "function") {
+          base2.triggerFiterSumTo();
+        }
+        return;
+      }
+      return typeof (base3 = this.parentPage).AutoSuggestionKeyUpEventHander === "function" ? base3.AutoSuggestionKeyUpEventHander(event) : void 0;
     };
 
     AutoSuggestion.prototype._changeEventHander = function(event) {
-      var base, base1, base2, base3, base4, base5, target;
+      var base, base1, base2, base3, target;
       target = $(event.target);
       if (closest(target, '.js--filter--status')) {
         if (typeof (base = this.parentPage).triggerFilterStatus === "function") {
@@ -68,19 +80,7 @@
         }
         return;
       }
-      if (closest(target, '.js--filter--sum--from')) {
-        if (typeof (base3 = this.parentPage).triggerFiterSumFrom === "function") {
-          base3.triggerFiterSumFrom();
-        }
-        return;
-      }
-      if (closest(target, '.js--filter--sum--to')) {
-        if (typeof (base4 = this.parentPage).triggerFiterSumTo === "function") {
-          base4.triggerFiterSumTo();
-        }
-        return;
-      }
-      return typeof (base5 = this.parentPage).AutoSuggestionChangeEventHander === "function" ? base5.AutoSuggestionChangeEventHander(event) : void 0;
+      return typeof (base3 = this.parentPage).AutoSuggestionChangeEventHander === "function" ? base3.AutoSuggestionChangeEventHander(event) : void 0;
     };
 
     AutoSuggestion.prototype._clickEventHandler = function(event) {
