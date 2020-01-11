@@ -20,18 +20,6 @@ spring:
       ddl-auto: update
       show-sql: false
       generate-ddl: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL5Dialect
-        connection:
-          characterEncoding: utf-8
-          CharSet: utf-8
-          useUnicode: true
-    http:
-      encoding:
-        charset: UTF-8
-        enabled: true
-        force: true
   queries:
     users-query: "select email, password, active from users where email=?"
     roles-query: "select email, role from users where email=?"

@@ -1,8 +1,9 @@
 class @EventUtils
 
-    @NEW_CLIENT_IS_CREATED = 'NEW_CLIENT_IS_CREATED'
-    @NEW_USER_IS_CREATED   = 'NEW_USER_IS_CREATED'
-    @NEW_WORKER_IS_CREATED = 'NEW_WORKER_IS_CREATED'
+    @NEW_CLIENT_IS_CREATED  = 'NEW_CLIENT_IS_CREATED'
+    @NEW_USER_IS_CREATED    = 'NEW_USER_IS_CREATED'
+    @NEW_WORKER_IS_CREATED  = 'NEW_WORKER_IS_CREATED'
+    @NEW_EXPENSE_IS_CREATED = 'NEW_EXPENSE_IS_CREATED'
 
     @triggerEvent: (eventName, data) ->
         $(document).trigger(eventName, data)
@@ -46,3 +47,13 @@ class @EventUtils
 
     @unbindCreatedNewWorker: (handler) ->
         @unbindEventHandler(EventUtils.NEW_WORKER_IS_CREATED, handler)
+
+    ### Expense ###
+    @triggerCreatedNewExpense: (expense) ->
+        @triggerEvent(EventUtils.NEW_EXPENSE_IS_CREATED, expense)
+    
+    @bindCreatedNewExpense: (handler) ->
+        @bindEventHandler(EventUtils.NEW_EXPENSE_IS_CREATED, handler)
+    
+    @unbindCreatedNewExpense: (handler) ->
+        @unbindEventHandler(EventUtils.NEW_EXPENSE_IS_CREATED, handler)

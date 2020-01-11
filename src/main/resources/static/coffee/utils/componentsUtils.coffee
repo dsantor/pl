@@ -75,15 +75,26 @@ class @ComponentsUtils
         date = new Date(millis)
         year = date.getFullYear()
         month = date.getMonth() + 1
+        if month < 10
+            month = @_prependZero(month)
         day  = date.getDate()
+        if day < 10
+            day = @_prependZero(day)
 
         hour = date.getHours()
+        if hour < 10
+            hour = @_prependZero(hour)
         minutes = date.getMinutes()
+        if minutes < 10
+            minutes = @_prependZero(minutes)
         seconds = date.getSeconds()
+        if seconds < 10
+            seconds = @_prependZero(seconds)
 
         return "#{day}-#{month}-#{year} (#{hour}:#{minutes}:#{seconds})"
 
-    
+    @_prependZero: (value) ->
+        return '0' + value
     @selectFromAutoSuggestion: (target, input, dataAttribute, array, container) ->
         id = Number(target.attr(dataAttribute))
         for a in array

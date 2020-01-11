@@ -23,6 +23,7 @@ import com.dakiplast.entities.interfaces.IUser;
 import com.dakiplast.enums.UserActivityLogType;
 import com.dakiplast.exceptions.ErrorsEnum;
 import com.dakiplast.requests.OrderRequest;
+import com.dakiplast.requests.OrderStatusRequest;
 import com.dakiplast.requests.PayOrderRequest;
 import com.dakiplast.responses.BaseResponse;
 import com.dakiplast.responses.OrderResponse;
@@ -30,7 +31,6 @@ import com.dakiplast.services.ClientService;
 import com.dakiplast.services.OrderService;
 import com.dakiplast.services.UserActivityLogService;
 import com.dakiplast.services.UserService;
-import com.dakiplast.services.WorkerService;
 import com.dakiplast.services.impl.SessionService;
 import com.dakiplast.utils.Validation;
 
@@ -44,8 +44,6 @@ public class OrderController {
 	private UserService userService;
 	@Autowired
 	private ClientService clientService;
-	@Autowired
-	private WorkerService workerService;
 	@Autowired
 	private UserActivityLogService userActivityLogService;
 	
@@ -123,5 +121,12 @@ public class OrderController {
 		}
 		order = orderService.payOrder(payOrderRequest);
 		return new BaseResponse(order.getPaid(), false, null);
+	}
+	
+	@PostMapping("/updateStatus")
+	public BaseResponse update(@RequestBody OrderStatusRequest orderRequest) {
+		IOrder order = orderService.updateStatus(orderRequest);
+		OrderDto orderDto = orderService.convertToOrderDto(order);
+		return new BaseResponse(orderDto, false, null);
 	}
 }

@@ -20,6 +20,7 @@ import com.dakiplast.requests.ClientRequest;
 import com.dakiplast.requests.DoorRequest;
 import com.dakiplast.requests.MosquitoRequest;
 import com.dakiplast.requests.OrderRequest;
+import com.dakiplast.requests.OrderStatusRequest;
 import com.dakiplast.requests.PayOrderRequest;
 import com.dakiplast.requests.ShutterRequest;
 import com.dakiplast.requests.ThresholdRequest;
@@ -307,7 +308,9 @@ public class OrderServiceImpl implements OrderService {
 			orderDto.setSaldo(order.getSaldo());
 			orderDto.setPaid(order.getPaid());
 			orderDto.setBuildDateMillis(order.getBuildDate().getTimeInMillis());
+			orderDto.setStatusStr(order.getStatus().getText());
 			orderDto.setStatus(order.getStatus().getValue());
+			orderDto.setNote(order.getNote());
 			orderDto.setWorkersMap(workersMap);
 			return orderDto;
 		}
@@ -321,6 +324,15 @@ public class OrderServiceImpl implements OrderService {
 			Long totalPaid = order.getPaid() + paidAmount;
 			
 			return orderRepository.payOrder(orderId, totalPaid);
+		}
+
+		@Override
+		public IOrder updateStatus(OrderStatusRequest orderRequest) {
+			Long orderId = orderRequest.getId();
+			String orderStatus = orderRequest.getStatus();
+			OrderStatus status = OrderStatus.valueOf(orderStatus);
+			String note = orderRequest.getNote();
+			
+			return orderRepository.updateStatus(orderId, status, note);
 		}		
-	
 }

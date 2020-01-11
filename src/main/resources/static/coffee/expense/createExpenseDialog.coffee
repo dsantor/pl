@@ -72,8 +72,9 @@ class @CreateExpenseDialog extends AbstractDialog
         ExpenseService.create(data, null, this, @_createSuccess, ajaxCallbackPrintMessage)
         @hide()
 
-    _createSuccess: () ->
+    _createSuccess: (response) ->
         FloatingMessage.success("Dažbina uspešno kreirana")
+        EventUtils.triggerCreatedNewExpense(response.data)
 
     _validateForm: () ->
         valid = true

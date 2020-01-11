@@ -32,7 +32,7 @@ class @ActivityDialog extends AbstractDialog
         rowHtml = ""
         for al in actionLogs
             rowHtml = "<tr>
-                        <td class='table-text w-20'>#{al.person}</td>
+                        <td class='table-text w-20'><a href='#{al.link}'>#{al.person}</a></td>
                         <td class='table-text w-20'>#{al.action}</td>
                         <td class='table-text w-20'>#{al.time}</td>
                     </tr>"
@@ -53,12 +53,15 @@ class @ActivityDialog extends AbstractDialog
             item = {}
             if actionLog.user
                 item.person = actionLog.user.firstName + ' ' + actionLog.user.lastName
-            
+                item.link = '#user/' + actionLog.user.id
+
             if actionLog.client
                 item.person = actionLog.client.firstName + ' ' + actionLog.client.lastName
+                item.link = '#client/' + actionLog.client.id
             
             if actionLog.worker
                 item.person = actionLog.worker.firstName + ' ' + actionLog.worker.lastName
+                item.link = '#worker/' + actionLog.worker.id
 
             item.action = actionLog.type
             item.time = ComponentsUtils.getTimeFromMillis(actionLog.time)

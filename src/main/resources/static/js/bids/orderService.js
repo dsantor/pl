@@ -35,6 +35,12 @@
       return AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError);
     };
 
+    OrderService.updateOrderStatus = function(data, onTheFlyData, callbackContext, callBackFunction, callbackError) {
+      var url;
+      url = this.apiUrl + '/updateStatus';
+      return AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError);
+    };
+
     return OrderService;
 
   })();

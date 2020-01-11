@@ -15,4 +15,5 @@ public interface IOrder {
 	public Long getPaid();
 	public Calendar getBuildDate();
 	public OrderStatus getStatus();
+	public String getNote();
 }

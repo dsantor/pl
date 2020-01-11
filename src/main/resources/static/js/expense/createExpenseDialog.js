@@ -81,8 +81,9 @@
       return this.hide();
     };
 
-    CreateExpenseDialog.prototype._createSuccess = function() {
-      return FloatingMessage.success("Dažbina uspešno kreirana");
+    CreateExpenseDialog.prototype._createSuccess = function(response) {
+      FloatingMessage.success("Dažbina uspešno kreirana");
+      return EventUtils.triggerCreatedNewExpense(response.data);
     };
 
     CreateExpenseDialog.prototype._validateForm = function() {

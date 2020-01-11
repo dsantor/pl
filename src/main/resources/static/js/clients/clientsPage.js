@@ -41,7 +41,12 @@
       this.createClientDialog.destroy();
       this.createClientDialog = null;
       this.clients = null;
-      return this.container.html('');
+      this.container.html('');
+      this.autoSuggestion.destroy();
+      this.autoSuggestion = null;
+      this.filterAsInput = null;
+      this.suggestionsContainer = null;
+      return this.filterStatus = null;
     };
 
     ClientsPage.prototype.getPageTitle = function() {
@@ -184,7 +189,7 @@
       this.filterAsInput.val('');
       this.filterAsInput.removeAttr('data-client-id');
       this.filterStatus.val(this.filterStatus[0].options[0].value);
-      return this._renderClientsHTML(this.clients);
+      return this._applyFilter();
     };
 
     return ClientsPage;

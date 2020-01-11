@@ -60,6 +60,9 @@ public class Order implements Serializable, IOrder {
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
 
+	@Column(name = "note")
+	private String note;
+	
 	public Long getId() {
 		return id;
 	}
@@ -131,9 +134,17 @@ public class Order implements Serializable, IOrder {
 	public void setBuildDate(Calendar buildDate) {
 		this.buildDate = buildDate;
 	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
 	public List<Long> getWorkerIds() {
 		Long[] listIds = new Gson().fromJson(this.workerIds, Long[].class);
 		return Arrays.asList(listIds);
 	}
-
 }

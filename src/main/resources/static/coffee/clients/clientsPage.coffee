@@ -28,6 +28,13 @@ class @ClientsPage extends AbstractPage
 
         @clients = null
         @container.html('')
+
+        @autoSuggestion.destroy()
+        @autoSuggestion = null
+
+        @filterAsInput        = null
+        @suggestionsContainer = null
+        @filterStatus         = null
         
 
     getPageTitle: () ->
@@ -175,4 +182,4 @@ class @ClientsPage extends AbstractPage
         @filterAsInput.val('')
         @filterAsInput.removeAttr('data-client-id')
         @filterStatus.val(@filterStatus[0].options[0].value)
-        @_renderClientsHTML(@clients)
+        @_applyFilter()

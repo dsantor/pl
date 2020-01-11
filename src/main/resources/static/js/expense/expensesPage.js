@@ -26,6 +26,8 @@
       this.filterSumFrom = this.container.find('.js--filter--sum--from');
       this.filterSumTo = this.container.find('.js--filter--sum--to');
       this.createExpenseDialog = new CreateExpenseDialog();
+      this.createdNewExpenseEvent = this._createdNewExpenseHandler.bind(this);
+      EventUtils.bindCreatedNewExpense(this.createdNewExpenseEvent);
     }
 
     ExpensesPage.prototype.destroy = function() {
@@ -34,7 +36,17 @@
       this.autoSuggestion.destroy();
       autoSuggestion = null;
       this.createExpenseDialog.destroy();
-      return this.createExpenseDialog = null;
+      this.createExpenseDialog = null;
+      EventUtils.unbindCreatedNewExpense(this.createdNewExpenseEvent);
+      this.createdNewExpenseEvent = null;
+      this.expensesContainer = null;
+      this.suggestionsContainer = null;
+      this.filterContainer = null;
+      this.filterAsInput = null;
+      this.filterFrom = null;
+      this.filterTo = null;
+      this.filterSumFrom = null;
+      return this.filterSumTo = null;
     };
 
     ExpensesPage.prototype._clickEventHandler = function(event) {
@@ -67,9 +79,9 @@
       innerHtml = "";
       for (i = 0, len = expenses.length; i < len; i++) {
         expense = expenses[i];
-        innerHtml += "<div class='flex-table js--expense--row' data-bid-id=" + expense.id + "> <div class='flex-table-cell w-20'> <a href='#user/" + expense.expenseCreatedBy + "'>" + expense.expenseCreatedByFullName + "</a> </div> <div class='flex-table-cell w-20'> <a href='#worker/" + expense.moneyGivenBy + "'>" + expense.moneyGivenByFullName + "</a> </div> <div class='flex-table-cell w-20'> " + (ComponentsUtils.getTimeFromMillis(expense.moneyGivenAt)) + " </div> <div class='flex-table-cell w-20'>" + expense.sum + "</div> <div class='flex-table-cell w-20'>" + expense.purpose + "</div> </div>";
+        innerHtml += "<div class='flex-table js--expense--row' data-bid-id=" + expense.id + "> <div class='flex-table-cell w-20'> <a href='#worker/" + expense.expenseCreatedBy + "'>" + expense.expenseCreatedByFullName + "</a> </div> <div class='flex-table-cell w-20'> <a href='#user/" + expense.moneyGivenBy + "'>" + expense.moneyGivenByFullName + "</a> </div> <div class='flex-table-cell w-20'> " + (ComponentsUtils.getTimeFromMillis(expense.moneyGivenAt)) + " </div> <div class='flex-table-cell w-20'>" + expense.sum + "</div> <div class='flex-table-cell w-20'>" + expense.purpose + "</div> </div>";
       }
-      html = "<div class='hide'></div> <div class='flex-table'> <div class='flex-table-cell w-20'>Primio novac</div> <div class='flex-table-cell w-20'>Izručio novac</div> <div class='flex-table-cell w-20'>Datum</div> <div class='flex-table-cell w-20'>Suma</div> <div class='flex-table-cell w-20'>Svrha</div> </div> " + innerHtml + " </div>";
+      html = "<div class='hide'></div> <div class='flex-table'> <div class='flex-table-cell w-20'>Primio novac</div> <div class='flex-table-cell w-20'>Uručio novac</div> <div class='flex-table-cell w-20'>Datum</div> <div class='flex-table-cell w-20'>Suma</div> <div class='flex-table-cell w-20'>Svrha</div> </div> " + innerHtml + " </div>";
       return this.expensesContainer.html(html);
     };
 
@@ -181,6 +193,11 @@
 
     ExpensesPage.prototype._loadedClientsError = function(response) {
       return console.log('error');
+    };
+
+    ExpensesPage.prototype._createdNewExpenseHandler = function(event, expense) {
+      this.expenses.push(expense);
+      return this._applyFilter();
     };
 
     return ExpensesPage;

@@ -5,6 +5,7 @@ import java.util.List;
 import com.dakiplast.entities.dto.OrderDto;
 import com.dakiplast.entities.interfaces.IOrder;
 import com.dakiplast.requests.OrderRequest;
+import com.dakiplast.requests.OrderStatusRequest;
 import com.dakiplast.requests.PayOrderRequest;
 
 public interface OrderService {
@@ -18,4 +19,5 @@ public interface OrderService {
 	public List<IOrder> getOrdersForClient(Long clientId);
 	public OrderDto convertToOrderDto(IOrder order);
 	public IOrder payOrder(PayOrderRequest payOrderRequest);
+	public IOrder updateStatus(OrderStatusRequest orderRequest);
 }

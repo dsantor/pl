@@ -21,6 +21,9 @@ class @ExpensesPage extends AbstractPage
         @filterSumFrom = @container.find('.js--filter--sum--from')
         @filterSumTo   = @container.find('.js--filter--sum--to')
         @createExpenseDialog = new CreateExpenseDialog()
+
+        @createdNewExpenseEvent = @_createdNewExpenseHandler.bind(this)
+        EventUtils.bindCreatedNewExpense(@createdNewExpenseEvent)
     destroy: () ->
         super()
 
@@ -29,6 +32,17 @@ class @ExpensesPage extends AbstractPage
 
         @createExpenseDialog.destroy()
         @createExpenseDialog = null
+        
+        EventUtils.unbindCreatedNewExpense(@createdNewExpenseEvent)
+        @createdNewExpenseEvent = null
+        @expensesContainer      = null
+        @suggestionsContainer   = null
+        @filterContainer        = null
+        @filterAsInput = null
+        @filterFrom    = null
+        @filterTo      = null
+        @filterSumFrom = null
+        @filterSumTo   = null
 
     _clickEventHandler: (event) ->
         target = $(event.target)
@@ -65,10 +79,10 @@ class @ExpensesPage extends AbstractPage
         for expense in expenses
             innerHtml += "<div class='flex-table js--expense--row' data-bid-id=#{expense.id}>
                             <div class='flex-table-cell w-20'>
-                                <a href='#user/#{expense.expenseCreatedBy}'>#{expense.expenseCreatedByFullName}</a>
+                                <a href='#worker/#{expense.expenseCreatedBy}'>#{expense.expenseCreatedByFullName}</a>
                             </div>
                             <div class='flex-table-cell w-20'>
-                                <a href='#worker/#{expense.moneyGivenBy}'>#{expense.moneyGivenByFullName}</a>
+                                <a href='#user/#{expense.moneyGivenBy}'>#{expense.moneyGivenByFullName}</a>
                             </div>
                             <div class='flex-table-cell w-20'>
                                 #{ComponentsUtils.getTimeFromMillis(expense.moneyGivenAt)}
@@ -80,7 +94,7 @@ class @ExpensesPage extends AbstractPage
         html = "<div class='hide'></div>
                 <div class='flex-table'>
                     <div class='flex-table-cell w-20'>Primio novac</div>
-                    <div class='flex-table-cell w-20'>Izručio novac</div>
+                    <div class='flex-table-cell w-20'>Uručio novac</div>
                     <div class='flex-table-cell w-20'>Datum</div>
                     <div class='flex-table-cell w-20'>Suma</div>
                     <div class='flex-table-cell w-20'>Svrha</div>
@@ -180,3 +194,7 @@ class @ExpensesPage extends AbstractPage
         @clientsAndWorkers = @clientsAndWorkers.concat(response.data)
     _loadedClientsError: (response) ->
         console.log 'error'
+
+    _createdNewExpenseHandler: (event, expense) ->
+        @expenses.push(expense)
+        @_applyFilter()

@@ -20,3 +20,7 @@ class @OrderService
     @payOrder: (data, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
         url = @apiUrl + '/payOrder'
         AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError)
+
+    @updateOrderStatus: (data, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
+        url = @apiUrl + '/updateStatus'
+        AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError)

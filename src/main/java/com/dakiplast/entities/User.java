@@ -35,7 +35,7 @@ public class User implements Serializable, IUser {
 	@Column(name = "user_id")
 	private Long id;
 	
-	@Column(name = "first_name", columnDefinition="CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci")
+	@Column(name = "first_name")
 	private String firstName;
 	
 	@Column(name = "last_name")

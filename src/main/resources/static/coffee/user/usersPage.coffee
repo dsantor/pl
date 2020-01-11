@@ -51,10 +51,13 @@ class @UsersPage extends AbstractPage
         if users is null or users.length is 0
             @emptyState()
             return
+        adminOptionsHtml = ''
+        if window.loggedUserInfo.isAdmin
+            adminOptionsHtml = "<th class='table-text w-10'>Profil</th>"
         tableHtml = "<div>
                         <table class='table mb-0'>
                             <tr>
-                                <th class='table-text w-10'>Profil</th>
+                                #{adminOptionsHtml}
                                 <th class='table-text w-20'>Ime</th>
                                 <th class='table-text w-20'>Prezime</th>
                                 <th class='table-text w-20'>Telefon</th>
@@ -62,13 +65,14 @@ class @UsersPage extends AbstractPage
                             </tr>
                         </table>
                         <table class='table table-striped'>"
-        rowHtml = ""
+        rowHtml = ''
+        adminOptionsHtml = ''
         for u in users
 
             firstName   = u.firstName or '/'
             lastName    = u.lastName or '/'
             phoneNumber = u.phoneNumber or '/'
-
+            
             if window.loggedUserInfo.isAdmin
                 if u.active
                     userIcon = 'user-icon'
@@ -205,4 +209,4 @@ class @UsersPage extends AbstractPage
         @userASInput.val('')
         @userASInput.removeAttr('data-user-id')
         @userStatus.val(@userStatus[0].options[0].value)
-        @_renderUsersHTML(@users)
+        @_applyFilter()

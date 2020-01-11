@@ -55,8 +55,13 @@
         this.emptyState();
         return;
       }
-      tableHtml = "<div> <table class='table mb-0'> <tr> <th class='table-text w-10'>Profil</th> <th class='table-text w-20'>Ime</th> <th class='table-text w-20'>Prezime</th> <th class='table-text w-20'>Telefon</th> <th class='table-text w-30'>Email</th> </tr> </table> <table class='table table-striped'>";
-      rowHtml = "";
+      adminOptionsHtml = '';
+      if (window.loggedUserInfo.isAdmin) {
+        adminOptionsHtml = "<th class='table-text w-10'>Profil</th>";
+      }
+      tableHtml = "<div> <table class='table mb-0'> <tr> " + adminOptionsHtml + " <th class='table-text w-20'>Ime</th> <th class='table-text w-20'>Prezime</th> <th class='table-text w-20'>Telefon</th> <th class='table-text w-30'>Email</th> </tr> </table> <table class='table table-striped'>";
+      rowHtml = '';
+      adminOptionsHtml = '';
       for (i = 0, len = users.length; i < len; i++) {
         u = users[i];
         firstName = u.firstName || '/';
@@ -223,7 +228,7 @@
       this.userASInput.val('');
       this.userASInput.removeAttr('data-user-id');
       this.userStatus.val(this.userStatus[0].options[0].value);
-      return this._renderUsersHTML(this.users);
+      return this._applyFilter();
     };
 
     return UsersPage;

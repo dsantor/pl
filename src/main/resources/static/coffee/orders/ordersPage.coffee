@@ -19,8 +19,22 @@ class @OrdersPage extends AbstractPage
         @suggestionsContainer = @container.find('.js--filter--suggestions')
         @status = @container.find('.js--filter--status')        
         @filterToggleButton = @container.find('.js--filters--content')
+
     destroy: () ->
         super()
+        @autoSuggestion.destroy()
+        @autoSuggestion  = null
+
+        @ordersContainer = null
+        @filterContainer = null
+        filterStatus     = null        
+        @asInput         = null
+        @filterFrom      = null
+        @filterTo        = null
+        @status          = null
+
+        @suggestionsContainer = null        
+        @filterToggleButton   = null
 
     getPageTitle: () ->
         return "Porudzbine"
@@ -57,7 +71,7 @@ class @OrdersPage extends AbstractPage
                             </td>
                             <td class='table-text w-20'>#{order.saldo}</td>
                             <td class='table-text w-20'>#{order.paid}</td>
-                            <td class='table-text w-20'>#{order.status}</td>
+                            <td class='table-text w-20'>#{order.statusStr}</td>
                             <td class='table-text w-20'>#{ComponentsUtils.getTimeFromMillis(order.createdAtMillis)}</td>                            
                         </tr>"
         tableHtml = "<div>

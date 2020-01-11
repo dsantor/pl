@@ -19,6 +19,8 @@ public class OrderDto {
 	private Long saldo;
 	private Long paid;
 	private String status;
+	private String statusStr;
+	private String note;
 	private Map<Long, String> workersMap;
 
 	public Long getId() {
@@ -110,5 +112,17 @@ public class OrderDto {
 	}
 	public void setBuildDateMillis(Long buildDateMillis) {
 		this.buildDateMillis = buildDateMillis;
+	}
+	public String getStatusStr() {
+		return statusStr;
+	}
+	public void setStatusStr(String statusStr) {
+		this.statusStr = statusStr;
+	}
+	public String getNote() {
+		return note;
+	}
+	public void setNote(String note) {
+		this.note = note;
 	}
 }

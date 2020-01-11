@@ -188,4 +188,13 @@ public class OrderRepositoryImpl implements OrderRepository {
 		entityManager.merge(entity);
 		return entity;
 	}
+
+	@Override
+	public IOrder updateStatus(Long orderId, OrderStatus status, String note) {
+		Order entity = entityManager.find(Order.class, orderId);		
+		entity.setStatus(status);
+		entity.setNote(note);
+		entityManager.merge(entity);
+		return entity;
+	}
 }

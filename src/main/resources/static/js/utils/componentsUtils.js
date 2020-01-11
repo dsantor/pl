@@ -50,11 +50,30 @@
       date = new Date(millis);
       year = date.getFullYear();
       month = date.getMonth() + 1;
+      if (month < 10) {
+        month = this._prependZero(month);
+      }
       day = date.getDate();
+      if (day < 10) {
+        day = this._prependZero(day);
+      }
       hour = date.getHours();
+      if (hour < 10) {
+        hour = this._prependZero(hour);
+      }
       minutes = date.getMinutes();
+      if (minutes < 10) {
+        minutes = this._prependZero(minutes);
+      }
       seconds = date.getSeconds();
+      if (seconds < 10) {
+        seconds = this._prependZero(seconds);
+      }
       return day + "-" + month + "-" + year + " (" + hour + ":" + minutes + ":" + seconds + ")";
+    };
+
+    ComponentsUtils._prependZero = function(value) {
+      return '0' + value;
     };
 
     ComponentsUtils.selectFromAutoSuggestion = function(target, input, dataAttribute, array, container) {

@@ -29,4 +29,5 @@ public interface OrderRepository {
 	void setSaldo(Long orderId, Long saldo);
 	List<IOrder> getOrdersForClient(Long clientId);
 	IOrder payOrder(Long orderId, Long totalPaid);
+	IOrder updateStatus(Long orderId, OrderStatus status, String note);
 }

@@ -11,13 +11,16 @@
       this.order = null;
       OrderService.get(orderId, null, this, this._loadedOrder, ajaxCallbackPrintMessage);
       this.payOrderDialog = new PayOrderDialog();
+      this.updateOrderDialog = new UpdateOrderDialog();
     }
 
     OrderPage.prototype.destroy = function() {
       OrderPage.__super__.destroy.call(this);
       this.order = null;
       this.payOrderDialog.destroy();
-      return this.payOrderDialog = null;
+      this.payOrderDialog = null;
+      this.updateOrderDialog.destroy();
+      return this.updateOrderDialog = null;
     };
 
     OrderPage.prototype._loadedOrder = function(response) {
@@ -37,7 +40,7 @@
         return;
       }
       if (closest(target, '.js--complete--order')) {
-        console.log('TODO complete order dialog');
+        this.updateOrderDialog.show(this, this.order);
       }
     };
 
@@ -49,11 +52,16 @@
         key = keys[i];
         workersHTML += "<a href='#worker/" + key + "'>" + this.order.workersMap[key] + "</a></br>";
       }
-      return "<nav class='nav justify-content-end header pt-3'> <span class='nav-link span-a back-button js--back--button'>Nazad</span> <span class='nav-link span-a js--paying--order'>Plaćanje</span> <span class='nav-link span-a js--complete--order'>Završi porudžbinu</span> </nav> <div class='h-75 pt-5 flex'> <div class='container w-50'> <table class='table table-borderless'> <tr> <td>Porudžbinu kreirao/la</td> <td><a href='#user/" + this.order.createdById + "'>" + this.order.createdByName + "</a></td> </tr> <tr> <td>Klijent</td> <td><a href='#client/" + this.order.clientId + "'>" + this.order.clientFullName + "</a></td> </tr> <tr> <td>Kreirano</td> <td>" + (ComponentsUtils.getTimeFromMillis(this.order.createdAtMillis)) + "</td> </tr> <tr> <td>Status prodžbine</td> <td>" + this.order.status + "</td> </tr> <tr> <td>Cena</td> <td>" + this.order.saldo + "</td> </tr> <tr> <td>Uplaćeno</td> <td>" + this.order.paid + "</td> </tr> <tr> <td>Radnici</td> <td>" + workersHTML + "</td> </tr> </table> </div> </div>";
+      return "<nav class='nav justify-content-end header pt-3'> <span class='nav-link span-a back-button js--back--button'>Nazad</span> <span class='nav-link span-a js--paying--order'>Plaćanje</span> <span class='nav-link span-a js--complete--order'>Ažuriraj porudžbinu</span> </nav> <div class='h-75 pt-5 flex'> <div class='container w-50'> <table class='table table-borderless'> <tr> <td>Porudžbinu kreirao/la</td> <td><a href='#user/" + this.order.createdById + "'>" + this.order.createdByName + "</a></td> </tr> <tr> <td>Klijent</td> <td><a href='#client/" + this.order.clientId + "'>" + this.order.clientFullName + "</a></td> </tr> <tr> <td>Kreirano</td> <td>" + (ComponentsUtils.getTimeFromMillis(this.order.createdAtMillis)) + "</td> </tr> <tr> <td>Status prodžbine</td> <td>" + this.order.statusStr + "</td> </tr> <tr> <td>Cena</td> <td>" + this.order.saldo + "</td> </tr> <tr> <td>Uplaćeno</td> <td>" + this.order.paid + "</td> </tr> <tr> <td>Radnici</td> <td>" + workersHTML + "</td> </tr> <tr> <td>Napomena</td> <td>" + (this.order.note || '/') + "</td> </tr> </table> </div> </div>";
     };
 
     OrderPage.prototype.payOrderSuccess = function(response) {
       this.order.paid = response.data;
+      return this.pageHTML();
+    };
+
+    OrderPage.prototype.updateOrderStatus = function(order) {
+      this.order = order;
       return this.pageHTML();
     };
 

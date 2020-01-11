@@ -3,35 +3,60 @@
   var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
-  this.UpdaterderDialog = (function(superClass) {
-    extend(UpdaterderDialog, superClass);
+  this.UpdateOrderDialog = (function(superClass) {
+    extend(UpdateOrderDialog, superClass);
 
-    function UpdaterderDialog() {
-      UpdaterderDialog.__super__.constructor.call(this);
-      customHTML();
+    function UpdateOrderDialog() {
+      UpdateOrderDialog.__super__.constructor.call(this);
     }
 
-    UpdaterderDialog.prototype.destroy = function() {
-      return UpdaterderDialog.__super__.destroy.call(this);
+    UpdateOrderDialog.prototype.destroy = function() {
+      UpdateOrderDialog.__super__.destroy.call(this);
+      this.parentPage = null;
+      return this.order = null;
     };
 
-    UpdaterderDialog.prototype.show = function() {
-      return UpdaterderDialog.__super__.show.call(this);
+    UpdateOrderDialog.prototype.show = function(parentPage, order) {
+      this.parentPage = parentPage;
+      this.order = order;
+      UpdateOrderDialog.__super__.show.call(this);
+      this.customHTML();
+      this.container.find('.js--order--status').val(this.order.status);
+      return this.container.find('.js--note').val(this.order.note);
     };
 
-    UpdaterderDialog.prototype.hide = function() {
-      return UpdaterderDialog.__super__.hide.call(this);
+    UpdateOrderDialog.prototype.hide = function() {
+      return UpdateOrderDialog.__super__.hide.call(this);
     };
 
-    UpdaterderDialog.prototype.positiveAction = function() {
-      return UpdaterderDialog.__super__.positiveAction.call(this);
+    UpdateOrderDialog.prototype.positiveAction = function() {
+      var data, note, status;
+      status = this.container.find('.js--order--status').val();
+      note = this.container.find('.js--note').val();
+      data = {
+        id: this.order.id,
+        status: status,
+        note: note
+      };
+      OrderService.updateOrderStatus(data, null, this, this._updateOrderStatusSuccess, this._updateOrderStatusError);
+      return UpdateOrderDialog.__super__.positiveAction.call(this);
     };
 
-    UpdaterderDialog.prototype._customHTML = function() {
-      return '';
+    UpdateOrderDialog.prototype._customHTML = function() {
+      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <div class='form-group'> <div class='form-group'> <label>Status porudzbine</label> <select class='js--order--status'> <option value='ACCEPTED'>Prihvaćen</option> <option value='WAITING'>Na čekanju</option> <option value='DECLINED'>Odbijen</option> <option value='FINISHED'>Završen</option> </select> </div> <div class='pos-rel'> <label>Napomena</label> <textarea class='form-control js--note' placeholder='Naponema...'/> </div> </div> </div> </div>";
     };
 
-    return UpdaterderDialog;
+    UpdateOrderDialog.prototype._updateOrderStatusSuccess = function(response) {
+      if (this.parentPage) {
+        return this.parentPage.updateOrderStatus(response.data);
+      }
+    };
+
+    UpdateOrderDialog.prototype.updateOrderStatusError = function() {
+      return FloatingMessage.error("Ops. Došlo je do greške, pokušajte ponovo");
+    };
+
+    return UpdateOrderDialog;
 
   })(AbstractDialog);
 

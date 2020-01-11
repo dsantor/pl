@@ -162,4 +162,4 @@ class @WorkersPage extends AbstractPage
     
     _createdNewWorkerEventHandler: (event, worker) ->
         @workers.push(worker)
-        @_renderWorkersHTML(@workers)
+        @_applyFilter()

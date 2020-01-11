@@ -165,7 +165,7 @@
 
     WorkersPage.prototype._createdNewWorkerEventHandler = function(event, worker) {
       this.workers.push(worker);
-      return this._renderWorkersHTML(this.workers);
+      return this._applyFilter();
     };
 
     return WorkersPage;

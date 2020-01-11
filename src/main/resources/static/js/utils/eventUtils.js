@@ -9,6 +9,8 @@
 
     EventUtils.NEW_WORKER_IS_CREATED = 'NEW_WORKER_IS_CREATED';
 
+    EventUtils.NEW_EXPENSE_IS_CREATED = 'NEW_EXPENSE_IS_CREATED';
+
     EventUtils.triggerEvent = function(eventName, data) {
       return $(document).trigger(eventName, data);
     };
@@ -64,6 +66,21 @@
 
     EventUtils.unbindCreatedNewWorker = function(handler) {
       return this.unbindEventHandler(EventUtils.NEW_WORKER_IS_CREATED, handler);
+    };
+
+
+    /* Expense */
+
+    EventUtils.triggerCreatedNewExpense = function(expense) {
+      return this.triggerEvent(EventUtils.NEW_EXPENSE_IS_CREATED, expense);
+    };
+
+    EventUtils.bindCreatedNewExpense = function(handler) {
+      return this.bindEventHandler(EventUtils.NEW_EXPENSE_IS_CREATED, handler);
+    };
+
+    EventUtils.unbindCreatedNewExpense = function(handler) {
+      return this.unbindEventHandler(EventUtils.NEW_EXPENSE_IS_CREATED, handler);
     };
 
     return EventUtils;

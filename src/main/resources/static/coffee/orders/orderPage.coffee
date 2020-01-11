@@ -6,11 +6,16 @@ class @OrderPage extends AbstractPage
         OrderService.get(orderId, null, this, @_loadedOrder, ajaxCallbackPrintMessage)
         @payOrderDialog = new PayOrderDialog()
 
+        @updateOrderDialog = new UpdateOrderDialog()
+
     destroy: () ->
         super()
         @order = null
         @payOrderDialog.destroy()
         @payOrderDialog = null
+        
+        @updateOrderDialog.destroy()
+        @updateOrderDialog = null
 
     _loadedOrder: (response) ->
         @order = response.data
@@ -28,7 +33,7 @@ class @OrderPage extends AbstractPage
             return
 
         if closest(target, '.js--complete--order')
-            console.log 'TODO complete order dialog'
+            @updateOrderDialog.show(this, @order)
             return
     
     _customHTML: () ->
@@ -39,7 +44,7 @@ class @OrderPage extends AbstractPage
         return "<nav class='nav justify-content-end header pt-3'> 
                     <span class='nav-link span-a back-button js--back--button'>Nazad</span>
                     <span class='nav-link span-a js--paying--order'>Plaćanje</span>
-                    <span class='nav-link span-a js--complete--order'>Završi porudžbinu</span>
+                    <span class='nav-link span-a js--complete--order'>Ažuriraj porudžbinu</span>
                 </nav>
                 <div class='h-75 pt-5 flex'>
                     <div class='container w-50'>
@@ -60,7 +65,7 @@ class @OrderPage extends AbstractPage
                             </tr>
                             <tr>
                                 <td>Status prodžbine</td>
-                                <td>#{@order.status}</td>
+                                <td>#{@order.statusStr}</td>
                             </tr>
                             <tr>
                                 <td>Cena</td>
@@ -75,10 +80,19 @@ class @OrderPage extends AbstractPage
                                 <td>Radnici</td>
                                 <td>#{workersHTML}</td>
                             </tr>
+                            <tr>
+                                <td>Napomena</td>
+                                <td>#{@order.note or '/'}</td>
+                            </tr>
                         </table>
                     </div>
                 </div>"
 
     payOrderSuccess: (response) ->
         @order.paid = response.data
+        @pageHTML()
+
+    
+    updateOrderStatus: (order) ->
+        @order = order
         @pageHTML()

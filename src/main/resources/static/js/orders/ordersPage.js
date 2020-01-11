@@ -39,7 +39,19 @@
     }
 
     OrdersPage.prototype.destroy = function() {
-      return OrdersPage.__super__.destroy.call(this);
+      var filterStatus;
+      OrdersPage.__super__.destroy.call(this);
+      this.autoSuggestion.destroy();
+      this.autoSuggestion = null;
+      this.ordersContainer = null;
+      this.filterContainer = null;
+      filterStatus = null;
+      this.asInput = null;
+      this.filterFrom = null;
+      this.filterTo = null;
+      this.status = null;
+      this.suggestionsContainer = null;
+      return this.filterToggleButton = null;
     };
 
     OrdersPage.prototype.getPageTitle = function() {
@@ -72,7 +84,7 @@
       innerHTML = '';
       for (i = 0, len = orders.length; i < len; i++) {
         order = orders[i];
-        innerHTML += "<tr> <td class='table-text w-20'> <a class='text-decoration-none' href='#order/" + order.id + "'> <span class='d-inline-block align-middle launch-icon'></span> </a> " + order.clientFullName + " </td> <td class='table-text w-20'>" + order.saldo + "</td> <td class='table-text w-20'>" + order.paid + "</td> <td class='table-text w-20'>" + order.status + "</td> <td class='table-text w-20'>" + (ComponentsUtils.getTimeFromMillis(order.createdAtMillis)) + "</td> </tr>";
+        innerHTML += "<tr> <td class='table-text w-20'> <a class='text-decoration-none' href='#order/" + order.id + "'> <span class='d-inline-block align-middle launch-icon'></span> </a> " + order.clientFullName + " </td> <td class='table-text w-20'>" + order.saldo + "</td> <td class='table-text w-20'>" + order.paid + "</td> <td class='table-text w-20'>" + order.statusStr + "</td> <td class='table-text w-20'>" + (ComponentsUtils.getTimeFromMillis(order.createdAtMillis)) + "</td> </tr>";
       }
       tableHtml = "<div> <table class='table mb-0'> <tr> <th class='table-text w-20'>Poručilac</th> <th class='table-text w-20'>Cena</th> <th class='table-text w-20'>Uplaćeno</th> <th class='table-text w-20'>Status</th> <th class='table-text w-20'>Poručeno</th> </tr> </table> <table class='table table-striped'> " + innerHTML + " </table> </div>";
       return this.ordersContainer.html(tableHtml);
