@@ -53,4 +53,26 @@ public class WorkerServiceImpl implements WorkerService {
 		return workerRepository.toggleBlockWorker(workerId);
 	}
 
+	@Override
+	public IWorker update(WorkerRequest workerRequest) {
+		Long id			   = workerRequest.getId();
+		String firstName   = workerRequest.getFirstName().trim();
+		String lastName    = workerRequest.getLastName().trim();
+		String street	   = workerRequest.getStreet().trim();
+		String buildNumber = workerRequest.getBuildNumber().trim();
+		String city 	   = workerRequest.getCity().trim();
+		String phoneNumber = workerRequest.getPhoneNumber().trim();
+		String email 	   = workerRequest.getEmail().trim();
+		
+		if (Validation.isEmptyString(firstName) || Validation.isEmptyString(lastName)) {
+			return null;	
+		}
+		
+		if (!Validation.phone(phoneNumber)) {
+			return null;
+		}
+		
+		return workerRepository.update(id, firstName, lastName, email, phoneNumber, city, street, buildNumber);
+	}
+
 }

@@ -9,7 +9,8 @@
         '#client': 'clients',
         '#order': 'orders',
         '#bids': 'bids',
-        '#expens': 'expenses'
+        '#expens': 'expenses',
+        '#systemSettings': 'systemSettings'
       };
       this.currentPageHash = null;
       this.currentPage = null;
@@ -89,16 +90,18 @@
         case '#expenses':
           this.currentPage = new ExpensesPage(hash.value);
           break;
+        case '#systemSettings':
+          return this.currentPage = new OrderTypesSettings();
         default:
           this._redirectToErrorPage();
       }
     };
 
     MainNavigation.prototype._restrictPage = function() {
-      var onlyAdmin;
       if (!window.loggedUserInfo.isAdmin) {
-        onlyAdmin = $('.js--admin--only');
-        return onlyAdmin.remove();
+        return $('.js--admin--options').remove();
+      } else {
+        return $('.js--admin--options').removeClass('hide');
       }
     };
 

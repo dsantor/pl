@@ -32,6 +32,7 @@
       this.container = null;
       this.parentPage = null;
       this.filterToggleButton = null;
+      this.filterSuggestionsContainer = null;
       return this.status = null;
     };
 

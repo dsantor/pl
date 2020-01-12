@@ -8,12 +8,19 @@
 
     function WorkerPage(workerId) {
       WorkerPage.__super__.constructor.call(this);
+      this.worker = null;
       WorkerService.get(workerId, null, this, this._loadedWorker, ajaxCallbackPrintMessage);
       this.createExpenseDialog = new CreateExpenseDialog();
+      this.createWorkerDialog = new CreateWorkerDialog();
     }
 
     WorkerPage.prototype.destroy = function() {
-      return WorkerPage.__super__.destroy.call(this);
+      WorkerPage.__super__.destroy.call(this);
+      this.createExpenseDialog.destroy();
+      this.createExpenseDialog = null;
+      this.createWorkerDialog.destroy();
+      this.createWorkerDialog = null;
+      return this.worker = null;
     };
 
     WorkerPage.prototype._clickEventHandler = function(event) {
@@ -33,6 +40,10 @@
       }
       if (closest(target, '.js--worker--expenses')) {
         window.location.href = "#expenses/" + this.worker.id;
+        return;
+      }
+      if (closest(target, '.js--edit--worker')) {
+        this.createWorkerDialog.show(this, this.worker);
       }
     };
 
@@ -43,9 +54,9 @@
 
     WorkerPage.prototype._toggleBlockUserText = function() {
       var text;
-      text = 'Aktiviraj';
+      text = 'Neaktivan';
       if (this.worker.active) {
-        text = 'Deaktiviraj';
+        text = 'Aktivan';
       }
       return text;
     };
@@ -54,7 +65,7 @@
       var html, innerHTML;
       if (this.worker) {
         innerHTML = this._toggleBlockUserText();
-        html = "<nav class='nav justify-content-end header pt-3'> <span class='nav-link span-a back-button js--back--button'>Nazad</span> <span class='nav-link span-a js--block--worker'>" + innerHTML + "</span> <span class='nav-link span-a js--worker--expenses'>Rashodi</span> <span class='nav-link span-a js--create--expense'>Kreiraj rashod</span> </nav>";
+        html = "<nav class='nav justify-content-end header pt-3'> <span class='nav-link span-a back-button js--back--button'>Nazad</span> <span class='nav-link span-a js--edit--worker'>Izmeni</span> <span class='nav-link span-a js--block--worker'>" + innerHTML + "</span> <span class='nav-link span-a js--worker--expenses'>Rashodi</span> <span class='nav-link span-a js--create--expense'>Kreiraj rashod</span> </nav>";
         html += ComponentsUtils.userDetailsFilledHTML(this.worker);
         return html;
       } else {
@@ -66,6 +77,11 @@
       this.worker.active = !this.worker.active;
       $(".js--block--worker").html(this._toggleBlockUserText());
       return WorkerService.toggleBlockWorker(this.worker.id, null, this, globalSuccessMessage, globalErrorMessage);
+    };
+
+    WorkerPage.prototype.createWorkerDialogPositiveAction = function(worker) {
+      this.worker = worker;
+      return this.pageHTML();
     };
 
     return WorkerPage;

@@ -8,10 +8,9 @@
 
     function CreateExpenseDialog() {
       CreateExpenseDialog.__super__.constructor.call(this);
+      this.users = [];
       this.worker = null;
       this.workers = [];
-      this.keyDownEvent = this._keyDownEventHandler.bind(this);
-      this.container.on('keyup', this.keyDownEvent);
     }
 
     CreateExpenseDialog.prototype.destroy = function() {
@@ -20,17 +19,21 @@
       this.purpose = null;
       this.moneyGivenAt = null;
       this.sum = null;
+      this.users = null;
       this.worker = null;
       this.workers = null;
       this.container.off('keyup', this.keyDownEvent);
       this.keyDownEvent = null;
       this.userAutoSuggestions = null;
+      this.workersAutoSuggestions = null;
       return CreateExpenseDialog.__super__.destroy.call(this);
     };
 
     CreateExpenseDialog.prototype.show = function(worker) {
       CreateExpenseDialog.__super__.show.call(this);
       this.customHTML();
+      this.keyDownEvent = this._keyDownEventHandler.bind(this);
+      this.container.on('keyup', this.keyDownEvent);
       this.moneyGivenBy = this.container.find('.js--money--given--by');
       this.moneyTook = this.container.find('.js--money--took');
       this.purpose = this.container.find('.js--purpose');

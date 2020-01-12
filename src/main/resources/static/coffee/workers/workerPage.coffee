@@ -2,10 +2,19 @@ class @WorkerPage extends AbstractPage
 
     constructor: (workerId) ->
         super()
+        @worker = null
         WorkerService.get(workerId, null, this, @_loadedWorker, ajaxCallbackPrintMessage)
         @createExpenseDialog = new CreateExpenseDialog()
+        @createWorkerDialog  = new CreateWorkerDialog()
+
     destroy: () ->
         super()
+        @createExpenseDialog.destroy()
+        @createExpenseDialog = null
+
+        @createWorkerDialog.destroy()
+        @createWorkerDialog  = null
+        @worker = null
 
     _clickEventHandler: (event) ->
         target = $(event.target)
@@ -25,15 +34,19 @@ class @WorkerPage extends AbstractPage
         if closest( target, '.js--worker--expenses')
             window.location.href = "#expenses/#{@worker.id}"
             return
+        
+        if closest(target, '.js--edit--worker')
+            @createWorkerDialog.show(this, @worker)
+            return
 
     _loadedWorker: (response) ->
         @worker = response.data
         @pageHTML()
 
     _toggleBlockUserText: () ->
-        text = 'Aktiviraj'
+        text = 'Neaktivan'
         if @worker.active
-            text = 'Deaktiviraj'
+            text = 'Aktivan'
         return text
 
     _customHTML: () ->
@@ -41,6 +54,7 @@ class @WorkerPage extends AbstractPage
             innerHTML = @_toggleBlockUserText()
             html = "<nav class='nav justify-content-end header pt-3'>
                         <span class='nav-link span-a back-button js--back--button'>Nazad</span>
+                        <span class='nav-link span-a js--edit--worker'>Izmeni</span>
                         <span class='nav-link span-a js--block--worker'>#{innerHTML}</span>
                         <span class='nav-link span-a js--worker--expenses'>Rashodi</span>
                         <span class='nav-link span-a js--create--expense'>Kreiraj rashod</span>
@@ -56,3 +70,7 @@ class @WorkerPage extends AbstractPage
         @worker.active = !@worker.active
         $(".js--block--worker").html(@_toggleBlockUserText())
         WorkerService.toggleBlockWorker(@worker.id, null, this, globalSuccessMessage, globalErrorMessage)
+    
+    createWorkerDialogPositiveAction: (worker) ->
+        @worker = worker
+        @pageHTML()

@@ -2,29 +2,35 @@ class @CreateExpenseDialog extends AbstractDialog
 
     constructor: () ->
         super()
-        @worker = null
+        @users   = []
+        @worker  = null
         @workers = []
-
-        @keyDownEvent = @_keyDownEventHandler.bind(this)
-        @container.on 'keyup', @keyDownEvent
         
-    destroy: () ->
+
+        
+    destroy: () ->  
         @moneyGivenBy = null
         @moneyTook    = null
         @purpose      = null
         @moneyGivenAt = null
         @sum          = null
+        @users        = null
         @worker       = null     
         @workers      = null   
         @container.off 'keyup', @keyDownEvent
         @keyDownEvent = null
 
-        @userAutoSuggestions = null
+        @userAutoSuggestions    = null
+        @workersAutoSuggestions = null
+
         super()
 
     show: (worker) ->
         super()
         @customHTML()
+
+        @keyDownEvent = @_keyDownEventHandler.bind(this)
+        @container.on 'keyup', @keyDownEvent
 
         @moneyGivenBy = @container.find('.js--money--given--by')
         @moneyTook    = @container.find('.js--money--took')
@@ -160,7 +166,7 @@ class @CreateExpenseDialog extends AbstractDialog
             return
 
     _selectUserFromAutoSuggestion: (target) ->
-        ComponentsUtils.selectFromAutoSuggestion(target,  @moneyGivenBy, 'data-user-id', @users, @userAutoSuggestions)
+        ComponentsUtils.selectFromAutoSuggestion(target, @moneyGivenBy, 'data-user-id', @users, @userAutoSuggestions)
 
     _handlerUserSuggestion: () ->
         ComponentsUtils.handleAutoSuggestion(@moneyGivenBy, 'data-user-id', @users, @userAutoSuggestions)

@@ -15,3 +15,7 @@ class @WorkerService
     @toggleBlockWorker: (workerId, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
         url = @apiUrl + '/toggleBlockUser/' + workerId
         AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError)
+
+    @update: (data, onTheFlyData, callbackContext, callBackFunction, callbackError) ->
+        url = @apiUrl + '/update'
+        AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError)

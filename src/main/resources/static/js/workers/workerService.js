@@ -29,6 +29,12 @@
       return AjaxRequest.GET(url, onTheFlyData, callbackContext, callBackFunction, callbackError);
     };
 
+    WorkerService.update = function(data, onTheFlyData, callbackContext, callBackFunction, callbackError) {
+      var url;
+      url = this.apiUrl + '/update';
+      return AjaxRequest.POST(url, data, onTheFlyData, callbackContext, callBackFunction, callbackError);
+    };
+
     return WorkerService;
 
   })();

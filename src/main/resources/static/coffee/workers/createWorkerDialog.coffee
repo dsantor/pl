@@ -7,7 +7,7 @@
         return 'Kreiranje radnika'    
 
 
-    show: () ->
+    show: (@parentPage, @worker) ->
         super()
         @customHTML()
         # Inputs
@@ -18,6 +18,15 @@
         @city         = @container.find('.js--city')
         @phoneNumber  = @container.find('.js--phoneNumber')
         @email        = @container.find('.js--email')
+
+        if @worker
+            @firstName.val(@worker.firstName)
+            @lastName.val(@worker.lastName)
+            @street.val(@worker.street)
+            @buildNumber.val(@worker.buildNumber)
+            @city.val(@worker.city)
+            @phoneNumber.val(@worker.phoneNumber)
+            @email.val(@worker.email)
 
     hide: () ->
         super()
@@ -33,43 +42,43 @@
         @email        = null
 
     _customHTML: () ->
-        "<div class='col-7 m-auto h-75 pt-5 flex'>
-            <div class='container w-50'>
-                <div class='form-group'>
-                    <label>Email    </label>
-                    <input type='email' class='form-control js--email' placeholder='email'/>
-                </div>
+        return "<div class='col-7 m-auto h-75 pt-5 flex'>
+                    <div class='container w-50'>
+                        <div class='form-group'>
+                            <label>Email</label>
+                            <input type='email' class='form-control js--email' placeholder='email'/>
+                        </div>
 
-                <div class='form-group'>
-                    <label>Ime*</label>
-                    <input type='text' class='form-control js--firstName' placeholder='ime'/>
+                        <div class='form-group'>
+                            <label>Ime*</label>
+                            <input type='text' class='form-control js--firstName' placeholder='ime'/>
+                            </div>
+                        <div class='form-group'>
+                            <label>Prezime*</label>
+                            <input type='text' class='form-control js--lastName' placeholder='prezime'/>
+                        </div>
+                    
+                        <div class='form-group'>
+                            <label>Ulica</label>
+                            <input type='text' class='form-control js--street' placeholder='ulica'/>
+                        </div>
                     </div>
-                <div class='form-group'>
-                    <label>Prezime*</label>
-                    <input type='text' class='form-control js--lastName' placeholder='prezime'/>
-                </div>
-            
-                <div class='form-group'>
-                    <label>Ulica</label>
-                    <input type='text' class='form-control js--street' placeholder='ulica'/>
-                </div>
-            </div>
-            <div class='container w-50'>
-                <div class='form-group'>
-                    <label>Broj stana</label>
-                    <input type='text' class='form-control js--buildNumber' placeholder='broj kuce/stana'/>
-                </div>
-                <div class='form-group'>
-                    <label>Grad</label>
-                    <input type='text' class='form-control js--city' placeholder='grad'/>
-                </div>
-                
-                <div class='form-group'>
-                    <label>Telefon*</label>
-                    <input type='tel' class='form-control js--phoneNumber' placeholder='telefon'/>
-                </div>               
-            </div>
-    	</div>"
+                    <div class='container w-50'>
+                        <div class='form-group'>
+                            <label>Broj stana</label>
+                            <input type='text' class='form-control js--buildNumber' placeholder='broj kuce/stana'/>
+                        </div>
+                        <div class='form-group'>
+                            <label>Grad</label>
+                            <input type='text' class='form-control js--city' placeholder='grad'/>
+                        </div>
+                        
+                        <div class='form-group'>
+                            <label>Telefon*</label>
+                            <input type='tel' class='form-control js--phoneNumber' placeholder='telefon'/>
+                        </div>               
+                    </div>
+                </div>"
 
     negativeAction: () ->
         @hide()
@@ -108,7 +117,12 @@
         if not valid
             return
 
+        id = null
+        if @worker
+            id = @worker.id
+
         data = {
+            id           : id
             firstName    : firstName
             lastName     : lastName
             street       : street
@@ -117,13 +131,17 @@
             phoneNumber  : phoneNumber
             email        : email
         }
+        if @worker
+            WorkerService.update(data, null, this, @_updateWorkerSuccess, globalErrorMessage)
+        else
+            WorkerService.save(data, null, this, @_saveWorkerSuccess, globalErrorMessage)
 
-        WorkerService.save(data, null, this, @_saveWorkerSuccess, @_saveWorkerError)
         @hide()
 
     _saveWorkerSuccess: (response) ->
-        FloatingMessage.success("Kreiran klijent #{response.data.firstName}  #{response.data.lastName}" )
+        FloatingMessage.success(response.message)
         EventUtils.triggerCreatedNewWorker(response.data)
 
-    _saveWorkerError: (response) ->
-        FloatingMessage.error("Korisnik nije uspesno kreiran, pokusajte ponovo.")
+    _updateWorkerSuccess: (response) ->
+        if @parentPage
+            @parentPage.createWorkerDialogPositiveAction(response.data)

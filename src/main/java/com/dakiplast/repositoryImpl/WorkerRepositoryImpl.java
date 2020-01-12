@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import com.dakiplast.entities.Worker;
 import com.dakiplast.entities.interfaces.IWorker;
 import com.dakiplast.repository.WorkerRepository;
-import com.dakiplast.requests.WorkerRequest;
 
 @Repository
 @Transactional
@@ -58,12 +57,6 @@ public class WorkerRepositoryImpl implements WorkerRepository {
 	}
 
 	@Override
-	public IWorker update(WorkerRequest worker) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean delete(Long id) {
 		Worker entity = entityManager.find(Worker.class, id);
 		entityManager.remove(entity);
@@ -90,6 +83,27 @@ public class WorkerRepositoryImpl implements WorkerRepository {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public IWorker update(Long id, String firstName, String lastName, String email, String phoneNumber, String city,
+			String street, String buildNumber) {
+
+		Worker entity = entityManager.find(Worker.class, id);
+		if (entity == null) {
+			return null;
+		}
+		
+		entity.setFirstName(firstName);
+		entity.setLastName(lastName);
+		entity.setEmail(email);
+		entity.setPhoneNumber(phoneNumber);
+		entity.setCity(city);
+		entity.setStreet(street);
+		entity.setBuildNumber(buildNumber);
+		
+		entityManager.merge(entity);
+		return entity;
 	}
 
 }

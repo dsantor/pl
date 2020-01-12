@@ -2,7 +2,8 @@ class @MainNavigation
     constructor: () ->
         @pages = {
             '#profile': 'profile', '#user': 'users', '#worker': 'workers',
-            '#client': 'clients', '#order': 'orders', '#bids': 'bids', '#expens': 'expenses'}
+            '#client': 'clients', '#order': 'orders', '#bids': 'bids', '#expens': 'expenses'
+            '#systemSettings': 'systemSettings'}
 
         @currentPageHash  = null
         @currentPage = null
@@ -80,6 +81,8 @@ class @MainNavigation
             when '#expenses'
                 @currentPage = new ExpensesPage(hash.value)
                 return
+            when '#systemSettings'
+                @currentPage = new OrderTypesSettings()
             else
                 @_redirectToErrorPage()
                 return
@@ -87,8 +90,9 @@ class @MainNavigation
     
     _restrictPage: () ->
         if not window.loggedUserInfo.isAdmin
-            onlyAdmin = $('.js--admin--only')
-            onlyAdmin.remove()
+            $('.js--admin--options').remove()
+        else
+            $('.js--admin--options').removeClass('hide')
 
     _handleNavigationButtons: (tab) ->
         $('.js--nav--item').removeClass('active')

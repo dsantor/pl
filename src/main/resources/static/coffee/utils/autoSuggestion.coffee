@@ -35,6 +35,7 @@ class @AutoSuggestion
         @container = null
         @parentPage = null
         @filterToggleButton = null
+        @filterSuggestionsContainer = null
         @status = null
 
     _keyupEventHandler: (event) ->

@@ -2,12 +2,12 @@ class @UserPage extends AbstractPage
 
     constructor: (userId) ->
         super()
+        @activityDialog = new ActivityDialog()
+
         if  `window.loggedUserInfo.id == userId`
             window.location.hash = '#profile'
         else
             UserService.getUser(userId, null, this, @show, null)
-
-            @activityDialog = new ActivityDialog()
 
     show: (respone) ->
         @user = respone.data
@@ -31,6 +31,9 @@ class @UserPage extends AbstractPage
         @user           = null
         @parentPage     = null
         @updatedUser    = null
+
+        @activityDialog.destroy()
+        @activityDialog = null
 
     _customHTML: () ->
         if @user

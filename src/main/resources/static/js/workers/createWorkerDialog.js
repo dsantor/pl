@@ -14,7 +14,9 @@
       return 'Kreiranje radnika';
     };
 
-    CreateWorkerDialog.prototype.show = function() {
+    CreateWorkerDialog.prototype.show = function(parentPage, worker) {
+      this.parentPage = parentPage;
+      this.worker = worker;
       CreateWorkerDialog.__super__.show.call(this);
       this.customHTML();
       this.firstName = this.container.find('.js--firstName');
@@ -23,7 +25,16 @@
       this.buildNumber = this.container.find('.js--buildNumber');
       this.city = this.container.find('.js--city');
       this.phoneNumber = this.container.find('.js--phoneNumber');
-      return this.email = this.container.find('.js--email');
+      this.email = this.container.find('.js--email');
+      if (this.worker) {
+        this.firstName.val(this.worker.firstName);
+        this.lastName.val(this.worker.lastName);
+        this.street.val(this.worker.street);
+        this.buildNumber.val(this.worker.buildNumber);
+        this.city.val(this.worker.city);
+        this.phoneNumber.val(this.worker.phoneNumber);
+        return this.email.val(this.worker.email);
+      }
     };
 
     CreateWorkerDialog.prototype.hide = function() {
@@ -42,7 +53,7 @@
     };
 
     CreateWorkerDialog.prototype._customHTML = function() {
-      return "<div class='col-7 m-auto h-75 pt-5 flex'> <div class='container w-50'> <div class='form-group'> <label>Email    </label> <input type='email' class='form-control js--email' placeholder='email'/> </div> <div class='form-group'> <label>Ime*</label> <input type='text' class='form-control js--firstName' placeholder='ime'/> </div> <div class='form-group'> <label>Prezime*</label> <input type='text' class='form-control js--lastName' placeholder='prezime'/> </div> <div class='form-group'> <label>Ulica</label> <input type='text' class='form-control js--street' placeholder='ulica'/> </div> </div> <div class='container w-50'> <div class='form-group'> <label>Broj stana</label> <input type='text' class='form-control js--buildNumber' placeholder='broj kuce/stana'/> </div> <div class='form-group'> <label>Grad</label> <input type='text' class='form-control js--city' placeholder='grad'/> </div> <div class='form-group'> <label>Telefon*</label> <input type='tel' class='form-control js--phoneNumber' placeholder='telefon'/> </div> </div> </div>";
+      return "<div class='col-7 m-auto h-75 pt-5 flex'> <div class='container w-50'> <div class='form-group'> <label>Email</label> <input type='email' class='form-control js--email' placeholder='email'/> </div> <div class='form-group'> <label>Ime*</label> <input type='text' class='form-control js--firstName' placeholder='ime'/> </div> <div class='form-group'> <label>Prezime*</label> <input type='text' class='form-control js--lastName' placeholder='prezime'/> </div> <div class='form-group'> <label>Ulica</label> <input type='text' class='form-control js--street' placeholder='ulica'/> </div> </div> <div class='container w-50'> <div class='form-group'> <label>Broj stana</label> <input type='text' class='form-control js--buildNumber' placeholder='broj kuce/stana'/> </div> <div class='form-group'> <label>Grad</label> <input type='text' class='form-control js--city' placeholder='grad'/> </div> <div class='form-group'> <label>Telefon*</label> <input type='tel' class='form-control js--phoneNumber' placeholder='telefon'/> </div> </div> </div>";
     };
 
     CreateWorkerDialog.prototype.negativeAction = function() {
@@ -50,7 +61,7 @@
     };
 
     CreateWorkerDialog.prototype.positiveAction = function() {
-      var buildNumber, city, data, email, firstName, lastName, mobileValid, phoneNumber, phoneValid, street, valid;
+      var buildNumber, city, data, email, firstName, id, lastName, mobileValid, phoneNumber, phoneValid, street, valid;
       valid = true;
       phoneValid = true;
       mobileValid = true;
@@ -82,7 +93,12 @@
       if (!valid) {
         return;
       }
+      id = null;
+      if (this.worker) {
+        id = this.worker.id;
+      }
       data = {
+        id: id,
         firstName: firstName,
         lastName: lastName,
         street: street,
@@ -91,17 +107,23 @@
         phoneNumber: phoneNumber,
         email: email
       };
-      WorkerService.save(data, null, this, this._saveWorkerSuccess, this._saveWorkerError);
+      if (this.worker) {
+        WorkerService.update(data, null, this, this._updateWorkerSuccess, globalErrorMessage);
+      } else {
+        WorkerService.save(data, null, this, this._saveWorkerSuccess, globalErrorMessage);
+      }
       return this.hide();
     };
 
     CreateWorkerDialog.prototype._saveWorkerSuccess = function(response) {
-      FloatingMessage.success("Kreiran klijent " + response.data.firstName + "  " + response.data.lastName);
+      FloatingMessage.success(response.message);
       return EventUtils.triggerCreatedNewWorker(response.data);
     };
 
-    CreateWorkerDialog.prototype._saveWorkerError = function(response) {
-      return FloatingMessage.error("Korisnik nije uspesno kreiran, pokusajte ponovo.");
+    CreateWorkerDialog.prototype._updateWorkerSuccess = function(response) {
+      if (this.parentPage) {
+        return this.parentPage.createWorkerDialogPositiveAction(response.data);
+      }
     };
 
     return CreateWorkerDialog;

@@ -45,7 +45,10 @@ public class WorkersController {
 		}
 		
 		IWorker iWorker = workerService.create(worker, user.getFullName());
-		return new BaseResponse(iWorker, false, null);
+		if (iWorker == null) {
+			return new BaseResponse(null, true, "Korisnik nije uspesno kreiran, pokusajte ponovo.");
+		}
+		return new BaseResponse(iWorker, false, "Kreiran klijent " + iWorker.getFirstName() + " " + iWorker.getLastName());
 	}
 	
 	@GetMapping("get/{id}")
@@ -87,5 +90,14 @@ public class WorkersController {
 			return new BaseResponse(null, false, "Uspešno " + blockText + " radnik");
 		}
 		return new BaseResponse(null, true, "Akcija nije uspešno izvršena");
+	}
+	
+	@PostMapping("/update")
+	public BaseResponse update(@RequestBody WorkerRequest workerRequest) {
+		IWorker worker = workerService.update(workerRequest);
+		if (worker == null) {
+			return new BaseResponse(null, true, "Korisnik nije uspesno izmenjen, pokusajte ponovo.");
+		}
+		return new BaseResponse(worker, false, null);
 	}
 }

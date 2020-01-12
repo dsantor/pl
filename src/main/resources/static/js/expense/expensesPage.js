@@ -14,6 +14,7 @@
       } else {
         ExpenseService.getAll(null, this, this._expensesLoaded, this._expensesLoadedError);
       }
+      this.expenses = [];
       this.clientsAndWorkers = [];
       WorkerService.getAll(null, this, this._loadedClientsSuccess, this._loadedClientsError);
       this.filterContainer = this.container.find('.js--filter--container');
@@ -31,10 +32,9 @@
     }
 
     ExpensesPage.prototype.destroy = function() {
-      var autoSuggestion;
       ExpensesPage.__super__.destroy.call(this);
       this.autoSuggestion.destroy();
-      autoSuggestion = null;
+      this.autoSuggestion = null;
       this.createExpenseDialog.destroy();
       this.createExpenseDialog = null;
       EventUtils.unbindCreatedNewExpense(this.createdNewExpenseEvent);
@@ -42,6 +42,8 @@
       this.expensesContainer = null;
       this.suggestionsContainer = null;
       this.filterContainer = null;
+      this.expenses = null;
+      this.clientsAndWorkers = null;
       this.filterAsInput = null;
       this.filterFrom = null;
       this.filterTo = null;

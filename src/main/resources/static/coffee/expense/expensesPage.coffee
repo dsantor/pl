@@ -8,6 +8,7 @@ class @ExpensesPage extends AbstractPage
         else
             ExpenseService.getAll(null, this, @_expensesLoaded, @_expensesLoadedError)
 
+        @expenses          = []
         @clientsAndWorkers = []
         WorkerService.getAll(null, this, @_loadedClientsSuccess, @_loadedClientsError)
         @filterContainer = @container.find('.js--filter--container')
@@ -28,7 +29,7 @@ class @ExpensesPage extends AbstractPage
         super()
 
         @autoSuggestion.destroy()
-        autoSuggestion = null
+        @autoSuggestion = null
 
         @createExpenseDialog.destroy()
         @createExpenseDialog = null
@@ -38,6 +39,9 @@ class @ExpensesPage extends AbstractPage
         @expensesContainer      = null
         @suggestionsContainer   = null
         @filterContainer        = null
+        @expenses               = null
+        @clientsAndWorkers      = null
+
         @filterAsInput = null
         @filterFrom    = null
         @filterTo      = null

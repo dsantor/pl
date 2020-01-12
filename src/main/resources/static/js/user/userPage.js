@@ -8,11 +8,11 @@
 
     function UserPage(userId) {
       UserPage.__super__.constructor.call(this);
+      this.activityDialog = new ActivityDialog();
       if (window.loggedUserInfo.id == userId) {
         window.location.hash = '#profile';
       } else {
         UserService.getUser(userId, null, this, this.show, null);
-        this.activityDialog = new ActivityDialog();
       }
     }
 
@@ -39,7 +39,9 @@
       this.email = null;
       this.user = null;
       this.parentPage = null;
-      return this.updatedUser = null;
+      this.updatedUser = null;
+      this.activityDialog.destroy();
+      return this.activityDialog = null;
     };
 
     UserPage.prototype._customHTML = function() {
