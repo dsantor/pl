@@ -36,7 +36,7 @@
     };
 
     OrderTypesSettings.prototype._clickEventHandler = function(event) {
-      var input, items, onTheFlyData, target, type;
+      var data, input, items, onTheFlyData, target, type;
       target = $(event.target);
       if (closest(target, '.js--nav--door')) {
         this._activeContainer('.js--nav--door');
@@ -61,14 +61,11 @@
       if (closest(target, '.js--door--sort--add--button')) {
         input = $('.js--door--sort--add--value').val().trim();
         this.doorSorts.push(input);
-        onTheFlyData = {
-          array: 'doorSorts',
-          itemToRemove: type,
-          callback: this._doorsHTML,
-          context: this,
-          settingsType: 'DOOR_SORT'
+        data = {
+          type: 'DOOR_SORT',
+          options: this.doorSorts
         };
-        this.confirmationDialogResponse(true, onTheFlyData);
+        SettingsService.saveOrderTypes(data, null, this, null, null);
         this._doorsHTML();
         return;
       }
@@ -88,6 +85,11 @@
       if (closest(target, '.js--door--glass--add--button')) {
         input = $('.js--door--glass--add--value').val().trim();
         this.doorGlass.push(input);
+        data = {
+          type: 'DOOR_GLASS',
+          options: this.doorGlass
+        };
+        SettingsService.saveOrderTypes(data, null, this, null, null);
         this._doorsHTML();
         return;
       }
@@ -106,6 +108,11 @@
       if (closest(target, '.js--door--type--add--button')) {
         input = $('.js--door--type--add--value').val().trim();
         this.doorTypes.push(input);
+        data = {
+          type: 'DOOR_TYPE',
+          options: this.doorTypes
+        };
+        SettingsService.saveOrderTypes(data, null, this, null, null);
         this._doorsHTML();
         return;
       }
@@ -124,6 +131,11 @@
       if (closest(target, '.js--threshold--sort--add--button')) {
         input = $('.js--threshold--sort--add--value').val().trim();
         this.thresholdSorts.push(input);
+        data = {
+          type: 'THRESHOLD_SORT',
+          options: this.thresholdSorts
+        };
+        SettingsService.saveOrderTypes(data, null, this, null, null);
         this._thresholdHTML();
         return;
       }
@@ -142,6 +154,11 @@
       if (closest(target, '.js--mosquito--sort--add--button')) {
         input = $('.js--mosquito--sort--add--value').val().trim();
         this.mosquitoSorts.push(input);
+        data = {
+          type: 'MOSQUITO_SORT',
+          options: this.mosquitoSorts
+        };
+        SettingsService.saveOrderTypes(data, null, this, null, null);
         this._mosquitoHTML();
         return;
       }
@@ -160,6 +177,11 @@
       if (closest(target, '.js--mosquito--type--add--button')) {
         input = $('.js--mosquito--type--add--value').val().trim();
         this.mosquitoTypes.push(input);
+        data = {
+          type: 'MOSQUITO_TYPE',
+          options: this.mosquitoTypes
+        };
+        SettingsService.saveOrderTypes(data, null, this, null, null);
         this._mosquitoHTML();
         return;
       }
@@ -178,6 +200,11 @@
       if (closest(target, '.js--window--sort--add--button')) {
         input = $('.js--window--sort--add--value').val().trim();
         this.windowSorts.push(input);
+        data = {
+          type: 'WINDOW_SORT',
+          options: this.windowSorts
+        };
+        SettingsService.saveOrderTypes(data, null, this, null, null);
         this._windowHTML();
         return;
       }
@@ -196,6 +223,11 @@
       if (closest(target, '.js--window--glass--add--button')) {
         input = $('.js--window--glass--add--value').val().trim();
         this.windowGlass.push(input);
+        data = {
+          type: 'WINDOW_GLASS',
+          options: this.windowGlass
+        };
+        SettingsService.saveOrderTypes(data, null, this, null, null);
         this._windowHTML();
         return;
       }
@@ -214,6 +246,11 @@
       if (closest(target, '.js--shutter--sort--add--button')) {
         input = $('.js--shutter--sort--add--value').val().trim();
         this.shutterSorts.push(input);
+        data = {
+          type: 'SHUTTER_SORT',
+          options: this.shutterSorts
+        };
+        SettingsService.saveOrderTypes(data, null, this, null, null);
         this._shutterHTML();
         return;
       }
@@ -232,6 +269,11 @@
       if (closest(target, '.js--shutter--box--sort--add--button')) {
         input = $('.js--shutter--box--sort--add--value').val().trim();
         this.shutterBoxSorts.push(input);
+        data = {
+          type: 'SHUTTER_BOX_SORT',
+          options: this.shutterBoxSorts
+        };
+        SettingsService.saveOrderTypes(data, null, this, null, null);
         this._shutterHTML();
         return;
       }
@@ -250,6 +292,11 @@
       if (closest(target, '.js--shutter--box--type--add--button')) {
         input = $('.js--shutter--box--type--add--value').val().trim();
         this.shutterBoxTypes.push(input);
+        data = {
+          type: 'SHUTTER_BOX_TYPE',
+          options: this.shutterBoxTypes
+        };
+        SettingsService.saveOrderTypes(data, null, this, null, null);
         this._shutterHTML();
         return;
       }
@@ -315,7 +362,7 @@
 
     OrderTypesSettings.prototype._shutterHTML = function() {
       var html;
-      html = "<div class='form-group'> <h5>Roletne</h5> <div class='flex flex-column'> <label>Vrsta roletne</label> <div class='flex flex-row'> <select class='js--shutter--sort'> " + (this._printOptionsHTML(this.shutterSorts)) + " </select> <button class='cbtn btn-danger js--shutter--sort--remove--value'>Obriši</button> </div> <div class='flex flex-row'> <input type='text' class='form-control js--shutter--sort--add--value' placeholder='Vrsta roletne'> <button class='cbtn btn-primary js--shutter--sort--add--button'>Dodaj</button> </div> </div> </div> <div class='form-group'> <div class='flex flex-column'> <label>Vrsta kutije</label> <div class='flex flex-row'> <select class='js--shutter--box--sort'> " + (this._printOptionsHTML(this.shutterBoxSorts)) + " </select> <button class='cbtn btn-danger js--shutter--box--sort--remove--value'>Obriši</button> </div> <div class='flex flex-row'> <input type='text' class='form-control js--shutter--box--sort--add--value' placeholder='Vrsta kutije'> <button class='cbtn btn-primary js--shutter--box--sort--add--button'>Dodaj</button> </div> </div> </div> <div class='form-group'> <div class='flex flex-column'> <label>Tip kutije</label> <div class='flex flex-row'> <select class='js--shutter--box--type'> " + (this._printOptionsHTML(this.shutterBoxTypes)) + " </select> <button class='cbtn btn-danger js--door--sort--remove--value'>Obriši</button> </div> <div class='flex flex-row'> <input type='text' class='form-control js--shutter--box--type--add--value' placeholder='Tip kutije'> <button class='cbtn btn-primary js--shutter--box--type--add--button'>Dodaj</button> </div> </div> </div>";
+      html = "<div class='form-group'> <h5>Roletne</h5> <div class='flex flex-column'> <label>Vrsta roletne</label> <div class='flex flex-row'> <select class='js--shutter--sort'> " + (this._printOptionsHTML(this.shutterSorts)) + " </select> <button class='cbtn btn-danger js--shutter--sort--remove--value'>Obriši</button> </div> <div class='flex flex-row'> <input type='text' class='form-control js--shutter--sort--add--value' placeholder='Vrsta roletne'> <button class='cbtn btn-primary js--shutter--sort--add--button'>Dodaj</button> </div> </div> </div> <div class='form-group'> <div class='flex flex-column'> <label>Vrsta kutije</label> <div class='flex flex-row'> <select class='js--shutter--box--sort'> " + (this._printOptionsHTML(this.shutterBoxSorts)) + " </select> <button class='cbtn btn-danger js--shutter--box--sort--remove--value'>Obriši</button> </div> <div class='flex flex-row'> <input type='text' class='form-control js--shutter--box--sort--add--value' placeholder='Vrsta kutije'> <button class='cbtn btn-primary js--shutter--box--sort--add--button'>Dodaj</button> </div> </div> </div> <div class='form-group'> <div class='flex flex-column'> <label>Tip kutije</label> <div class='flex flex-row'> <select class='js--shutter--box--type'> " + (this._printOptionsHTML(this.shutterBoxTypes)) + " </select> <button class='cbtn btn-danger js--shutter--box--type--remove--value'>Obriši</button> </div> <div class='flex flex-row'> <input type='text' class='form-control js--shutter--box--type--add--value' placeholder='Tip kutije'> <button class='cbtn btn-primary js--shutter--box--type--add--button'>Dodaj</button> </div> </div> </div>";
       return this.container.find('.js--nav--shutter--container').html(html);
     };
 
@@ -336,12 +383,8 @@
           type: onTheFlyData.settingsType,
           options: this[onTheFlyData.array]
         };
-        return SettingsService.saveOrderTypes(data, null, this, this._saveOrderTypeSuccess, null);
+        return SettingsService.saveOrderTypes(data, null, this, null, null);
       }
-    };
-
-    OrderTypesSettings.prototype._saveOrderTypeSuccess = function(response) {
-      return console.log(response);
     };
 
     OrderTypesSettings.prototype._loadedOrderTypes = function(response) {

@@ -54,14 +54,12 @@ class @OrderTypesSettings extends AbstractPage
         if closest(target, '.js--door--sort--add--button')
             input = $('.js--door--sort--add--value').val().trim()
             @doorSorts.push(input)
-            onTheFlyData = {
-                array : 'doorSorts'
-                itemToRemove: type
-                callback: @_doorsHTML
-                context : this
-                settingsType : 'DOOR_SORT'
+            data = {
+                type    : 'DOOR_SORT'
+                options : @doorSorts
+
             }
-            @confirmationDialogResponse(true, onTheFlyData)
+            SettingsService.saveOrderTypes(data, null, this, null, null)
             @_doorsHTML()
             return
 
@@ -83,6 +81,11 @@ class @OrderTypesSettings extends AbstractPage
         if closest(target, '.js--door--glass--add--button')
             input = $('.js--door--glass--add--value').val().trim()
             @doorGlass.push(input)
+            data = {
+                type    : 'DOOR_GLASS'
+                options : @doorGlass
+            }
+            SettingsService.saveOrderTypes(data, null, this, null, null)
             @_doorsHTML()
             return
 
@@ -102,6 +105,11 @@ class @OrderTypesSettings extends AbstractPage
         if closest(target, '.js--door--type--add--button')
             input = $('.js--door--type--add--value').val().trim()
             @doorTypes.push(input)
+            data = {
+                type    : 'DOOR_TYPE'
+                options : @doorTypes
+            }
+            SettingsService.saveOrderTypes(data, null, this, null, null)
             @_doorsHTML()
             return
 
@@ -121,6 +129,11 @@ class @OrderTypesSettings extends AbstractPage
         if closest(target, '.js--threshold--sort--add--button')
             input = $('.js--threshold--sort--add--value').val().trim()
             @thresholdSorts.push(input)
+            data = {
+                type    : 'THRESHOLD_SORT'
+                options : @thresholdSorts
+            }
+            SettingsService.saveOrderTypes(data, null, this, null, null)
             @_thresholdHTML()
             return
 
@@ -140,6 +153,11 @@ class @OrderTypesSettings extends AbstractPage
         if closest(target, '.js--mosquito--sort--add--button')
             input = $('.js--mosquito--sort--add--value').val().trim()
             @mosquitoSorts.push(input)
+            data = {
+                type    : 'MOSQUITO_SORT'
+                options : @mosquitoSorts
+            }
+            SettingsService.saveOrderTypes(data, null, this, null, null)
             @_mosquitoHTML()
             return
 
@@ -159,6 +177,11 @@ class @OrderTypesSettings extends AbstractPage
         if closest(target, '.js--mosquito--type--add--button')
             input = $('.js--mosquito--type--add--value').val().trim()
             @mosquitoTypes.push(input)
+            data = {
+                type    : 'MOSQUITO_TYPE'
+                options : @mosquitoTypes
+            }
+            SettingsService.saveOrderTypes(data, null, this, null, null)
             @_mosquitoHTML()
             return
 
@@ -178,6 +201,11 @@ class @OrderTypesSettings extends AbstractPage
         if closest(target, '.js--window--sort--add--button')
             input = $('.js--window--sort--add--value').val().trim()
             @windowSorts.push(input)
+            data = {
+                type    : 'WINDOW_SORT'
+                options : @windowSorts
+            }
+            SettingsService.saveOrderTypes(data, null, this, null, null)
             @_windowHTML()
             return
 
@@ -197,6 +225,11 @@ class @OrderTypesSettings extends AbstractPage
         if closest(target, '.js--window--glass--add--button')
             input = $('.js--window--glass--add--value').val().trim()
             @windowGlass.push(input)
+            data = {
+                type    : 'WINDOW_GLASS'
+                options : @windowGlass
+            }
+            SettingsService.saveOrderTypes(data, null, this, null, null)
             @_windowHTML()
             return
 
@@ -216,6 +249,11 @@ class @OrderTypesSettings extends AbstractPage
         if closest(target, '.js--shutter--sort--add--button')
             input = $('.js--shutter--sort--add--value').val().trim()
             @shutterSorts.push(input)
+            data = {
+                type    : 'SHUTTER_SORT'
+                options : @shutterSorts
+            }
+            SettingsService.saveOrderTypes(data, null, this, null, null)
             @_shutterHTML()
             return
 
@@ -235,6 +273,11 @@ class @OrderTypesSettings extends AbstractPage
         if closest(target, '.js--shutter--box--sort--add--button')
             input = $('.js--shutter--box--sort--add--value').val().trim()
             @shutterBoxSorts.push(input)
+            data = {
+                type    : 'SHUTTER_BOX_SORT'
+                options : @shutterBoxSorts
+            }
+            SettingsService.saveOrderTypes(data, null, this, null, null)
             @_shutterHTML()
             return
 
@@ -254,6 +297,11 @@ class @OrderTypesSettings extends AbstractPage
         if closest(target, '.js--shutter--box--type--add--button')
             input = $('.js--shutter--box--type--add--value').val().trim()
             @shutterBoxTypes.push(input)
+            data = {
+                type    : 'SHUTTER_BOX_TYPE'
+                options : @shutterBoxTypes
+            }
+            SettingsService.saveOrderTypes(data, null, this, null, null)
             @_shutterHTML()
             return
 
@@ -483,7 +531,7 @@ class @OrderTypesSettings extends AbstractPage
                             <select class='js--shutter--box--type'>
                                 #{@_printOptionsHTML(@shutterBoxTypes)}
                             </select>
-                            <button class='cbtn btn-danger js--door--sort--remove--value'>Obriši</button>    
+                            <button class='cbtn btn-danger js--shutter--box--type--remove--value'>Obriši</button>    
                         </div>
                         <div class='flex flex-row'>
                             <input type='text' class='form-control js--shutter--box--type--add--value' placeholder='Tip kutije'>
@@ -508,12 +556,8 @@ class @OrderTypesSettings extends AbstractPage
                 options : this[onTheFlyData.array] 
 
             }
-            SettingsService.saveOrderTypes(data, null, this, @_saveOrderTypeSuccess, null)
-    
-    _saveOrderTypeSuccess: (response) ->
-        console.log response
-
-    
+            SettingsService.saveOrderTypes(data, null, this, null, null)
+        
     _loadedOrderTypes: (response) ->
         data = response.data
         @doorSorts = data['DOOR_SORT']
