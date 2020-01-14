@@ -120,3 +120,9 @@ class @AbstractDialog
             valid = false
             input.addClass(ComponentsUtils.CSS_INVALID_INPUT)
         return valid
+
+    _printOptionsHTML: (items) ->
+        html = ''
+        for item in items
+            html += "<option>#{item}</option>"
+        return html

@@ -9,12 +9,18 @@
       this.worker = null;
       this.workerIds = [];
       this.allWorkers = [];
+      this.orderInformationDoorTypes = {};
+      this.orderInformationThrasholdTypes = {};
+      this.orderInformationMosquitoTypes = {};
+      this.orderInformationWindowTypes = {};
+      this.orderInformationShutterTypes = {};
       this.bidCurrentId = 1;
       this.container = $('.js--page--container');
       this.allowedSaveBidsButton = false;
       this.oldClientIsChosen = true;
       this._renderChoseBidHTML();
-      WorkerService.getAll(null, this, this._loadWorkersSuccess, ajaxCallbackPrintMessage);
+      SettingsService.getAllOrderTypes(null, this, this._loadedOrderTypes, ajaxCallbackPrintMessage);
+      WorkerService.getAllActive(null, this, this._loadWorkersSuccess, ajaxCallbackPrintMessage);
       if (this.clientId) {
         ClientService.get(clientId, null, this, this._loadedClientSuccess, ajaxCallbackPrintMessage);
       } else {
@@ -96,7 +102,12 @@
       this.buildNumber = null;
       this.city = null;
       this.phoneNumber = null;
-      return this.email = null;
+      this.email = null;
+      this.orderInformationDoorTypes = null;
+      this.orderInformationThrasholdTypes = null;
+      this.orderInformationMosquitoTypes = null;
+      this.orderInformationWindowTypes = null;
+      return this.orderInformationShutterTypes = null;
     };
 
     BidsPage.prototype.getPageTitle = function() {
@@ -609,6 +620,27 @@
 
     BidsPage.prototype._orderSavedSuccess = function(response) {
       return window.location.href = '#order/' + response.data.id;
+    };
+
+    BidsPage.prototype._loadedOrderTypes = function(response) {
+      var data;
+      data = response.data;
+      this.orderInformationDoorTypes['DOOR_SORT'] = data['DOOR_SORT'];
+      this.orderInformationDoorTypes['DOOR_TYPE'] = data['DOOR_TYPE'];
+      this.orderInformationDoorTypes['DOOR_GLASS'] = data['DOOR_GLASS'];
+      this.orderInformationThrasholdTypes['THRESHOLD_SORT'] = data['THRESHOLD_SORT'];
+      this.orderInformationMosquitoTypes['MOSQUITO_SORT'] = data['MOSQUITO_SORT'];
+      this.orderInformationMosquitoTypes['MOSQUITO_TYPE'] = data['MOSQUITO_TYPE'];
+      this.orderInformationWindowTypes['WINDOW_SORT'] = data['WINDOW_SORT'];
+      this.orderInformationWindowTypes['WINDOW_GLASS'] = data['WINDOW_GLASS'];
+      this.orderInformationShutterTypes['SHUTTER_SORT'] = data['SHUTTER_SORT'];
+      this.orderInformationShutterTypes['SHUTTER_BOX_SORT'] = data['SHUTTER_BOX_SORT'];
+      this.orderInformationShutterTypes['SHUTTER_BOX_TYPE'] = data['SHUTTER_BOX_TYPE'];
+      this.doorBidDialog.setData(this.orderInformationDoorTypes);
+      this.thresholdBidDialog.setData(this.orderInformationThrasholdTypes);
+      this.windowBidDialog.setData(this.orderInformationWindowTypes);
+      this.shutterBidDialog.setData(this.orderInformationShutterTypes);
+      return this.mosquitoRepellerBidDialog.setData(this.orderInformationMosquitoTypes);
     };
 
     return BidsPage;

@@ -2,18 +2,21 @@ class @OrderTypesSettings extends AbstractPage
 
     constructor: () ->
         super()
-        @doorSorts = ['Ulazna', 'Sobna', 'Dvokrilna balkonska', 'Garažna', 'Segmentna garazna', 'Rolo']
-        @doorTypes = ['Sa staklom', 'Pun panel', 'Panel/staklo', 'Dekorativni modeli']
-        @doorGlass     = ['Providno', 'Griz', 'Delta', 'Vitraz']
-        @thresholdSorts = ['Alu prag', 'Štok']
-        @mosquitoSorts = ['Fiksni', 'Rolo']
-        @mosquitoTypes = ['Vrata', 'Rolo']
-        @windowSorts = ['Jednokrilni', 'Dvokrlni', 'Trokrilni', 'Fiks']
-        @windowGlass = ['Providno', 'Griz']
-        @shutterSorts = ['Kaiš', 'Kurbla', 'Elektronski pogon']
-        @shutterBoxSorts = ['Spoljašnja', 'Unutrašnja']
-        @shutterBoxTypes = ['RONDO poluzaobljeni', 'ALU liveni', 'ALU zastorom']
+        @doorSorts = []
+        @doorTypes = []
+        @doorGlass     = []
+        @thresholdSorts = []
+        @mosquitoSorts = []
+        @mosquitoTypes = []
+        @windowSorts = []
+        @windowGlass = []
+        @shutterSorts = []
+        @shutterBoxSorts = []
+        @shutterBoxTypes = []
         @pageHTML()
+
+        SettingsService.getAllOrderTypes(null, this, @_loadedOrderTypes, ajaxCallbackPrintMessage)
+        @confirmationDialog = new ConfirmationDialog(this)
 
     destroy: () ->
         super()
@@ -51,17 +54,29 @@ class @OrderTypesSettings extends AbstractPage
         if closest(target, '.js--door--sort--add--button')
             input = $('.js--door--sort--add--value').val().trim()
             @doorSorts.push(input)
+            onTheFlyData = {
+                array : 'doorSorts'
+                itemToRemove: type
+                callback: @_doorsHTML
+                context : this
+                settingsType : 'DOOR_SORT'
+            }
+            @confirmationDialogResponse(true, onTheFlyData)
             @_doorsHTML()
             return
 
         if closest(target, '.js--door--sort--remove--value')
             type = $('.js--door--sort').val()
             items = []
-            for item in @doorSorts
-                if item isnt type
-                    items.push(item)
-            @doorSorts = items
-            @_doorsHTML()
+          
+            onTheFlyData = {
+                array : 'doorSorts'
+                itemToRemove: type
+                callback: @_doorsHTML
+                context : this
+                settingsType : 'DOOR_SORT'
+            }
+            @confirmationDialog.show("Da li ste sigurni da zelite obrisati '#{type}'?", onTheFlyData)
             return
 
         # Door glass
@@ -73,12 +88,14 @@ class @OrderTypesSettings extends AbstractPage
 
         if closest(target, '.js--door--glass--remove--value')
             type = $('.js--door--glass').val()
-            items = []
-            for item in @doorGlass
-                if item isnt type
-                    items.push(item)
-            @doorGlass = items
-            @_doorsHTML()
+            onTheFlyData = {
+                array : 'doorGlass'
+                itemToRemove: type
+                callback: @_doorsHTML
+                context : this
+                settingsType : 'DOOR_GLASS'
+            }
+            @confirmationDialog.show("Da li ste sigurni da zelite obrisati '#{type}'?", onTheFlyData)
             return
 
         # Door type
@@ -90,12 +107,14 @@ class @OrderTypesSettings extends AbstractPage
 
         if closest(target, '.js--door--type--remove--value')
             type = $('.js--door--type').val()
-            items = []
-            for item in @doorTypes
-                if item isnt type
-                    items.push(item)
-            @doorTypes = items
-            @_doorsHTML()
+            onTheFlyData = {
+                array : 'doorTypes'
+                itemToRemove: type
+                callback: @_doorsHTML
+                context : this
+                settingsType : 'DOOR_TYPE'
+            }
+            @confirmationDialog.show("Da li ste sigurni da zelite obrisati '#{type}'?", onTheFlyData)            
             return
 
         # Threshold sort
@@ -107,12 +126,14 @@ class @OrderTypesSettings extends AbstractPage
 
         if closest(target, '.js--threshold--sort--remove--value')
             type = $('.js--threshold--sort').val()
-            items = []
-            for item in @thresholdSorts
-                if item isnt type
-                    items.push(item)
-            @thresholdSorts = items
-            @_thresholdHTML()
+            onTheFlyData = {
+                array : 'thresholdSorts'
+                itemToRemove: type
+                callback: @_thresholdHTML
+                context : this
+                settingsType : 'THRESHOLD_SORT'
+            }
+            @confirmationDialog.show("Da li ste sigurni da zelite obrisati '#{type}'?", onTheFlyData)
             return
         
         # Mosquito sort
@@ -124,14 +145,35 @@ class @OrderTypesSettings extends AbstractPage
 
         if closest(target, '.js--mosquito--sort--remove--value')
             type = $('.js--mosquito--sort').val()
-            items = []
-            for item in @mosquitoSorts
-                if item isnt type
-                    items.push(item)
-            @mosquitoSorts = items
-            @_mosquitoHTML()
+            onTheFlyData = {
+                array : 'mosquitoSorts'
+                itemToRemove: type
+                callback: @_mosquitoHTML
+                context : this
+                settingsType : 'MOSQUITO_SORT'
+            }
+            @confirmationDialog.show("Da li ste sigurni da zelite obrisati '#{type}'?", onTheFlyData)
             return
         
+        # Mosquito type
+        if closest(target, '.js--mosquito--type--add--button')
+            input = $('.js--mosquito--type--add--value').val().trim()
+            @mosquitoTypes.push(input)
+            @_mosquitoHTML()
+            return
+
+        if closest(target, '.js--mosquito--type--remove--value')
+            type = $('.js--mosquito--type').val()
+            onTheFlyData = {
+                array : 'mosquitoTypes'
+                itemToRemove: type
+                callback: @_mosquitoHTML
+                context : this
+                settingsType : 'MOSQUITO_TYPE'
+            }
+            @confirmationDialog.show("Da li ste sigurni da zelite obrisati '#{type}'?", onTheFlyData)
+            return
+
         # Window sort
         if closest(target, '.js--window--sort--add--button')
             input = $('.js--window--sort--add--value').val().trim()
@@ -141,12 +183,14 @@ class @OrderTypesSettings extends AbstractPage
 
         if closest(target, '.js--window--sort--remove--value')
             type = $('.js--window--sort').val()
-            items = []
-            for item in @windowSorts
-                if item isnt type
-                    items.push(item)
-            @windowSorts = items
-            @_windowHTML()
+            onTheFlyData = {
+                array : 'windowSorts'
+                itemToRemove: type
+                callback: @_windowHTML
+                context : this
+                settingsType : 'WINDOW_SORT'
+            }
+            @confirmationDialog.show("Da li ste sigurni da zelite obrisati '#{type}'?", onTheFlyData)
             return
 
         # Window glass
@@ -158,12 +202,14 @@ class @OrderTypesSettings extends AbstractPage
 
         if closest(target, '.js--window--glass--remove--value')
             type = $('.js--window--glass').val()
-            items = []
-            for item in @windowGlass
-                if item isnt type
-                    items.push(item)
-            @windowGlass = items
-            @_windowHTML()
+            onTheFlyData = {
+                array : 'windowGlass'
+                itemToRemove: type
+                callback: @_windowHTML
+                context : this
+                settingsType : 'WINDOW_GLASS'
+            }
+            @confirmationDialog.show("Da li ste sigurni da zelite obrisati '#{type}'?", onTheFlyData)
             return
 
         # Shutter sort
@@ -175,12 +221,14 @@ class @OrderTypesSettings extends AbstractPage
 
         if closest(target, '.js--shutter--sort--remove--value')
             type = $('.js--shutter--sort').val()
-            items = []
-            for item in @shutterSorts
-                if item isnt type
-                    items.push(item)
-            @shutterSorts = items
-            @_shutterHTML()
+            onTheFlyData = {
+                array : 'shutterSorts'
+                itemToRemove: type
+                callback: @_shutterHTML
+                context : this
+                settingsType : 'SHUTTER_SORT'
+            }
+            @confirmationDialog.show("Da li ste sigurni da zelite obrisati '#{type}'?", onTheFlyData)
             return
         
         # Shutter box sort
@@ -192,12 +240,14 @@ class @OrderTypesSettings extends AbstractPage
 
         if closest(target, '.js--shutter--box--sort--remove--value')
             type = $('.js--shutter--box--sort').val()
-            items = []
-            for item in @shutterBoxSorts
-                if item isnt type
-                    items.push(item)
-            @shutterBoxSorts = items
-            @_shutterHTML()
+            onTheFlyData = {
+                array : 'shutterBoxSorts'
+                itemToRemove: type
+                callback: @_shutterHTML
+                context : this
+                settingsType : 'SHUTTER_BOX_SORT'
+            }
+            @confirmationDialog.show("Da li ste sigurni da zelite obrisati '#{type}'?", onTheFlyData)
             return
         
         # Shutter box type
@@ -209,12 +259,14 @@ class @OrderTypesSettings extends AbstractPage
 
         if closest(target, '.js--shutter--box--type--remove--value')
             type = $('.js--shutter--box--type').val()
-            items = []
-            for item in @shutterBoxTypes
-                if item isnt type
-                    items.push(item)
-            @shutterBoxTypes = items
-            @_shutterHTML()
+            onTheFlyData = {
+                array : 'shutterBoxTypes'
+                itemToRemove: type
+                callback: @_shutterHTML
+                context : this
+                settingsType : 'SHUTTER_BOX_TYPE'
+            }
+            @confirmationDialog.show("Da li ste sigurni da zelite obrisati '#{type}'?", onTheFlyData)
             return
 
     pageHTML: () ->
@@ -440,3 +492,43 @@ class @OrderTypesSettings extends AbstractPage
                     </div>
                 </div>"
         @container.find('.js--nav--shutter--container').html(html)
+
+    
+    confirmationDialogResponse: (action, onTheFlyData) ->
+        
+        if action
+            items = []
+            for item in this[onTheFlyData.array]
+                if item isnt onTheFlyData.itemToRemove
+                    items.push(item)
+            this[onTheFlyData.array] = items
+            onTheFlyData.callback.call(onTheFlyData.context)
+            data = {
+                type    : onTheFlyData.settingsType
+                options : this[onTheFlyData.array] 
+
+            }
+            SettingsService.saveOrderTypes(data, null, this, @_saveOrderTypeSuccess, null)
+    
+    _saveOrderTypeSuccess: (response) ->
+        console.log response
+
+    
+    _loadedOrderTypes: (response) ->
+        data = response.data
+        @doorSorts = data['DOOR_SORT']
+        @doorTypes = data['DOOR_TYPE']
+        @doorGlass = data['DOOR_GLASS']
+
+        @thresholdSorts = data['THRESHOLD_SORT']
+
+        @mosquitoSorts = data['MOSQUITO_SORT']
+        @mosquitoTypes = data['MOSQUITO_TYPE']
+
+        @windowSorts = data['WINDOW_SORT']
+        @windowGlass = data['WINDOW_GLASS']
+        
+        @shutterSorts    = data['SHUTTER_SORT']
+        @shutterBoxSorts = data['SHUTTER_BOX_SORT']
+        @shutterBoxTypes = data['SHUTTER_BOX_TYPE']
+        @pageHTML()

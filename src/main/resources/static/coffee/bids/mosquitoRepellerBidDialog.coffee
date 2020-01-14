@@ -29,6 +29,9 @@ class @MosquitoRepellerBidDialog extends AbstractDialog
 
     hide: () ->
         super()
+        @parentPage = null
+        @orderTypes = null
+
         @sort     = null
         @type     = null
         @openSide = null
@@ -51,6 +54,7 @@ class @MosquitoRepellerBidDialog extends AbstractDialog
     negativeAction: () ->
         super()
 
+    setData: (@orderTypes) ->
 
     _collectDataFromForm: () ->
         return {
@@ -98,16 +102,14 @@ class @MosquitoRepellerBidDialog extends AbstractDialog
                             <label>Vrsta komarnika*</label>
                             <select class='js--sort'>
                                 <option selected>---</option>
-                                <option>Fiksni</option>
-                                <option>Rolo</option>
+                                #{@_printOptionsHTML(@orderTypes['MOSQUITO_SORT'])}
                             </select>
                         </div>
                         <div class='form-group'>
                                 <label>Tip komarnika*</label>
                                 <select class='js--type'>
                                     <option selected>---</option>
-                                    <option>Vrata</option>
-                                    <option>Rolo</option>
+                                    #{@_printOptionsHTML(@orderTypes['MOSQUITO_TYPE'])}
                                 </select>
                         </div>
                         <div class='form-group'>

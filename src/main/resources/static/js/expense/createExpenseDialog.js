@@ -45,7 +45,7 @@
         this.moneyTook.val(this.worker.fullName);
         this.moneyTook.attr('disabled', 'disabled');
       } else {
-        WorkerService.getAll(null, this, this._workersLoaded, ajaxCallbackPrintMessage);
+        WorkerService.getAllActive(null, this, this._workersLoaded, ajaxCallbackPrintMessage);
       }
       UserService.getUsersIncludedMe(null, this, this._usersLoaded, ajaxCallbackPrintMessage);
       this.userAutoSuggestions = this.container.find('.js--user--suggestions');

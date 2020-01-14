@@ -106,4 +106,10 @@ public class WorkerRepositoryImpl implements WorkerRepository {
 		return entity;
 	}
 
+	@Override
+	public List<IWorker> getAllActive() {
+		Query query = entityManager.createNamedQuery("Worker.findAllActive");
+		return query.getResultList();
+	}
+
 }

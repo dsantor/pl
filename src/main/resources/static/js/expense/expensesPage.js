@@ -16,7 +16,7 @@
       }
       this.expenses = [];
       this.clientsAndWorkers = [];
-      WorkerService.getAll(null, this, this._loadedClientsSuccess, this._loadedClientsError);
+      WorkerService.getAllActive(null, this, this._loadedClientsSuccess, this._loadedClientsError);
       this.filterContainer = this.container.find('.js--filter--container');
       this.expensesContainer = this.container.find('.js--expenses--container');
       this.autoSuggestion = new AutoSuggestion(this, this.filterContainer, AutoSuggestion.EXPENSE_FILTER);

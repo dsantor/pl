@@ -8,18 +8,20 @@
 
     function OrderTypesSettings() {
       OrderTypesSettings.__super__.constructor.call(this);
-      this.doorSorts = ['Ulazna', 'Sobna', 'Dvokrilna balkonska', 'Garažna', 'Segmentna garazna', 'Rolo'];
-      this.doorTypes = ['Sa staklom', 'Pun panel', 'Panel/staklo', 'Dekorativni modeli'];
-      this.doorGlass = ['Providno', 'Griz', 'Delta', 'Vitraz'];
-      this.thresholdSorts = ['Alu prag', 'Štok'];
-      this.mosquitoSorts = ['Fiksni', 'Rolo'];
-      this.mosquitoTypes = ['Vrata', 'Rolo'];
-      this.windowSorts = ['Jednokrilni', 'Dvokrlni', 'Trokrilni', 'Fiks'];
-      this.windowGlass = ['Providno', 'Griz'];
-      this.shutterSorts = ['Kaiš', 'Kurbla', 'Elektronski pogon'];
-      this.shutterBoxSorts = ['Spoljašnja', 'Unutrašnja'];
-      this.shutterBoxTypes = ['RONDO poluzaobljeni', 'ALU liveni', 'ALU zastorom'];
+      this.doorSorts = [];
+      this.doorTypes = [];
+      this.doorGlass = [];
+      this.thresholdSorts = [];
+      this.mosquitoSorts = [];
+      this.mosquitoTypes = [];
+      this.windowSorts = [];
+      this.windowGlass = [];
+      this.shutterSorts = [];
+      this.shutterBoxSorts = [];
+      this.shutterBoxTypes = [];
       this.pageHTML();
+      SettingsService.getAllOrderTypes(null, this, this._loadedOrderTypes, ajaxCallbackPrintMessage);
+      this.confirmationDialog = new ConfirmationDialog(this);
     }
 
     OrderTypesSettings.prototype.destroy = function() {
@@ -34,7 +36,7 @@
     };
 
     OrderTypesSettings.prototype._clickEventHandler = function(event) {
-      var i, input, item, items, j, k, l, len, len1, len2, len3, len4, len5, len6, len7, len8, len9, m, n, o, p, q, r, ref, ref1, ref2, ref3, ref4, ref5, ref6, ref7, ref8, ref9, target, type;
+      var input, items, onTheFlyData, target, type;
       target = $(event.target);
       if (closest(target, '.js--nav--door')) {
         this._activeContainer('.js--nav--door');
@@ -59,21 +61,28 @@
       if (closest(target, '.js--door--sort--add--button')) {
         input = $('.js--door--sort--add--value').val().trim();
         this.doorSorts.push(input);
+        onTheFlyData = {
+          array: 'doorSorts',
+          itemToRemove: type,
+          callback: this._doorsHTML,
+          context: this,
+          settingsType: 'DOOR_SORT'
+        };
+        this.confirmationDialogResponse(true, onTheFlyData);
         this._doorsHTML();
         return;
       }
       if (closest(target, '.js--door--sort--remove--value')) {
         type = $('.js--door--sort').val();
         items = [];
-        ref = this.doorSorts;
-        for (i = 0, len = ref.length; i < len; i++) {
-          item = ref[i];
-          if (item !== type) {
-            items.push(item);
-          }
-        }
-        this.doorSorts = items;
-        this._doorsHTML();
+        onTheFlyData = {
+          array: 'doorSorts',
+          itemToRemove: type,
+          callback: this._doorsHTML,
+          context: this,
+          settingsType: 'DOOR_SORT'
+        };
+        this.confirmationDialog.show("Da li ste sigurni da zelite obrisati '" + type + "'?", onTheFlyData);
         return;
       }
       if (closest(target, '.js--door--glass--add--button')) {
@@ -84,16 +93,14 @@
       }
       if (closest(target, '.js--door--glass--remove--value')) {
         type = $('.js--door--glass').val();
-        items = [];
-        ref1 = this.doorGlass;
-        for (j = 0, len1 = ref1.length; j < len1; j++) {
-          item = ref1[j];
-          if (item !== type) {
-            items.push(item);
-          }
-        }
-        this.doorGlass = items;
-        this._doorsHTML();
+        onTheFlyData = {
+          array: 'doorGlass',
+          itemToRemove: type,
+          callback: this._doorsHTML,
+          context: this,
+          settingsType: 'DOOR_GLASS'
+        };
+        this.confirmationDialog.show("Da li ste sigurni da zelite obrisati '" + type + "'?", onTheFlyData);
         return;
       }
       if (closest(target, '.js--door--type--add--button')) {
@@ -104,16 +111,14 @@
       }
       if (closest(target, '.js--door--type--remove--value')) {
         type = $('.js--door--type').val();
-        items = [];
-        ref2 = this.doorTypes;
-        for (k = 0, len2 = ref2.length; k < len2; k++) {
-          item = ref2[k];
-          if (item !== type) {
-            items.push(item);
-          }
-        }
-        this.doorTypes = items;
-        this._doorsHTML();
+        onTheFlyData = {
+          array: 'doorTypes',
+          itemToRemove: type,
+          callback: this._doorsHTML,
+          context: this,
+          settingsType: 'DOOR_TYPE'
+        };
+        this.confirmationDialog.show("Da li ste sigurni da zelite obrisati '" + type + "'?", onTheFlyData);
         return;
       }
       if (closest(target, '.js--threshold--sort--add--button')) {
@@ -124,16 +129,14 @@
       }
       if (closest(target, '.js--threshold--sort--remove--value')) {
         type = $('.js--threshold--sort').val();
-        items = [];
-        ref3 = this.thresholdSorts;
-        for (l = 0, len3 = ref3.length; l < len3; l++) {
-          item = ref3[l];
-          if (item !== type) {
-            items.push(item);
-          }
-        }
-        this.thresholdSorts = items;
-        this._thresholdHTML();
+        onTheFlyData = {
+          array: 'thresholdSorts',
+          itemToRemove: type,
+          callback: this._thresholdHTML,
+          context: this,
+          settingsType: 'THRESHOLD_SORT'
+        };
+        this.confirmationDialog.show("Da li ste sigurni da zelite obrisati '" + type + "'?", onTheFlyData);
         return;
       }
       if (closest(target, '.js--mosquito--sort--add--button')) {
@@ -144,16 +147,32 @@
       }
       if (closest(target, '.js--mosquito--sort--remove--value')) {
         type = $('.js--mosquito--sort').val();
-        items = [];
-        ref4 = this.mosquitoSorts;
-        for (m = 0, len4 = ref4.length; m < len4; m++) {
-          item = ref4[m];
-          if (item !== type) {
-            items.push(item);
-          }
-        }
-        this.mosquitoSorts = items;
+        onTheFlyData = {
+          array: 'mosquitoSorts',
+          itemToRemove: type,
+          callback: this._mosquitoHTML,
+          context: this,
+          settingsType: 'MOSQUITO_SORT'
+        };
+        this.confirmationDialog.show("Da li ste sigurni da zelite obrisati '" + type + "'?", onTheFlyData);
+        return;
+      }
+      if (closest(target, '.js--mosquito--type--add--button')) {
+        input = $('.js--mosquito--type--add--value').val().trim();
+        this.mosquitoTypes.push(input);
         this._mosquitoHTML();
+        return;
+      }
+      if (closest(target, '.js--mosquito--type--remove--value')) {
+        type = $('.js--mosquito--type').val();
+        onTheFlyData = {
+          array: 'mosquitoTypes',
+          itemToRemove: type,
+          callback: this._mosquitoHTML,
+          context: this,
+          settingsType: 'MOSQUITO_TYPE'
+        };
+        this.confirmationDialog.show("Da li ste sigurni da zelite obrisati '" + type + "'?", onTheFlyData);
         return;
       }
       if (closest(target, '.js--window--sort--add--button')) {
@@ -164,16 +183,14 @@
       }
       if (closest(target, '.js--window--sort--remove--value')) {
         type = $('.js--window--sort').val();
-        items = [];
-        ref5 = this.windowSorts;
-        for (n = 0, len5 = ref5.length; n < len5; n++) {
-          item = ref5[n];
-          if (item !== type) {
-            items.push(item);
-          }
-        }
-        this.windowSorts = items;
-        this._windowHTML();
+        onTheFlyData = {
+          array: 'windowSorts',
+          itemToRemove: type,
+          callback: this._windowHTML,
+          context: this,
+          settingsType: 'WINDOW_SORT'
+        };
+        this.confirmationDialog.show("Da li ste sigurni da zelite obrisati '" + type + "'?", onTheFlyData);
         return;
       }
       if (closest(target, '.js--window--glass--add--button')) {
@@ -184,16 +201,14 @@
       }
       if (closest(target, '.js--window--glass--remove--value')) {
         type = $('.js--window--glass').val();
-        items = [];
-        ref6 = this.windowGlass;
-        for (o = 0, len6 = ref6.length; o < len6; o++) {
-          item = ref6[o];
-          if (item !== type) {
-            items.push(item);
-          }
-        }
-        this.windowGlass = items;
-        this._windowHTML();
+        onTheFlyData = {
+          array: 'windowGlass',
+          itemToRemove: type,
+          callback: this._windowHTML,
+          context: this,
+          settingsType: 'WINDOW_GLASS'
+        };
+        this.confirmationDialog.show("Da li ste sigurni da zelite obrisati '" + type + "'?", onTheFlyData);
         return;
       }
       if (closest(target, '.js--shutter--sort--add--button')) {
@@ -204,16 +219,14 @@
       }
       if (closest(target, '.js--shutter--sort--remove--value')) {
         type = $('.js--shutter--sort').val();
-        items = [];
-        ref7 = this.shutterSorts;
-        for (p = 0, len7 = ref7.length; p < len7; p++) {
-          item = ref7[p];
-          if (item !== type) {
-            items.push(item);
-          }
-        }
-        this.shutterSorts = items;
-        this._shutterHTML();
+        onTheFlyData = {
+          array: 'shutterSorts',
+          itemToRemove: type,
+          callback: this._shutterHTML,
+          context: this,
+          settingsType: 'SHUTTER_SORT'
+        };
+        this.confirmationDialog.show("Da li ste sigurni da zelite obrisati '" + type + "'?", onTheFlyData);
         return;
       }
       if (closest(target, '.js--shutter--box--sort--add--button')) {
@@ -224,16 +237,14 @@
       }
       if (closest(target, '.js--shutter--box--sort--remove--value')) {
         type = $('.js--shutter--box--sort').val();
-        items = [];
-        ref8 = this.shutterBoxSorts;
-        for (q = 0, len8 = ref8.length; q < len8; q++) {
-          item = ref8[q];
-          if (item !== type) {
-            items.push(item);
-          }
-        }
-        this.shutterBoxSorts = items;
-        this._shutterHTML();
+        onTheFlyData = {
+          array: 'shutterBoxSorts',
+          itemToRemove: type,
+          callback: this._shutterHTML,
+          context: this,
+          settingsType: 'SHUTTER_BOX_SORT'
+        };
+        this.confirmationDialog.show("Da li ste sigurni da zelite obrisati '" + type + "'?", onTheFlyData);
         return;
       }
       if (closest(target, '.js--shutter--box--type--add--button')) {
@@ -244,16 +255,14 @@
       }
       if (closest(target, '.js--shutter--box--type--remove--value')) {
         type = $('.js--shutter--box--type').val();
-        items = [];
-        ref9 = this.shutterBoxTypes;
-        for (r = 0, len9 = ref9.length; r < len9; r++) {
-          item = ref9[r];
-          if (item !== type) {
-            items.push(item);
-          }
-        }
-        this.shutterBoxTypes = items;
-        this._shutterHTML();
+        onTheFlyData = {
+          array: 'shutterBoxTypes',
+          itemToRemove: type,
+          callback: this._shutterHTML,
+          context: this,
+          settingsType: 'SHUTTER_BOX_TYPE'
+        };
+        this.confirmationDialog.show("Da li ste sigurni da zelite obrisati '" + type + "'?", onTheFlyData);
       }
     };
 
@@ -308,6 +317,48 @@
       var html;
       html = "<div class='form-group'> <h5>Roletne</h5> <div class='flex flex-column'> <label>Vrsta roletne</label> <div class='flex flex-row'> <select class='js--shutter--sort'> " + (this._printOptionsHTML(this.shutterSorts)) + " </select> <button class='cbtn btn-danger js--shutter--sort--remove--value'>Obriši</button> </div> <div class='flex flex-row'> <input type='text' class='form-control js--shutter--sort--add--value' placeholder='Vrsta roletne'> <button class='cbtn btn-primary js--shutter--sort--add--button'>Dodaj</button> </div> </div> </div> <div class='form-group'> <div class='flex flex-column'> <label>Vrsta kutije</label> <div class='flex flex-row'> <select class='js--shutter--box--sort'> " + (this._printOptionsHTML(this.shutterBoxSorts)) + " </select> <button class='cbtn btn-danger js--shutter--box--sort--remove--value'>Obriši</button> </div> <div class='flex flex-row'> <input type='text' class='form-control js--shutter--box--sort--add--value' placeholder='Vrsta kutije'> <button class='cbtn btn-primary js--shutter--box--sort--add--button'>Dodaj</button> </div> </div> </div> <div class='form-group'> <div class='flex flex-column'> <label>Tip kutije</label> <div class='flex flex-row'> <select class='js--shutter--box--type'> " + (this._printOptionsHTML(this.shutterBoxTypes)) + " </select> <button class='cbtn btn-danger js--door--sort--remove--value'>Obriši</button> </div> <div class='flex flex-row'> <input type='text' class='form-control js--shutter--box--type--add--value' placeholder='Tip kutije'> <button class='cbtn btn-primary js--shutter--box--type--add--button'>Dodaj</button> </div> </div> </div>";
       return this.container.find('.js--nav--shutter--container').html(html);
+    };
+
+    OrderTypesSettings.prototype.confirmationDialogResponse = function(action, onTheFlyData) {
+      var data, i, item, items, len, ref;
+      if (action) {
+        items = [];
+        ref = this[onTheFlyData.array];
+        for (i = 0, len = ref.length; i < len; i++) {
+          item = ref[i];
+          if (item !== onTheFlyData.itemToRemove) {
+            items.push(item);
+          }
+        }
+        this[onTheFlyData.array] = items;
+        onTheFlyData.callback.call(onTheFlyData.context);
+        data = {
+          type: onTheFlyData.settingsType,
+          options: this[onTheFlyData.array]
+        };
+        return SettingsService.saveOrderTypes(data, null, this, this._saveOrderTypeSuccess, null);
+      }
+    };
+
+    OrderTypesSettings.prototype._saveOrderTypeSuccess = function(response) {
+      return console.log(response);
+    };
+
+    OrderTypesSettings.prototype._loadedOrderTypes = function(response) {
+      var data;
+      data = response.data;
+      this.doorSorts = data['DOOR_SORT'];
+      this.doorTypes = data['DOOR_TYPE'];
+      this.doorGlass = data['DOOR_GLASS'];
+      this.thresholdSorts = data['THRESHOLD_SORT'];
+      this.mosquitoSorts = data['MOSQUITO_SORT'];
+      this.mosquitoTypes = data['MOSQUITO_TYPE'];
+      this.windowSorts = data['WINDOW_SORT'];
+      this.windowGlass = data['WINDOW_GLASS'];
+      this.shutterSorts = data['SHUTTER_SORT'];
+      this.shutterBoxSorts = data['SHUTTER_BOX_SORT'];
+      this.shutterBoxTypes = data['SHUTTER_BOX_TYPE'];
+      return this.pageHTML();
     };
 
     return OrderTypesSettings;

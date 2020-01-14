@@ -44,7 +44,7 @@ class @CreateExpenseDialog extends AbstractDialog
             @moneyTook.val(@worker.fullName)
             @moneyTook.attr('disabled', 'disabled')
         else
-            WorkerService.getAll(null, this, @_workersLoaded, ajaxCallbackPrintMessage)
+            WorkerService.getAllActive(null, this, @_workersLoaded, ajaxCallbackPrintMessage)
 
         UserService.getUsersIncludedMe(null, this, @_usersLoaded, ajaxCallbackPrintMessage)
 

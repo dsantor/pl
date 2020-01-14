@@ -42,6 +42,7 @@ class @ShutterBidDialog extends AbstractDialog
 
     destroy: () ->
         @parentPage = null
+        @orderTypes = null
         @additionBoxOptions = null
         @additionBoxActive  = null
 
@@ -65,6 +66,8 @@ class @ShutterBidDialog extends AbstractDialog
 
     negativeAction: () ->
         super()
+
+    setData: (@orderTypes) ->
 
     _pageClickEventHandler: (event) ->
         target = $(event.target)
@@ -134,26 +137,21 @@ class @ShutterBidDialog extends AbstractDialog
                             <label>Vrsta roletne*</label>
                             <select class='js--sort'>
                                 <option selected>---</option>
-                                <option>Kais</option>
-                                <option>Kurbla</option>
-                                <option>Elektronski pogon</option>
+                                #{@_printOptionsHTML(@orderTypes['SHUTTER_SORT'])}
                             </select>
                         </div>
                         <div class='form-group'>
                                 <label>Vrsta kutije*</label>
                                 <select class='js--box'>
                                     <option value='0'>---</option>
-                                    <option value='Unutrasnja'>Unutrasnja</option>
-                                    <option value='Spoljasnja'>Spoljasnja</option>
+                                    #{@_printOptionsHTML(@orderTypes['SHUTTER_BOX_SORT'])}
                                 </select>
                         </div>
                         <div class='form-group js--box--type--option hide'>
                                 <label>Tip kutije*</label>
                                 <select class='js--box--type'>
                                     <option>---</option>
-                                    <option>RONDO poluzaobljena</option>
-                                    <option>ALU livena</option>
-                                    <option>ALU zastorom</option>
+                                    #{@_printOptionsHTML(@orderTypes['SHUTTER_BOX_TYPE'])}
                                 </select>
                         </div>
                         <div class='form-group'>

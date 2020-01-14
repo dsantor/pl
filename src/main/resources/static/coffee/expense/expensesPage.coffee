@@ -10,7 +10,7 @@ class @ExpensesPage extends AbstractPage
 
         @expenses          = []
         @clientsAndWorkers = []
-        WorkerService.getAll(null, this, @_loadedClientsSuccess, @_loadedClientsError)
+        WorkerService.getAllActive(null, this, @_loadedClientsSuccess, @_loadedClientsError)
         @filterContainer = @container.find('.js--filter--container')
         @expensesContainer = @container.find('.js--expenses--container')
         @autoSuggestion = new AutoSuggestion(this, @filterContainer, AutoSuggestion.EXPENSE_FILTER)

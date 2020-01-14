@@ -55,6 +55,7 @@
 
     ShutterBidDialog.prototype.destroy = function() {
       this.parentPage = null;
+      this.orderTypes = null;
       this.additionBoxOptions = null;
       this.additionBoxActive = null;
       this.sort = null;
@@ -80,6 +81,10 @@
 
     ShutterBidDialog.prototype.negativeAction = function() {
       return ShutterBidDialog.__super__.negativeAction.call(this);
+    };
+
+    ShutterBidDialog.prototype.setData = function(orderTypes) {
+      this.orderTypes = orderTypes;
     };
 
     ShutterBidDialog.prototype._pageClickEventHandler = function(event) {
@@ -146,7 +151,7 @@
     };
 
     ShutterBidDialog.prototype._customHTML = function() {
-      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta roletne*</label> <select class='js--sort'> <option selected>---</option> <option>Kais</option> <option>Kurbla</option> <option>Elektronski pogon</option> </select> </div> <div class='form-group'> <label>Vrsta kutije*</label> <select class='js--box'> <option value='0'>---</option> <option value='Unutrasnja'>Unutrasnja</option> <option value='Spoljasnja'>Spoljasnja</option> </select> </div> <div class='form-group js--box--type--option hide'> <label>Tip kutije*</label> <select class='js--box--type'> <option>---</option> <option>RONDO poluzaobljena</option> <option>ALU livena</option> <option>ALU zastorom</option> </select> </div> <div class='form-group'> <label>Strana otvora*</label> <select class='js--open--side'> <option selected>---</option> <option>Levi otvor</option> <option>Desni otvor</option> </select> </div> <div class='form-group'> <label>Kolicina*</label> <input type='number' min='1' class='form-control js--quantity' value='1'> </div> <div class='form-group'> <label>Cena*</label> <input type='number' min='1' class='form-control js--price' placeholder='din'> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wc-10 left-label'>Sirina</label> <input type='number' class='form-control js--width' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wc-10 left-label'>Visina</label> <input type='number' class='form-control js--height' placeholder='cm'> </div> </div> </div> </div> </div>";
+      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta roletne*</label> <select class='js--sort'> <option selected>---</option> " + (this._printOptionsHTML(this.orderTypes['SHUTTER_SORT'])) + " </select> </div> <div class='form-group'> <label>Vrsta kutije*</label> <select class='js--box'> <option value='0'>---</option> " + (this._printOptionsHTML(this.orderTypes['SHUTTER_BOX_SORT'])) + " </select> </div> <div class='form-group js--box--type--option hide'> <label>Tip kutije*</label> <select class='js--box--type'> <option>---</option> " + (this._printOptionsHTML(this.orderTypes['SHUTTER_BOX_TYPE'])) + " </select> </div> <div class='form-group'> <label>Strana otvora*</label> <select class='js--open--side'> <option selected>---</option> <option>Levi otvor</option> <option>Desni otvor</option> </select> </div> <div class='form-group'> <label>Kolicina*</label> <input type='number' min='1' class='form-control js--quantity' value='1'> </div> <div class='form-group'> <label>Cena*</label> <input type='number' min='1' class='form-control js--price' placeholder='din'> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wc-10 left-label'>Sirina</label> <input type='number' class='form-control js--width' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wc-10 left-label'>Visina</label> <input type='number' class='form-control js--height' placeholder='cm'> </div> </div> </div> </div> </div>";
     };
 
     return ShutterBidDialog;

@@ -66,6 +66,12 @@ public class WorkersController {
 		return new BaseResponse(workers, false, null);
 	}
 	
+	@GetMapping("/allActive")
+	public BaseResponse getAllActive() {
+		List<IWorker> workers = workerService.getAllActive();
+		return new BaseResponse(workers, false, null);
+	}
+	
 	@GetMapping("/toggleBlockUser/{workerId}")
 	public BaseResponse toggleBlockUser(@PathVariable ("workerId") Long workerId, HttpServletRequest request) {
 		Long loggedUserId = SessionService.getLoggedUserId(request);

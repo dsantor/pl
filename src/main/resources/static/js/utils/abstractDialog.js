@@ -134,6 +134,16 @@
       return valid;
     };
 
+    AbstractDialog.prototype._printOptionsHTML = function(items) {
+      var html, i, item, len;
+      html = '';
+      for (i = 0, len = items.length; i < len; i++) {
+        item = items[i];
+        html += "<option>" + item + "</option>";
+      }
+      return html;
+    };
+
     return AbstractDialog;
 
   })();

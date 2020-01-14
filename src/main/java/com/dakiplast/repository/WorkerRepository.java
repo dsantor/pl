@@ -16,4 +16,5 @@ public interface WorkerRepository {
 	public boolean toggleBlockWorker(Long workerId);
 	public IWorker update(Long id, String firstName, String lastName, String email, String phoneNumber, String city,
 			String street, String buildNumber);
+	public List<IWorker> getAllActive();
 }

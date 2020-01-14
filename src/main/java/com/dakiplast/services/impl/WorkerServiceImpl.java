@@ -75,4 +75,9 @@ public class WorkerServiceImpl implements WorkerService {
 		return workerRepository.update(id, firstName, lastName, email, phoneNumber, city, street, buildNumber);
 	}
 
+	@Override
+	public List<IWorker> getAllActive() {
+		return workerRepository.getAllActive();
+	}
+
 }

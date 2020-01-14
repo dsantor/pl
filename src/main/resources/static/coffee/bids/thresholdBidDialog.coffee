@@ -29,6 +29,7 @@ class @ThresholdBidDialog extends AbstractDialog
 
     destroy: () ->
         @parentPage = null
+        @orderTypes = null
         super()
 
     positiveAction: () ->
@@ -41,6 +42,7 @@ class @ThresholdBidDialog extends AbstractDialog
     negativeAction: () ->
         super()
 
+    setData: (@orderTypes) ->
 
     _collectDataFromForm: () ->
         return {
@@ -84,8 +86,7 @@ class @ThresholdBidDialog extends AbstractDialog
                             <label>Vrsta praga</label>
                             <select class='js--sort'>
                                 <option selected>---</option>
-                                <option>Alu prag</option>
-                                <option>Stok</option>
+                                #{@_printOptionsHTML(@orderTypes['THRESHOLD_SORT'])}
                             </select>
                         </div>
 

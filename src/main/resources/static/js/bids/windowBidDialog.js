@@ -49,6 +49,7 @@
 
     WindowBidDialog.prototype.destroy = function() {
       this.parentPage = null;
+      this.orderTypes = null;
       this.sort = null;
       this.openSide = null;
       this.glass = null;
@@ -73,6 +74,10 @@
 
     WindowBidDialog.prototype.negativeAction = function() {
       return WindowBidDialog.__super__.negativeAction.call(this);
+    };
+
+    WindowBidDialog.prototype.setData = function(orderTypes) {
+      this.orderTypes = orderTypes;
     };
 
     WindowBidDialog.prototype._collectDataFromForm = function() {
@@ -116,7 +121,7 @@
     };
 
     WindowBidDialog.prototype._customHTML = function() {
-      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta prozora*</label> <select class='js--sort'> <option selected>---</option> <option>Jednokrilni</option> <option>Dvokrlni</option> <option>Trokrilni</option> <option>Fiks</option> </select> </div> <div class='form-group'> <label>Otvor*</label> <select class='js--open--side'> <option selected>---</option> <option>Levi</option> <option>Desni</option> </select> </div> <div class='form-group'> <label>Staklo*</label> <select class='js--glass'> <option selected>---</option> <option>Providno</option> <option>Griz</option> </select> </div> <div class='form-group'> <label>Kipovanje*</label> <select class='js--tipper'> <option selected>---</option> <option>Da</option> <option>Ne</option> </select> </div> <div class='form-group'> <label>Kolicina*</label> <input type='number' min='1' class='form-control js--quantity' value='1'> </div> <div class='form-group'> <label>Cena*</label> <input type='number' min='1' class='form-control js--price' placeholder='din'> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wc-10 left-label'>Sirina</label> <input type='number' class='form-control js--width' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wc-10 left-label'>Visina</label> <input type='number' class='form-control js--height' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wc-10 left-label'>Unutrasnja sirina</label> <input type='number' class='form-control js--inner--width' placeholder='cm'> </div> </div> </div> </div>";
+      return "<div class='col-7 m-auto p-5 flex'> <div class='container container-padding w-50'> <h5>Opste</h5> <br> <div class='form-group'> <label>Vrsta prozora*</label> <select class='js--sort'> <option selected>---</option> " + (this._printOptionsHTML(this.orderTypes['WINDOW_SORT'])) + " </select> </div> <div class='form-group'> <label>Otvor*</label> <select class='js--open--side'> <option selected>---</option> <option>Levi</option> <option>Desni</option> </select> </div> <div class='form-group'> <label>Staklo*</label> <select class='js--glass'> <option selected>---</option> " + (this._printOptionsHTML(this.orderTypes['WINDOW_GLASS'])) + " </select> </div> <div class='form-group'> <label>Kipovanje*</label> <select class='js--tipper'> <option selected>---</option> <option>Da</option> <option>Ne</option> </select> </div> <div class='form-group'> <label>Kolicina*</label> <input type='number' min='1' class='form-control js--quantity' value='1'> </div> <div class='form-group'> <label>Cena*</label> <input type='number' min='1' class='form-control js--price' placeholder='din'> </div> <div class='form-group'> <br> <hr> <h5>Dimenzije</h5> <br> <div class='form-group form-inline'> <label class='mr-2 wc-10 left-label'>Sirina</label> <input type='number' class='form-control js--width' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wc-10 left-label'>Visina</label> <input type='number' class='form-control js--height' placeholder='cm'> </div> <div class='form-group form-inline'> <label class='mr-2 wc-10 left-label'>Unutrasnja sirina</label> <input type='number' class='form-control js--inner--width' placeholder='cm'> </div> </div> </div> </div>";
     };
 
     return WindowBidDialog;

@@ -8,13 +8,19 @@ class @BidsPage
         @worker = null
         @workerIds = []
         @allWorkers = []
+        @orderInformationDoorTypes      = {}
+        @orderInformationThrasholdTypes = {}
+        @orderInformationMosquitoTypes  = {}
+        @orderInformationWindowTypes    = {}
+        @orderInformationShutterTypes   = {}
         @bidCurrentId = 1
         @container = $('.js--page--container')
         @allowedSaveBidsButton = false
         @oldClientIsChosen     = true
         @_renderChoseBidHTML()
 
-        WorkerService.getAll(null, this, @_loadWorkersSuccess, ajaxCallbackPrintMessage)
+        SettingsService.getAllOrderTypes(null, this, @_loadedOrderTypes, ajaxCallbackPrintMessage)
+        WorkerService.getAllActive(null, this, @_loadWorkersSuccess, ajaxCallbackPrintMessage)
 
         if @clientId
             ClientService.get(clientId, null, this, @_loadedClientSuccess, ajaxCallbackPrintMessage)
@@ -117,6 +123,11 @@ class @BidsPage
         @phoneNumber           = null
         @email                 = null
 
+        @orderInformationDoorTypes      = null
+        @orderInformationThrasholdTypes = null
+        @orderInformationMosquitoTypes  = null
+        @orderInformationWindowTypes    = null
+        @orderInformationShutterTypes   = null
 
     getPageTitle: () ->
         return "Porudzbine"
@@ -690,3 +701,27 @@ class @BidsPage
 
     _orderSavedSuccess: (response)->
         window.location.href = '#order/' + response.data.id
+
+    _loadedOrderTypes: (response) ->
+        data = response.data
+        @orderInformationDoorTypes['DOOR_SORT'] = data['DOOR_SORT']
+        @orderInformationDoorTypes['DOOR_TYPE'] = data['DOOR_TYPE']
+        @orderInformationDoorTypes['DOOR_GLASS'] = data['DOOR_GLASS']
+
+        @orderInformationThrasholdTypes['THRESHOLD_SORT'] = data['THRESHOLD_SORT']
+
+        @orderInformationMosquitoTypes['MOSQUITO_SORT'] = data['MOSQUITO_SORT']
+        @orderInformationMosquitoTypes['MOSQUITO_TYPE'] = data['MOSQUITO_TYPE']
+
+        @orderInformationWindowTypes['WINDOW_SORT']  = data['WINDOW_SORT']
+        @orderInformationWindowTypes['WINDOW_GLASS'] = data['WINDOW_GLASS']
+        
+        @orderInformationShutterTypes['SHUTTER_SORT']     = data['SHUTTER_SORT']
+        @orderInformationShutterTypes['SHUTTER_BOX_SORT'] = data['SHUTTER_BOX_SORT']
+        @orderInformationShutterTypes['SHUTTER_BOX_TYPE'] = data['SHUTTER_BOX_TYPE']
+
+        @doorBidDialog.setData(@orderInformationDoorTypes)
+        @thresholdBidDialog.setData(@orderInformationThrasholdTypes)
+        @windowBidDialog.setData(@orderInformationWindowTypes)
+        @shutterBidDialog.setData(@orderInformationShutterTypes)
+        @mosquitoRepellerBidDialog.setData(@orderInformationMosquitoTypes)

@@ -30,12 +30,16 @@ class @DoorBidDialog extends AbstractDialog
             @price.val(updateItem.price or '')
             @quantity.val(updateItem.quantity or '')
             @id = updateItem.id
+    
     hide: () ->
         super()
 
     destroy: () ->
         @parentPage = null
+        @orderTypes = null
         super()
+
+    setData: (@orderTypes) ->
 
     positiveAction: () ->
         if not @_validateForm()
@@ -102,13 +106,7 @@ class @DoorBidDialog extends AbstractDialog
                                 <label>Vrsta vrata*</label>
                                 <select class='select--input js--sort'>
                                     <option selected>---</option>
-                                    <option>Ulazna</option>
-                                    <option>Sobna</option>
-                                    <option>Jednokrilna balkonska</option>
-                                    <option>Dvokrilna balkonska</option>
-                                    <option>Garažna</option>
-                                    <option>segmentna garazna</option>
-                                    <option>Rolo</option>
+                                    #{@_printOptionsHTML(@orderTypes['DOOR_SORT'])}
                                 </select>
                             </div>
                             
@@ -116,10 +114,7 @@ class @DoorBidDialog extends AbstractDialog
                                 <label>Tip vrata*</label>
                                 <select class='select--input js--type'>
                                     <option selected>---</option>
-                                    <option>Sa staklom</option>
-                                    <option>Pun panel</option>
-                                    <option>Panel/staklo</option>
-                                    <option>Dekorativni modeli</option>
+                                    #{@_printOptionsHTML(@orderTypes['DOOR_TYPE'])}
                                 </select>
                             </div>                    
                             <div class='form-group'>
@@ -135,10 +130,7 @@ class @DoorBidDialog extends AbstractDialog
                                 <label>Staklo*</label>
                                 <select class='select--input js--glass'>
                                     <option selected>---</option>
-                                    <option>Providno</option>
-                                    <option>Griz</option>
-                                    <option>Delta</option>
-                                    <option>Vitraz</option>
+                                    #{@_printOptionsHTML(@orderTypes['DOOR_GLASS'])}
                                 </select>
                             </div>
 

@@ -36,7 +36,8 @@ class @WindowBidDialog extends AbstractDialog
 
     destroy: () ->
         @parentPage = null
-
+        @orderTypes = null
+        
         @sort       = null
         @openSide   = null
         @glass      = null
@@ -59,6 +60,7 @@ class @WindowBidDialog extends AbstractDialog
     negativeAction: () ->
         super()
 
+    setData: (@orderTypes) ->
 
     _collectDataFromForm: () ->
         return {
@@ -115,10 +117,7 @@ class @WindowBidDialog extends AbstractDialog
                             <label>Vrsta prozora*</label>
                             <select class='js--sort'>
                                 <option selected>---</option>
-                                <option>Jednokrilni</option>
-                                <option>Dvokrlni</option>
-                                <option>Trokrilni</option>
-                                <option>Fiks</option>
+                                #{@_printOptionsHTML(@orderTypes['WINDOW_SORT'])}
                             </select>
                         </div>
                         
@@ -134,8 +133,7 @@ class @WindowBidDialog extends AbstractDialog
                             <label>Staklo*</label>
                             <select class='js--glass'>
                                 <option selected>---</option>
-                                <option>Providno</option>
-                                <option>Griz</option>
+                                #{@_printOptionsHTML(@orderTypes['WINDOW_GLASS'])}
                             </select>
                         </div>
 

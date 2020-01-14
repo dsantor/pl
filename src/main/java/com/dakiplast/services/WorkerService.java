@@ -12,4 +12,5 @@ public interface WorkerService {
 	public List<IWorker> getAll();
 	public boolean toggleBlockWorker(Long workerId);
 	public IWorker update(WorkerRequest workerRequest);
+	public List<IWorker> getAllActive();
 }

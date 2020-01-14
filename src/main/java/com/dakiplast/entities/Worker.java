@@ -17,7 +17,8 @@ import com.dakiplast.entities.interfaces.IWorker;
 @Table(name = "workers")
 @NamedQueries({
 	@NamedQuery( name = "Worker.findAll", query = "SELECT w FROM Worker w"),
-	@NamedQuery( name = "Worker.findById", query = "SELECT w FROM Worker w WHERE w.id = :id")
+	@NamedQuery( name = "Worker.findById", query = "SELECT w FROM Worker w WHERE w.id = :id"),
+	@NamedQuery( name = "Worker.findAllActive", query = "SELECT w FROM Worker w where w.active = true")
 })
 public class Worker implements Serializable, IWorker {
 
