@@ -46,22 +46,22 @@
 
     UserProfile.prototype._renderUserInfo = function(user) {
       this.loggedUser = user;
-      this.firstname.text(user.firstName);
-      this.lastname.text(user.lastName);
-      this.phone.text(user.phoneNumber);
-      this.email.text(user.email);
-      this.street.text(user.street);
-      this.city.text(user.city);
-      return this.buildNumber.text(user.buildNumber);
+      this.firstname.text(user.firstName || '/');
+      this.lastname.text(user.lastName || '/');
+      this.phone.text(user.phoneNumber || '/');
+      this.email.text(user.email || '/');
+      this.street.text(user.street || '/');
+      this.city.text(user.city || '/');
+      return this.buildNumber.text(user.buildNumber || '/');
     };
 
     UserProfile.prototype.editProfileDialogSuccess = function(user) {
-      this.loggedUser.firstName = user.firstName;
-      this.loggedUser.lastName = user.lastName;
-      this.loggedUser.street = user.street;
-      this.loggedUser.buildNumber = user.buildNumber;
-      this.loggedUser.city = user.city;
-      this.loggedUser.phoneNumber = user.phoneNumber;
+      this.loggedUser.firstName = user.firstName || '/';
+      this.loggedUser.lastName = user.lastName || '/';
+      this.loggedUser.street = user.street || '/';
+      this.loggedUser.buildNumber = user.buildNumber || '/';
+      this.loggedUser.city = user.city || '/';
+      this.loggedUser.phoneNumber = user.phoneNumber || '/';
       window.loggedUserInfo = this.loggedUser;
       return this._renderUserInfo(this.loggedUser);
     };

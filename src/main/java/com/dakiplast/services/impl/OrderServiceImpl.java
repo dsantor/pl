@@ -77,10 +77,11 @@ public class OrderServiceImpl implements OrderService {
 			}
 			
 			if (!oldClientIsChosen) {
-				client = clientService.create(clientRequest, createdBy);
+				client = clientService.create(clientRequest, createdBy);				
 				if (client == null) {
 					return null;
 				}
+				clientId = client.getId();
 			}
 			
 			if (workerIds == null || workerIds.isEmpty()) {

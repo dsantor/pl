@@ -51,22 +51,22 @@ class @UserProfile
     _renderUserInfo: (user) ->
 
         @loggedUser = user
-        @firstname.text(user.firstName)
-        @lastname.text(user.lastName)
-        @phone.text(user.phoneNumber)
-        @email.text(user.email)
-        @street.text(user.street)
-        @city.text(user.city)
-        @buildNumber.text(user.buildNumber)
+        @firstname.text(user.firstName or '/')
+        @lastname.text(user.lastName or '/')
+        @phone.text(user.phoneNumber or '/')
+        @email.text(user.email or '/')
+        @street.text(user.street or '/')
+        @city.text(user.city or '/')
+        @buildNumber.text(user.buildNumber or '/')
 
     
     editProfileDialogSuccess: (user) ->
-        @loggedUser.firstName   = user.firstName
-        @loggedUser.lastName    = user.lastName
-        @loggedUser.street      = user.street
-        @loggedUser.buildNumber = user.buildNumber
-        @loggedUser.city        = user.city
-        @loggedUser.phoneNumber = user.phoneNumber
+        @loggedUser.firstName   = user.firstName or '/'
+        @loggedUser.lastName    = user.lastName or '/'
+        @loggedUser.street      = user.street or '/'
+        @loggedUser.buildNumber = user.buildNumber or '/'
+        @loggedUser.city        = user.city or '/'
+        @loggedUser.phoneNumber = user.phoneNumber or '/'
         window.loggedUserInfo = @loggedUser
         @_renderUserInfo(@loggedUser)
 
