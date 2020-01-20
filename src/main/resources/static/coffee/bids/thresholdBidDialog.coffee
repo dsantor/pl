@@ -30,6 +30,15 @@ class @ThresholdBidDialog extends AbstractDialog
     destroy: () ->
         @parentPage = null
         @orderTypes = null
+
+        @sort       = null
+        @width      = null
+        @height     = null
+        @innerWidth = null
+        @price      = null
+        @quantity   = null
+        @id         = null
+
         super()
 
     positiveAction: () ->

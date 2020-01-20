@@ -353,6 +353,7 @@
           break;
         }
       }
+      this._displayBidsTotal();
       return this._updateResultSections();
     };
 
@@ -420,7 +421,7 @@
         this._activePage('empty');
         return;
       }
-      html = '';
+      html = "<div class='flex justify-content-end pr-3 js--bids--overview--sum'></div>";
       for (i = 0, len = keys.length; i < len; i++) {
         key = keys[i];
         if (this.cartList[key].length > 0) {
@@ -428,7 +429,23 @@
         }
       }
       this.overviewContainer.html(html);
+      this._displayBidsTotal();
       return this._activePage('overview');
+    };
+
+    BidsPage.prototype._displayBidsTotal = function() {
+      var i, item, j, key, keys, len, len1, ref, sum;
+      keys = Object.keys(this.cartList);
+      sum = 0;
+      for (i = 0, len = keys.length; i < len; i++) {
+        key = keys[i];
+        ref = this.cartList[key];
+        for (j = 0, len1 = ref.length; j < len1; j++) {
+          item = ref[j];
+          sum += Number(item.price);
+        }
+      }
+      return this.overviewContainer.find('.js--bids--overview--sum').html("Suma: " + sum + " din");
     };
 
     BidsPage.prototype._renderOverviewBidSection = function(bidType) {

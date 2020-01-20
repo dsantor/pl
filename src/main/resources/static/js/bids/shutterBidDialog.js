@@ -27,7 +27,7 @@
       this.width = this.container.find('.js--width');
       this.height = this.container.find('.js--height');
       this.quantity = this.container.find('.js--quantity');
-      this.price = this.container.find('js--price');
+      this.price = this.container.find('.js--price');
       this.id = null;
       this.additionBoxOptions = this.container.find('.js--box--type--option');
       this.additionBoxActive = false;

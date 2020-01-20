@@ -1,6 +1,6 @@
 class @MosquitoRepellerBidDialog extends AbstractDialog
 
-    @BID_TYPE = 'MOSQUITO_REPELLER'
+    @BID_TYPE = 'MOSQUITO'
 
     constructor: () ->
         super()
@@ -29,7 +29,9 @@ class @MosquitoRepellerBidDialog extends AbstractDialog
 
     hide: () ->
         super()
-        @parentPage = null
+
+    destroy: () ->        
+        @parentPage = null        
         @orderTypes = null
 
         @sort     = null
@@ -41,7 +43,6 @@ class @MosquitoRepellerBidDialog extends AbstractDialog
         @quantity = null
         @id       = null
 
-    destroy: () ->
         super()
 
     positiveAction: () ->

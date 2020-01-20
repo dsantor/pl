@@ -50,6 +50,16 @@
     DoorBidDialog.prototype.destroy = function() {
       this.parentPage = null;
       this.orderTypes = null;
+      this.sort = null;
+      this.type = null;
+      this.openSide = null;
+      this.glass = null;
+      this.width = null;
+      this.height = null;
+      this.innerWidth = null;
+      this.price = null;
+      this.quantity = null;
+      this.id = null;
       return DoorBidDialog.__super__.destroy.call(this);
     };
 

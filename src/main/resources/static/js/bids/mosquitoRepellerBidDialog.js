@@ -6,7 +6,7 @@
   this.MosquitoRepellerBidDialog = (function(superClass) {
     extend(MosquitoRepellerBidDialog, superClass);
 
-    MosquitoRepellerBidDialog.BID_TYPE = 'MOSQUITO_REPELLER';
+    MosquitoRepellerBidDialog.BID_TYPE = 'MOSQUITO';
 
     function MosquitoRepellerBidDialog() {
       MosquitoRepellerBidDialog.__super__.constructor.call(this);
@@ -40,7 +40,10 @@
     };
 
     MosquitoRepellerBidDialog.prototype.hide = function() {
-      MosquitoRepellerBidDialog.__super__.hide.call(this);
+      return MosquitoRepellerBidDialog.__super__.hide.call(this);
+    };
+
+    MosquitoRepellerBidDialog.prototype.destroy = function() {
       this.parentPage = null;
       this.orderTypes = null;
       this.sort = null;
@@ -50,10 +53,7 @@
       this.height = null;
       this.price = null;
       this.quantity = null;
-      return this.id = null;
-    };
-
-    MosquitoRepellerBidDialog.prototype.destroy = function() {
+      this.id = null;
       return MosquitoRepellerBidDialog.__super__.destroy.call(this);
     };
 

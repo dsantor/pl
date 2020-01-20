@@ -26,7 +26,7 @@ public class Client implements IClient, Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "user_id")
+	@Column(name = "client_id")
 	private Long id;
 	
 	@Column(name = "first_name")

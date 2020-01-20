@@ -16,7 +16,7 @@ class @ShutterBidDialog extends AbstractDialog
         @width    = @container.find('.js--width')
         @height   = @container.find('.js--height')
         @quantity = @container.find('.js--quantity')
-        @price    = @container.find('js--price')
+        @price    = @container.find('.js--price')
         @id       = null
 
         @additionBoxOptions = @container.find('.js--box--type--option')

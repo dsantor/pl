@@ -37,6 +37,18 @@ class @DoorBidDialog extends AbstractDialog
     destroy: () ->
         @parentPage = null
         @orderTypes = null
+
+        @sort       = null  
+        @type       = null
+        @openSide   = null
+        @glass      = null
+        @width      = null
+        @height     = null
+        @innerWidth = null
+        @price      = null
+        @quantity   = null
+        @id         = null
+
         super()
 
     setData: (@orderTypes) ->

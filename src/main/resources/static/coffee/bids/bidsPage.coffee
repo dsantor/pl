@@ -478,6 +478,7 @@ class @BidsPage
                 @cartList[bidType].splice(index, 1)
                 break
         
+        @_displayBidsTotal()
         @_updateResultSections()
 
     _updateResultSections: () ->
@@ -529,14 +530,24 @@ class @BidsPage
             @_activePage('empty')
             return
 
-        html = ''    
+                
+        html = "<div class='flex justify-content-end pr-3 js--bids--overview--sum'></div>"
         for key in keys
             if @cartList[key].length > 0
                 html += @_renderOverviewBidSection(key)
-        
+                
         @overviewContainer.html(html)
+        @_displayBidsTotal()
         @_activePage('overview')
-        
+    
+    _displayBidsTotal: () ->
+        keys = Object.keys(@cartList)
+        sum = 0
+        for key in keys
+            for item in @cartList[key]
+                sum += Number(item.price)
+        @overviewContainer.find('.js--bids--overview--sum').html("Suma: #{sum} din")
+
     _renderOverviewBidSection: (bidType) ->
         switch bidType
             when DoorBidDialog.BID_TYPE

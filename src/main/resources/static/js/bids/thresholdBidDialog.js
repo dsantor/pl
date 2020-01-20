@@ -44,6 +44,13 @@
     ThresholdBidDialog.prototype.destroy = function() {
       this.parentPage = null;
       this.orderTypes = null;
+      this.sort = null;
+      this.width = null;
+      this.height = null;
+      this.innerWidth = null;
+      this.price = null;
+      this.quantity = null;
+      this.id = null;
       return ThresholdBidDialog.__super__.destroy.call(this);
     };
 

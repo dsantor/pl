@@ -24,18 +24,20 @@ class @BidSectionsHTML
                             </div>
                          </div>"
 
-        html = "<div class='container js--section--door'><h4>Vrata</h4></div>
-                <div class='flex-table'>
-                    <div class='flex-table-cell w-20'>Vrsta</div>
-                    <div class='flex-table-cell w-20'>Tip</div>
-                    <div class='flex-table-cell w-10'>Otvor</div>
-                    <div class='flex-table-cell w-10'>Staklo</div>
-                    <div class='flex-table-cell w-10'>Dimenzije</div>
-                    <div class='flex-table-cell w-10'>Količina</div>
-                    <div class='flex-table-cell w-10'>Izmeni</div>
-                    <div class='flex-table-cell w-10'>Obriši</div>
-                </div>
-                #{innerHtml}
+        html = "<div class='js--section--door'>
+                    <div class='container'><h4>Vrata</h4></div>
+                    <div class='flex-table'>
+                        <div class='flex-table-cell w-20'>Vrsta</div>
+                        <div class='flex-table-cell w-20'>Tip</div>
+                        <div class='flex-table-cell w-10'>Otvor</div>
+                        <div class='flex-table-cell w-10'>Staklo</div>
+                        <div class='flex-table-cell w-10'>Dimenzije</div>
+                        <div class='flex-table-cell w-10'>Količina</div>
+                        <div class='flex-table-cell w-10'>Izmeni</div>
+                        <div class='flex-table-cell w-10'>Obriši</div>
+                    </div>
+                    #{innerHtml}
+                    </div>
                 </div>"
         return html
 
@@ -56,17 +58,19 @@ class @BidSectionsHTML
                             </div>
                          </div>"
 
-        html = "<div class='container js--section--divreshold'><h4>Prag</h4></div>
-                <div class='flex-table'>
-                    <div class='flex-table-cell w-20'>Vrsta</div>
-                    <div class='flex-table-cell w-20'>Širina</div>
-                    <div class='flex-table-cell w-10'>Visina</div>
-                    <div class='flex-table-cell w-20'>Unudivašnja širina</div>
-                    <div class='flex-table-cell w-10'>Količina</div>
-                    <div class='flex-table-cell w-10'>Promeni</div>
-                    <div class='flex-table-cell w-10'>Obriši</div>
-                </div>
-                #{innerHtml}
+        html = "<div class='js--section--threshold'>
+                    <div class='container'><h4>Prag</h4></div>
+                    <div class='flex-table'>
+                        <div class='flex-table-cell w-20'>Vrsta</div>
+                        <div class='flex-table-cell w-20'>Širina</div>
+                        <div class='flex-table-cell w-10'>Visina</div>
+                        <div class='flex-table-cell w-20'>Unudivašnja širina</div>
+                        <div class='flex-table-cell w-10'>Količina</div>
+                        <div class='flex-table-cell w-10'>Promeni</div>
+                        <div class='flex-table-cell w-10'>Obriši</div>
+                    </div>
+                    #{innerHtml}
+                    </div>
                 </div>"
         return html
 
@@ -90,17 +94,19 @@ class @BidSectionsHTML
                             </div>
                          </div>"
 
-        html = "<div class='container js--section--mosquito--repeller'><h4>Komarnik</h4></div>
-                <div class='flex-table'>
-                    <div class='flex-table-cell w-20'>Vrsta</div>
-                    <div class='flex-table-cell w-20'>Tip</div>
-                    <div class='flex-table-cell w-20'>Otvor</div>
-                    <div class='flex-table-cell w-10'>Dimenzije</div>
-                    <div class='flex-table-cell w-10'>Količina</div>
-                    <div class='flex-table-cell w-10'>Izmeni</div>
-                    <div class='flex-table-cell w-10'>Obriši</div>
-                </div>
-                #{innerHtml}
+        html = "<div class='js--section--mosquito'>
+                    <div class='container'><h4>Komarnik</h4></div>
+                    <div class='flex-table'>
+                        <div class='flex-table-cell w-20'>Vrsta</div>
+                        <div class='flex-table-cell w-20'>Tip</div>
+                        <div class='flex-table-cell w-20'>Otvor</div>
+                        <div class='flex-table-cell w-10'>Dimenzije</div>
+                        <div class='flex-table-cell w-10'>Količina</div>
+                        <div class='flex-table-cell w-10'>Izmeni</div>
+                        <div class='flex-table-cell w-10'>Obriši</div>
+                    </div>
+                    #{innerHtml}
+                    </div>
                 </div>"
         return html
 
@@ -126,18 +132,20 @@ class @BidSectionsHTML
                             </div>
                          </div>"
 
-        html = "<div class='container js--section--window'><h4>Prozor</h4></div>
-                <div class='flex-table'>
-                    <div class='flex-table-cell w-20'>Vrsta</div>
-                    <div class='flex-table-cell w-15'>Otvor</div>
-                    <div class='flex-table-cell w-15'>Staklo</div>
-                    <div class='flex-table-cell w-10'>Kipanje</div>
-                    <div class='flex-table-cell w-10'>Dimenzije</div>
-                    <div class='flex-table-cell w-10'>Količina</div>
-                    <div class='flex-table-cell w-10'>Izmeni</div>
-                    <div class='flex-table-cell w-10'>Obriši</div>
-                </div>
-                #{innerHtml}
+        html = "<div class='js--section--window'>
+                    <div class='container'><h4>Prozor</h4></div>
+                    <div class='flex-table'>
+                        <div class='flex-table-cell w-20'>Vrsta</div>
+                        <div class='flex-table-cell w-15'>Otvor</div>
+                        <div class='flex-table-cell w-15'>Staklo</div>
+                        <div class='flex-table-cell w-10'>Kipanje</div>
+                        <div class='flex-table-cell w-10'>Dimenzije</div>
+                        <div class='flex-table-cell w-10'>Količina</div>
+                        <div class='flex-table-cell w-10'>Izmeni</div>
+                        <div class='flex-table-cell w-10'>Obriši</div>
+                    </div>
+                    #{innerHtml}
+                    </div>
                 </div>"
         return html
     
@@ -162,17 +170,19 @@ class @BidSectionsHTML
                             </div>
                          </div>"
 
-        html = "<div class='container js--section--shutter'><h4>Prozor</h4></div>
-                <div class='flex-table'>
-                    <div class='flex-table-cell w-15'>Vrsta</div>
-                    <div class='flex-table-cell w-15'>Kutija</div>
-                    <div class='flex-table-cell w-20'>Tip kutije</div>
-                    <div class='flex-table-cell w-10'>Otvor</div>
-                    <div class='flex-table-cell w-10'>Dimenzije</div>
-                    <div class='flex-table-cell w-10'>Količina</div>
-                    <div class='flex-table-cell w-10'>Izmeni</div>
-                    <div class='flex-table-cell w-10'>Obriši</div>
-                </div>
-                #{innerHtml}
+        html = "<div class='js--section--shutter'>
+                    <div class='container'><h4>Roletna</h4></div>
+                    <div class='flex-table'>
+                        <div class='flex-table-cell w-15'>Vrsta</div>
+                        <div class='flex-table-cell w-15'>Kutija</div>
+                        <div class='flex-table-cell w-20'>Tip kutije</div>
+                        <div class='flex-table-cell w-10'>Otvor</div>
+                        <div class='flex-table-cell w-10'>Dimenzije</div>
+                        <div class='flex-table-cell w-10'>Količina</div>
+                        <div class='flex-table-cell w-10'>Izmeni</div>
+                        <div class='flex-table-cell w-10'>Obriši</div>
+                    </div>
+                    #{innerHtml}
+                    </div>
                 </div>"
         return html
