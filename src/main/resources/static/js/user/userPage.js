@@ -45,10 +45,10 @@
     };
 
     UserPage.prototype._customHTML = function() {
-      var html, innerHTML;
+      var html, userText;
       if (this.user) {
-        innerHTML = this._toggleBlockUserText();
-        html = "<nav class='nav justify-content-end header pt-3'> <span class='nav-link span-a back-button js--back--button'>Nazad</span> <span class='nav-link span-a js--reset--password'>Restartuj šifru</span> <span class='nav-link span-a js--block--user'>" + innerHTML + "</span> <span class='nav-link span-a js--user--activity'>Aktivnosti</span> </nav>";
+        userText = this._toggleBlockUserText();
+        html = "<nav class='nav justify-content-end header pt-3'> <span class='nav-link span-a back-button js--back--button'>Nazad</span> <span class='nav-link span-a js--reset--password'>Restartuj šifru</span> <span class='nav-link span-a js--block--user " + userText.textCss + "'>" + userText.text + "</span> <span class='nav-link span-a js--user--activity'>Aktivnosti</span> </nav>";
         html += ComponentsUtils.userDetailsFilledHTML(this.user);
         return html;
       } else {
@@ -84,18 +84,31 @@
     };
 
     UserPage.prototype._toggleBlockUserText = function() {
-      var text;
-      text = 'Aktiviraj';
+      var text, textCss;
+      text = 'Neaktivan';
+      textCss = 'text-danger';
       if (this.user.active) {
-        text = 'Deaktiviraj';
+        text = 'Aktivan';
+        textCss = '';
       }
-      return text;
+      return {
+        text: text,
+        textCss: textCss
+      };
     };
 
     UserPage.prototype._toggleBlockUser = function() {
+      var item, userText;
       this.user.active = !this.user.active;
       this.updatedUser = true;
-      $(".js--block--user").html(this._toggleBlockUserText());
+      userText = this._toggleBlockUserText();
+      item = $(".js--block--user");
+      if (userText.textCss === '') {
+        item.removeClass('text-danger');
+      } else {
+        item.addClass('text-danger');
+      }
+      item.html(userText.text);
       return UserService.toggleBlockUser(this.user.id, null, this, globalSuccessMessage, globalErrorMessage);
     };
 

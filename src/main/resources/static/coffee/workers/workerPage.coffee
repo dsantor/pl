@@ -45,17 +45,20 @@ class @WorkerPage extends AbstractPage
 
     _toggleBlockUserText: () ->
         text = 'Neaktivan'
+        textCss = 'text-danger'
         if @worker.active
             text = 'Aktivan'
-        return text
+            textCss = ''
+        
+        return {text: text, textCss: textCss}
 
     _customHTML: () ->
         if @worker
-            innerHTML = @_toggleBlockUserText()
+            userText = @_toggleBlockUserText()
             html = "<nav class='nav justify-content-end header pt-3'>
                         <span class='nav-link span-a back-button js--back--button'>Nazad</span>
                         <span class='nav-link span-a js--edit--worker'>Izmeni</span>
-                        <span class='nav-link span-a js--block--worker'>#{innerHTML}</span>
+                        <span class='nav-link span-a js--block--worker #{userText.textCss}'>#{userText.text}</span>
                         <span class='nav-link span-a js--worker--expenses'>Rashodi</span>
                         <span class='nav-link span-a js--create--expense'>Kreiraj rashod</span>
                     </nav>"
@@ -68,7 +71,13 @@ class @WorkerPage extends AbstractPage
 
     _toggleBlockUser: () ->
         @worker.active = !@worker.active
-        $(".js--block--worker").html(@_toggleBlockUserText())
+        userText = @_toggleBlockUserText()
+        item = $(".js--block--worker")
+        if userText.textCss is ''
+            item.removeClass('text-danger')
+        else
+            item.addClass('text-danger')
+        item.html(userText.text)
         WorkerService.toggleBlockWorker(@worker.id, null, this, globalSuccessMessage, globalErrorMessage)
     
     createWorkerDialogPositiveAction: (worker) ->

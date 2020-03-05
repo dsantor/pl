@@ -53,19 +53,24 @@
     };
 
     WorkerPage.prototype._toggleBlockUserText = function() {
-      var text;
+      var text, textCss;
       text = 'Neaktivan';
+      textCss = 'text-danger';
       if (this.worker.active) {
         text = 'Aktivan';
+        textCss = '';
       }
-      return text;
+      return {
+        text: text,
+        textCss: textCss
+      };
     };
 
     WorkerPage.prototype._customHTML = function() {
-      var html, innerHTML;
+      var html, userText;
       if (this.worker) {
-        innerHTML = this._toggleBlockUserText();
-        html = "<nav class='nav justify-content-end header pt-3'> <span class='nav-link span-a back-button js--back--button'>Nazad</span> <span class='nav-link span-a js--edit--worker'>Izmeni</span> <span class='nav-link span-a js--block--worker'>" + innerHTML + "</span> <span class='nav-link span-a js--worker--expenses'>Rashodi</span> <span class='nav-link span-a js--create--expense'>Kreiraj rashod</span> </nav>";
+        userText = this._toggleBlockUserText();
+        html = "<nav class='nav justify-content-end header pt-3'> <span class='nav-link span-a back-button js--back--button'>Nazad</span> <span class='nav-link span-a js--edit--worker'>Izmeni</span> <span class='nav-link span-a js--block--worker " + userText.textCss + "'>" + userText.text + "</span> <span class='nav-link span-a js--worker--expenses'>Rashodi</span> <span class='nav-link span-a js--create--expense'>Kreiraj rashod</span> </nav>";
         html += ComponentsUtils.userDetailsFilledHTML(this.worker);
         return html;
       } else {
@@ -74,8 +79,16 @@
     };
 
     WorkerPage.prototype._toggleBlockUser = function() {
+      var item, userText;
       this.worker.active = !this.worker.active;
-      $(".js--block--worker").html(this._toggleBlockUserText());
+      userText = this._toggleBlockUserText();
+      item = $(".js--block--worker");
+      if (userText.textCss === '') {
+        item.removeClass('text-danger');
+      } else {
+        item.addClass('text-danger');
+      }
+      item.html(userText.text);
       return WorkerService.toggleBlockWorker(this.worker.id, null, this, globalSuccessMessage, globalErrorMessage);
     };
 

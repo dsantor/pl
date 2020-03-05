@@ -37,11 +37,11 @@ class @UserPage extends AbstractPage
 
     _customHTML: () ->
         if @user
-            innerHTML = @_toggleBlockUserText()
+            userText = @_toggleBlockUserText()
             html = "<nav class='nav justify-content-end header pt-3'>
                         <span class='nav-link span-a back-button js--back--button'>Nazad</span>
                         <span class='nav-link span-a js--reset--password'>Restartuj šifru</span>
-                        <span class='nav-link span-a js--block--user'>#{innerHTML}</span>
+                        <span class='nav-link span-a js--block--user #{userText.textCss}'>#{userText.text}</span>
                         <span class='nav-link span-a js--user--activity'>Aktivnosti</span>
                     </nav>"
             html += ComponentsUtils.userDetailsFilledHTML(@user)
@@ -74,13 +74,22 @@ class @UserPage extends AbstractPage
         UserService.defaultPassword(@user.id, null, this, globalSuccessMessage, globalErrorMessage)
 
     _toggleBlockUserText: () ->
-        text = 'Aktiviraj'
+        text = 'Neaktivan'
+        textCss = 'text-danger'
         if @user.active
-            text = 'Deaktiviraj'
-        return text
+            text = 'Aktivan'
+            textCss = ''
+        
+        return {text: text, textCss: textCss}
 
     _toggleBlockUser: () ->
         @user.active = !@user.active
         @updatedUser = true
-        $(".js--block--user").html(@_toggleBlockUserText())
+        userText = @_toggleBlockUserText()
+        item = $(".js--block--user")
+        if userText.textCss is ''
+            item.removeClass('text-danger')
+        else
+            item.addClass('text-danger')
+        item.html(userText.text)
         UserService.toggleBlockUser(@user.id, null, this, globalSuccessMessage, globalErrorMessage)

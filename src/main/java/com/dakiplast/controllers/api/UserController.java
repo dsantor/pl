@@ -186,7 +186,7 @@ public class UserController {
 		
 		if (blocked) {
 			IUser blockedUser = userService.getById(userId);
-			String blockText = blockedUser.isActive() ? "odblokiran" : "blokiran";
+			String blockText = blockedUser.isActive() ? "aktiviran" : "deaktiviran";
 			
 			if (blockedUser.isActive()) {
 				userActivityLogService.unblockUser(loggedUserId, userId);

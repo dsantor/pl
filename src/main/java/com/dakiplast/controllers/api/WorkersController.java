@@ -86,10 +86,10 @@ public class WorkersController {
 		
 		if (blocked) {
 			IWorker blockedUser = workerService.getById(workerId);
-			String blockText = blockedUser.isActive() ? "blokiran" : "odblokiran";
+			String blockText = blockedUser.isActive() ? "aktiviran" : "deaktiviran";
 			
 			if (blockedUser.isActive()) {
-				userActivityLogService.blockWorker(loggedUserId, workerId);
+				userActivityLogService.unblockWorker(loggedUserId, workerId);
 			} else {
 				userActivityLogService.blockWorker(loggedUserId, workerId);
 			}
