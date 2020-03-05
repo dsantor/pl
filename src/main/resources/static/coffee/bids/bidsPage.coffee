@@ -136,7 +136,7 @@ class @BidsPage
         bodyHTML = "<div class='container bids--container bids-container' data-page='bids'>
                         <nav class='nav header justify-content-end pt-3'>
                             <span class='nav-link span-a js--chose--bids nav--bids active'>Odaberi proizvod</span>
-                            <span class='nav-link span-a js--bids--overview nav--overview nav--empty'>Pregled porudzbine</span>
+                            <span class='nav-link span-a js--bids--overview nav--overview nav--empty'>Pregled porudžbine</span>
                             <span class='nav-link span-a #{@_createClientButtonClass()} js--chose--client nav--client'>Unesi klijenta</span>
                             <span class='nav-link span-a js--bids--order nav--order'>Poruči</span>
                         </nav>
